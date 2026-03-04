@@ -628,22 +628,22 @@
       border-bottom: 1px solid var(--border);
     }
     .r-bar-above {
-      position: relative; height: 46px; margin-bottom: 4px;
+      position: relative; height: 48px; margin-bottom: 4px;
       animation: slideUp 0.4s ease 0.4s both;
     }
     .r-bar-lbl {
-      position: absolute;
-      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+      position: absolute; bottom: 0;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2px; white-space: nowrap;
+      transform: translateX(-50%);
     }
-    .r-bar-lbl.lbl-min { bottom: 0; transform: translateX(-50%); }
-    .r-bar-lbl.lbl-avg { top: 0; transform: translateX(-50%); }
     .r-bar-lbl-box {
       padding: 2px 9px; border-radius: 5px;
       font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; flex-shrink: 0;
     }
     .r-bar-lbl-box.box-min { background: #FEF3C7; color: #92400E; }
     .r-bar-lbl-box.box-avg { background: #EEF2FF; color: #3730A3; }
-    .r-bar-lbl-text { font-size: 0.68rem; color: var(--gray-3); }
+    .r-bar-lbl-text { font-size: 0.62rem; color: var(--gray-3); }
     .r-bar-track {
       width: 100%; height: 10px; background: var(--gray-5);
       border-radius: 6px; position: relative; overflow: visible;
@@ -1528,7 +1528,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       const lbl2 = document.createElement('div');
       lbl2.className = 'r-bar-lbl lbl-avg';
       lbl2.style.left = pos2 + '%';
-      lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ย</span>';
+      lbl2.innerHTML = '<span class="r-bar-lbl-text">คะแนนเฉลี่ย</span><div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div>';
       barAbove.appendChild(lbl2);
     }
   }
