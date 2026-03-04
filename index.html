@@ -881,12 +881,10 @@
       background: var(--orange); flex-shrink: 0;
       box-shadow: 0 0 8px rgba(255,82,0,0.7);
     }
-    .hero-chip.c1 { top: 8%;    left: 4%;   --dur:5.5s; --d:0s; }
-    .hero-chip.c2 { top: 22%;   right:6%;   --dur:7s;   --d:1.2s; }
-    .hero-chip.c3 { top: 50%;   right:5%;   --dur:6.8s; --d:0.9s; }
-    .hero-chip.c4 { bottom:28%; left:2%;    --dur:6.2s; --d:0.6s; }
-    .hero-chip.c5 { bottom:14%; right:8%;   --dur:8.5s; --d:2s; }
-    .hero-chip.c6 { top: 38%;   left: 5%;   --dur:7.5s; --d:1.7s; }
+    .hero-chip.c1 { top: 5%;    left: 4%;   --dur:5.5s; --d:0s; }
+    .hero-chip.c2 { top: 5%;    right:4%;   --dur:7s;   --d:1.2s; }
+    .hero-chip.c3 { bottom:8%;  right:4%;   --dur:6.8s; --d:0.9s; }
+    .hero-chip.c4 { bottom:8%;  left:3%;    --dur:6.2s; --d:0.6s; }
     @keyframes floatChip {
       from { transform: translateY(0) rotate(-1.5deg); }
       to   { transform: translateY(-14px) rotate(2deg); }
@@ -912,71 +910,6 @@
     }
     .reveal-anim.in-view { opacity: 1; transform: translateY(0); }
 
-    /* ═══ FEATURES SECTION ═══ */
-    .features-section {
-      position: relative; z-index: 1;
-      padding: 72px 6% 64px;
-      background: var(--bg);
-    }
-    .features-inner { max-width: 1060px; margin: 0 auto; }
-    .features-header { text-align: center; margin-bottom: 52px; }
-    .features-tag {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700;
-      letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange);
-      background: rgba(255,82,0,0.08); border: 1px solid rgba(255,82,0,0.18);
-      padding: 4px 14px; border-radius: 100px; margin-bottom: 18px;
-    }
-    .features-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
-    .features-title {
-      font-family: var(--font-thai-head); font-size: clamp(1.65rem, 2.8vw, 2.4rem);
-      font-weight: 800; color: var(--gray-1); line-height: 1.25; letter-spacing: -0.01em;
-    }
-    .features-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
-    }
-    .feature-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 30px 26px;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      position: relative; overflow: hidden;
-    }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 52px rgba(0,0,0,0.08);
-      border-color: rgba(255,82,0,0.18);
-    }
-    .feature-card::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: var(--c, var(--orange-grad));
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    }
-    .feature-card:hover::after { transform: scaleX(1); }
-    .feature-card.fc-orange { --c: linear-gradient(90deg,#FF5200,#FF9060); }
-    .feature-card.fc-gold   { --c: linear-gradient(90deg,#C08B1A,#F0B429); }
-    .feature-card.fc-green  { --c: linear-gradient(90deg,#16a34a,#4ade80); }
-    .feature-card.fc-blue   { --c: linear-gradient(90deg,#1d4ed8,#60a5fa); }
-    .fi-wrap {
-      width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px; flex-shrink: 0;
-    }
-    .fi-wrap.fi-orange { background: rgba(255,82,0,0.1); color: var(--orange); }
-    .fi-wrap.fi-gold   { background: rgba(192,139,26,0.1); color: #B8820F; }
-    .fi-wrap.fi-green  { background: rgba(22,163,74,0.1); color: #16a34a; }
-    .fi-wrap.fi-blue   { background: rgba(29,78,216,0.1); color: #1d4ed8; }
-    .feature-card-title {
-      font-family: var(--font-thai-head); font-size: 1.05rem; font-weight: 700;
-      color: var(--gray-1); margin-bottom: 9px; letter-spacing: -0.01em;
-    }
-    .feature-card-desc {
-      font-size: 0.88rem; color: var(--gray-3); line-height: 1.78;
-    }
-    .features-grid .feature-card:nth-child(1) { transition-delay: 0.05s; }
-    .features-grid .feature-card:nth-child(2) { transition-delay: 0.15s; }
-    .features-grid .feature-card:nth-child(3) { transition-delay: 0.25s; }
-
     /* ═══ KEYFRAMES ═══ */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
@@ -1001,9 +934,6 @@
       .stat { padding: 0 1.2rem; }
       .stat:first-child { padding-left: 0; }
       .stat-n { font-size: 2rem; }
-      .features-section { padding: 52px 5% 48px; }
-      .features-grid { grid-template-columns: 1fr; gap: 16px; }
-      .features-title { font-size: 1.5rem; }
       .stats-photo { display: none; }
       .fstep { padding: 20px 18px; }
       .fstep-btn { padding: 16px 18px; }
@@ -1103,8 +1033,6 @@
         <div class="hero-chip c2">TGAT 90</div>
         <div class="hero-chip c3">A-Level</div>
         <div class="hero-chip c4">TPAT 30</div>
-        <div class="hero-chip c5">คะแนนรวม</div>
-        <div class="hero-chip c6">โควตา 2569</div>
       </div>
     </div>
   </section>
@@ -1123,39 +1051,6 @@
       <span class="marquee-item"><span class="marquee-dot"></span>PREDICT YOUR CHANCE</span>
     </div>
   </div>
-
-  <!-- ═══ FEATURES ═══ -->
-  <section class="features-section">
-    <div class="features-inner">
-      <div class="features-header reveal">
-        <div class="features-tag"><span class="features-tag-dot"></span>ทำไมต้องใช้ NUforecast</div>
-        <h2 class="features-title">วิเคราะห์โอกาสอย่างแม่นยำ<br>ด้วยข้อมูลจริง ม.นเรศวร</h2>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card fc-orange reveal">
-          <div class="fi-wrap fi-orange">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-          </div>
-          <div class="feature-card-title">วิเคราะห์จากข้อมูลจริง</div>
-          <div class="feature-card-desc">คำนวณจากคะแนนขั้นต่ำและค่าเฉลี่ยของผู้ผ่านการคัดเลือกจริง ย้อนหลัง 3 ปีการศึกษา ไม่ใช่การประมาณ</div>
-        </div>
-        <div class="feature-card fc-gold reveal">
-          <div class="fi-wrap fi-gold">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="feature-card-title">ครบทุกหลักสูตร 16 คณะ</div>
-          <div class="feature-card-desc">ครอบคลุม 90 หลักสูตรทั่วทุกคณะ/วิทยาลัยของมหาวิทยาลัยนเรศวร TCAS รอบ 2 โควตา ปี 2569</div>
-        </div>
-        <div class="feature-card fc-green reveal">
-          <div class="fi-wrap fi-green">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-          </div>
-          <div class="feature-card-title">คำแนะนำเฉพาะบุคคล</div>
-          <div class="feature-card-desc">ระบบแสดงผลจุดแข็งและจุดที่ต้องพัฒนา พร้อมระบุองค์ประกอบที่ไม่ผ่านเกณฑ์ขั้นต่ำอย่างชัดเจน</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="form-section" id="calculator">
     <div class="section-header">
