@@ -591,17 +591,6 @@
       animation: slideUp 0.4s ease 0.4s both;
       box-shadow: 0 2px 8px rgba(255,82,0,0.28);
     }
-    .r-hero-chips {
-      display: flex; gap: 8px; margin-top: 10px;
-      animation: slideUp 0.4s ease 0.45s both;
-    }
-    .r-hero-chip {
-      padding: 3px 12px; border-radius: 6px;
-      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700;
-    }
-    .r-hero-chip.chip-min { background: #FEF3C7; color: #92400E; }
-    .r-hero-chip.chip-avg { background: #EEF2FF; color: #3730A3; }
-
     /* ── Score Bar Section ── */
     .r-bar-section {
       padding: 16px 20px 14px;
@@ -664,13 +653,11 @@
 
     .r-disclaimer {
       font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
-      color: #7f1d1d; line-height: 1.5; margin-bottom: 10px;
+      color: #7f1d1d; line-height: 1.6; margin-bottom: 10px;
       padding: 8px 12px; background: #FEF2F2;
       border-radius: 8px; border: 1.5px solid rgba(220,38,38,0.28);
-      display: flex; gap: 8px; align-items: flex-start;
     }
-    .r-disclaimer::before { content: '⚠'; font-size: 0.9rem; flex-shrink: 0; color: #dc2626; margin-top: 1px; }
-    .r-disclaimer strong { color: #991b1b; }
+    .r-disclaimer strong { color: #dc2626; }
 
     .r-advice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; text-align: left; }
     .r-advice-card {
@@ -870,7 +857,6 @@
       .r-bar-above { height: 32px; }
       .r-bar-lbl-text { display: none; }
       .r-prog-pill { font-size: 0.76rem; padding: 7px 14px; }
-      .r-hero-chip { font-size: 0.75rem; padding: 3px 10px; }
       .r-body { padding: 10px 14px 16px; }
       .section-header { flex-direction: column; align-items: flex-start; }
       .section-sub { text-align: left; }
@@ -1042,7 +1028,6 @@
             <span class="r-score-slash">/ 1,000</span>
           </div>
           <div class="r-prog-pill" id="r-prog-pill"></div>
-          <div class="r-hero-chips" id="r-hero-chips"></div>
         </div>
       </div>
 
@@ -1465,25 +1450,6 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   progPill.textContent = prog.p;
   progPill.style.display = hasFail ? 'none' : '';
 
-  // Hero chips: [min] [avg]
-  const heroChips = document.getElementById('r-hero-chips');
-  heroChips.innerHTML = '';
-  heroChips.style.display = hasFail ? 'none' : '';
-  if (!hasFail) {
-    if (minMin > 0) {
-      const minChip = document.createElement('span');
-      minChip.className = 'r-hero-chip chip-min';
-      minChip.textContent = minMin.toFixed(0);
-      heroChips.appendChild(minChip);
-    }
-    if (avg3yr > 0) {
-      const avgChip = document.createElement('span');
-      avgChip.className = 'r-hero-chip chip-avg';
-      avgChip.textContent = avg3yr.toFixed(0);
-      heroChips.appendChild(avgChip);
-    }
-  }
-
   const barMax = Math.max(avg3yr * 1.3, totalScore * 1.1, 1000);
   const track = document.getElementById('r-bar-track');
   track.querySelectorAll('.r-bar-marker, .r-bar-you').forEach(el => el.remove());
@@ -1502,7 +1468,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       const lbl1 = document.createElement('div');
       lbl1.className = 'r-bar-lbl lbl-min';
       lbl1.style.left = pos1 + '%';
-      lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุดของผู้ผ่าน</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
+      lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุด</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
       barAbove.appendChild(lbl1);
     }
     if (avg3yr > 0) {
@@ -1515,7 +1481,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       const lbl2 = document.createElement('div');
       lbl2.className = 'r-bar-lbl lbl-avg';
       lbl2.style.left = pos2 + '%';
-      lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ยผู้ผ่าน</span>';
+      lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ย</span>';
       barAbove.appendChild(lbl2);
     }
   }
@@ -1534,7 +1500,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     youTag.className = 'r-bar-you-tag';
     youTag.id = 'r-bar-you-tag';
     youTag.style.left = '0%';
-    youTag.innerHTML = '<span style="color:' + color + '">▲</span> คะแนนของคุณ';
+    youTag.innerHTML = 'คะแนนของคุณ';
     barBelow.appendChild(youTag);
   }
 
