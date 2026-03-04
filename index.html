@@ -1404,7 +1404,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   const threshold_A = avg3yr * 1.10;
   const range = threshold_A - minMin;
   const threshold_B = minMin + 0.55 * range;
-  const threshold_C = minMin + 0.20 * range;
+  // threshold C/D = minMin เอง: D = ต่ำกว่าคะแนนต่ำสุดของผู้ผ่านจริงๆ
 
   let level, title, sub, color;
 
@@ -1424,13 +1424,13 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     level = 'B'; title = 'โอกาสสูง';
     sub = 'คะแนนของคุณอยู่บริเวณค่าเฉลี่ยของผู้เข้าสอบ —> มีโอกาสผ่านระหว่าง 60–80%';
     color = '#60a5fa';
-  } else if (totalScore >= threshold_C) {
+  } else if (totalScore >= minMin) {
     level = 'C'; title = 'โอกาสปานกลาง';
     sub = 'คะแนนของคุณมากกว่าคะแนนต่ำสุดของผู้ผ่าน — มีโอกาสผ่านระหว่าง 40–60%';
     color = '#fbbf24';
   } else {
     level = 'D'; title = 'ต้องพัฒนาเพิ่ม';
-    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน— มีโอกาสผ่านต่ำกว่า 40%';
+    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน — มีโอกาสผ่านต่ำกว่า 40%';
     color = '#f87171';
   }
 
@@ -1502,27 +1502,18 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   const weakSubjects = [];
   const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
 
-  // คำนวณ ratio เพื่อประมาณคะแนนต่ำสุดของผู้ผ่านในแต่ละวิชา
-  // subjectMin ≈ avg * (minMin / avg3yr) — ใช้ nm (คะแนนต่ำสุดของผู้ผ่าน) หาร a3 (เฉลี่ย)
-  const nmRatio = (prog.a3 > 0 && prog.nm > 0) ? prog.nm / prog.a3 : null;
-
   activeSubjects.forEach(k => {
     const inp = document.getElementById('inp-' + k);
     const raw = parseFloat(inp.value);
     if (isNaN(raw)) return;
     const avg = prog.sa[k];
     if (avg == null) return;
+    const diff = raw - avg;
     const isGpax = (k === 'GPAX');
-    if (raw >= avg) {
-      // สูงกว่าค่าเฉลี่ย → ทำได้ดี
-      goodSubjects.push({ name: SUBJ[k].label, diff: (raw - avg).toFixed(2), isGpax });
+    if (diff >= 0) {
+      goodSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
     } else {
-      // ต่ำกว่าค่าเฉลี่ย → ตรวจสอบว่าต่ำกว่าคะแนนต่ำสุดของผู้ผ่านด้วยหรือไม่
-      const subjectMin = nmRatio != null ? avg * nmRatio : null;
-      if (subjectMin != null && raw < subjectMin) {
-        weakSubjects.push({ name: SUBJ[k].label, diff: (raw - subjectMin).toFixed(2), isGpax });
-      }
-      // อยู่ระหว่างต่ำสุด–เฉลี่ย → ไม่แสดงในกลุ่มใด (ยังพอรับได้)
+      weakSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
     }
   });
 
@@ -1533,13 +1524,11 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       if (isNaN(raw)) return;
       const avg = prog.sa[s.key];
       if (avg == null) return;
-      if (raw >= avg) {
-        goodSubjects.push({ name: s.label, diff: (raw - avg).toFixed(2), isGpax: false });
+      const diff = raw - avg;
+      if (diff >= 0) {
+        goodSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
       } else {
-        const subjectMin = nmRatio != null ? avg * nmRatio : null;
-        if (subjectMin != null && raw < subjectMin) {
-          weakSubjects.push({ name: s.label, diff: (raw - subjectMin).toFixed(2), isGpax: false });
-        }
+        weakSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
       }
     });
   }
@@ -1582,12 +1571,12 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     adviceHtml += '<div class="r-advice-list">';
     weakSubjects.forEach(s => {
       const absDiff = Math.abs(parseFloat(s.diff)).toFixed(2);
-      const descText = s.isGpax ? 'ต่ำกว่า GPAX ต่ำสุดของผู้ผ่าน ' + absDiff : 'ต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน ' + absDiff + ' คะแนน';
+      const descText = s.isGpax ? 'ต่ำกว่า GPAX เฉลี่ย ' + absDiff : 'ต่ำกว่าคะแนนเฉลี่ย ' + absDiff + ' คะแนน';
       adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff neg">' + descText + '</span></div>';
     });
     adviceHtml += '</div>';
   } else {
-    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าคะแนนต่ำสุดของผู้ผ่าน ✓</div>';
+    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าค่าเฉลี่ย</div>';
   }
   adviceHtml += '</div>';
 
