@@ -1410,7 +1410,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
 
   if (hasFail) {
     level = 'F'; title = 'ไม่ผ่านเกณฑ์ขั้นต่ำ';
-    sub = 'คะแนนบางองค์ประกอบต่ำกว่าเกณฑ์ขั้นต่ำที่หลักสูตรกำหนด';
+    sub = 'คะแนนบางองค์ประกอบไม่ผ่านเกณฑ์ขั้นต่ำที่หลักสูตรกำหนด';
     color = '#dc2626';
   } else if (!avg3yr) {
     level = '?'; title = 'ไม่มีข้อมูลเปรียบเทียบ';
@@ -1418,19 +1418,19 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     color = '#fbbf24';
   } else if (totalScore >= threshold_A) {
     level = 'A'; title = 'โอกาสสูงมาก';
-    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ย 3 ปี +10% — มีโอกาสเกิน 80%';
+    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ยค่อนข้างมาก —> มีโอกาสผ่านเกิน 80%';
     color = '#4ade80';
   } else if (totalScore >= threshold_B) {
     level = 'B'; title = 'โอกาสสูง';
-    sub = 'คะแนนอยู่ในเกณฑ์ดี ใกล้เคียงค่าเฉลี่ย — โอกาส 60–80%';
+    sub = 'คะแนนของคุณอยู่บริเวณค่าเฉลี่ยของผู้เข้าสอบ —> มีโอกาสผ่านระหว่าง 60–80%';
     color = '#60a5fa';
   } else if (totalScore >= threshold_C) {
     level = 'C'; title = 'โอกาสปานกลาง';
-    sub = 'คะแนนอยู่ในช่วงกลาง ยังมีลุ้น — โอกาส 40–60%';
+    sub = 'คะแนนของคุณมากกว่าคะแนนต่ำสุดของผู้ผ่าน — มีโอกาสผ่านระหว่าง 40–60%';
     color = '#fbbf24';
   } else {
     level = 'D'; title = 'ต้องพัฒนาเพิ่ม';
-    sub = 'คะแนนต่ำกว่าค่าเฉลี่ยค่อนข้างมาก — โอกาสต่ำกว่า 40%';
+    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน— มีโอกาสผ่านต่ำกว่า 40%';
     color = '#f87171';
   }
 
@@ -1491,10 +1491,10 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   let legendHtml = '';
   legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-you" style="color:' + color + ';background:' + color + '"></div>คะแนนของคุณ</div>';
   if (minMin > 0) {
-    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-min"></div>ต่ำสุดผู้ติด 3 ปี</div>';
+    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-min"></div>คะแนนต่ำสุดของผู้ผ่าน</div>';
   }
   if (avg3yr > 0) {
-    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-avg"></div>เฉลี่ย 3 ปี</div>';
+    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-avg"></div>คะแนนเฉลี่ยผู้ผ่าน</div>';
   }
   legend.innerHTML = legendHtml;
 
