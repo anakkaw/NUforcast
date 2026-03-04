@@ -628,15 +628,15 @@
       border-bottom: 1px solid var(--border);
     }
     .r-bar-above {
-      position: relative; height: 38px; margin-bottom: 4px;
+      position: relative; height: 46px; margin-bottom: 4px;
       animation: slideUp 0.4s ease 0.4s both;
     }
     .r-bar-lbl {
-      position: absolute; bottom: 0;
+      position: absolute;
       display: flex; align-items: center; gap: 5px; white-space: nowrap;
     }
-    .r-bar-lbl.lbl-min { left: 0 !important; transform: none; }
-    .r-bar-lbl.lbl-avg { right: 0; left: unset !important; transform: none; }
+    .r-bar-lbl.lbl-min { bottom: 0; transform: translateX(-50%); }
+    .r-bar-lbl.lbl-avg { top: 0; transform: translateX(-50%); }
     .r-bar-lbl-box {
       padding: 2px 9px; border-radius: 5px;
       font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; flex-shrink: 0;
@@ -691,33 +691,42 @@
     }
     .r-disclaimer strong { color: #dc2626; }
 
-    .r-advice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; text-align: left; }
+    .r-advice { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; text-align: left; }
     .r-advice-card {
-      border-radius: 10px; padding: 10px 13px;
+      border-radius: 10px; padding: 11px 14px;
       animation: slideUp 0.4s ease 0.5s both;
-      border: 1.5px solid transparent;
     }
-    .r-advice-card.card-good { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: rgba(22,163,74,0.2); }
-    .r-advice-card.card-weak { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-color: rgba(234,88,12,0.18); }
+    .r-advice-card.card-good {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid rgba(22,163,74,0.22);
+      border-left: 4px solid #16a34a;
+    }
+    .r-advice-card.card-weak {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid rgba(217,119,6,0.22);
+      border-left: 4px solid #d97706;
+    }
     .r-advice-card:nth-child(2) { animation-delay: 0.6s; }
-    .r-advice-header { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; padding-bottom: 6px; border-bottom: 1px solid rgba(0,0,0,0.06); }
-    .r-advice-icon { font-size: 0.9rem; }
-    .r-advice-title { font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; }
+    .r-advice-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .r-advice-icon { font-size: 1rem; }
+    .r-advice-title { font-family: var(--font-body); font-size: 0.84rem; font-weight: 700; }
     .r-advice-title.good { color: #15803d; }
-    .r-advice-title.improve { color: #c2410c; }
+    .r-advice-title.improve { color: #92400e; }
     .r-advice-list { font-size: 0.86rem; color: var(--gray-2); }
-    .r-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .r-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
     .r-advice-item:last-child { border-bottom: none; }
     .r-advice-item .subj-name { color: var(--gray-1); flex: 1; font-size: 0.84rem; font-weight: 500; }
-    .r-advice-item .subj-diff { font-family: var(--font-body); font-size: 0.74rem; font-weight: 700; white-space: nowrap; padding: 1px 8px; border-radius: 20px; }
-    .r-advice-item .subj-diff.pos { color: #15803d; background: rgba(22,163,74,0.1); }
-    .r-advice-item .subj-diff.neg { color: #c2410c; background: rgba(234,88,12,0.1); }
+    .r-advice-item .subj-diff { font-family: var(--font-body); font-size: 0.74rem; font-weight: 700; white-space: nowrap; padding: 2px 9px; border-radius: 20px; }
+    .r-advice-item .subj-diff.pos { color: #15803d; background: rgba(22,163,74,0.12); }
+    .r-advice-item .subj-diff.neg { color: #92400e; background: rgba(217,119,6,0.12); }
     .r-advice-empty { font-size: 0.82rem; color: var(--gray-3); font-style: italic; }
 
     .r-fail-section {
       text-align: left; margin-bottom: 8px;
       background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-      border: 1.5px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 10px 13px;
+      border: 1px solid rgba(220,38,38,0.2);
+      border-left: 4px solid #dc2626;
+      border-radius: 10px; padding: 11px 14px;
     }
     .r-fail-title {
       font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: #b91c1c;
@@ -1505,6 +1514,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       track.appendChild(m1);
       const lbl1 = document.createElement('div');
       lbl1.className = 'r-bar-lbl lbl-min';
+      lbl1.style.left = pos1 + '%';
       lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุด</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
       barAbove.appendChild(lbl1);
     }
@@ -1517,6 +1527,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       track.appendChild(m2);
       const lbl2 = document.createElement('div');
       lbl2.className = 'r-bar-lbl lbl-avg';
+      lbl2.style.left = pos2 + '%';
       lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ย</span>';
       barAbove.appendChild(lbl2);
     }
