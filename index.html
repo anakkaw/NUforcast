@@ -1502,19 +1502,27 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   const weakSubjects = [];
   const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
 
+  // คำนวณ ratio เพื่อประมาณคะแนนต่ำสุดของผู้ผ่านในแต่ละวิชา
+  // subjectMin ≈ avg * (minMin / avg3yr) — ใช้ nm (คะแนนต่ำสุดของผู้ผ่าน) หาร a3 (เฉลี่ย)
+  const nmRatio = (prog.a3 > 0 && prog.nm > 0) ? prog.nm / prog.a3 : null;
+
   activeSubjects.forEach(k => {
     const inp = document.getElementById('inp-' + k);
     const raw = parseFloat(inp.value);
     if (isNaN(raw)) return;
     const avg = prog.sa[k];
     if (avg == null) return;
-    const diff = raw - avg;
-    const pct = avg > 0 ? ((diff / avg) * 100) : 0;
     const isGpax = (k === 'GPAX');
-    if (diff >= 0) {
-      goodSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+    if (raw >= avg) {
+      // สูงกว่าค่าเฉลี่ย → ทำได้ดี
+      goodSubjects.push({ name: SUBJ[k].label, diff: (raw - avg).toFixed(2), isGpax });
     } else {
-      weakSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+      // ต่ำกว่าค่าเฉลี่ย → ตรวจสอบว่าต่ำกว่าคะแนนต่ำสุดของผู้ผ่านด้วยหรือไม่
+      const subjectMin = nmRatio != null ? avg * nmRatio : null;
+      if (subjectMin != null && raw < subjectMin) {
+        weakSubjects.push({ name: SUBJ[k].label, diff: (raw - subjectMin).toFixed(2), isGpax });
+      }
+      // อยู่ระหว่างต่ำสุด–เฉลี่ย → ไม่แสดงในกลุ่มใด (ยังพอรับได้)
     }
   });
 
@@ -1525,11 +1533,13 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       if (isNaN(raw)) return;
       const avg = prog.sa[s.key];
       if (avg == null) return;
-      const diff = raw - avg;
-      if (diff >= 0) {
-        goodSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+      if (raw >= avg) {
+        goodSubjects.push({ name: s.label, diff: (raw - avg).toFixed(2), isGpax: false });
       } else {
-        weakSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+        const subjectMin = nmRatio != null ? avg * nmRatio : null;
+        if (subjectMin != null && raw < subjectMin) {
+          weakSubjects.push({ name: s.label, diff: (raw - subjectMin).toFixed(2), isGpax: false });
+        }
       }
     });
   }
@@ -1572,12 +1582,12 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     adviceHtml += '<div class="r-advice-list">';
     weakSubjects.forEach(s => {
       const absDiff = Math.abs(parseFloat(s.diff)).toFixed(2);
-      const descText = s.isGpax ? 'ต่ำกว่า GPAX เฉลี่ย ' + absDiff : 'ต่ำกว่าคะแนนเฉลี่ย ' + absDiff + ' คะแนน';
+      const descText = s.isGpax ? 'ต่ำกว่า GPAX ต่ำสุดของผู้ผ่าน ' + absDiff : 'ต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน ' + absDiff + ' คะแนน';
       adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff neg">' + descText + '</span></div>';
     });
     adviceHtml += '</div>';
   } else {
-    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าค่าเฉลี่ย</div>';
+    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าคะแนนต่ำสุดของผู้ผ่าน ✓</div>';
   }
   adviceHtml += '</div>';
 
