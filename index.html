@@ -580,31 +580,52 @@
     .r-score-num { font-family: var(--font-mono); font-size: 2.8rem; font-weight: 700; line-height: 1; }
     .r-score-slash { font-family: var(--font-mono); font-size: 1rem; color: var(--gray-3); font-weight: 500; }
 
+    /* ── Hero Program Pill & Chips ── */
+    .r-prog-pill {
+      display: block; width: 100%; margin-top: 14px;
+      padding: 8px 20px; border-radius: 100px;
+      background: var(--orange); color: #fff;
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+      text-align: center; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+      animation: slideUp 0.4s ease 0.4s both;
+      box-shadow: 0 2px 8px rgba(255,82,0,0.28);
+    }
+    .r-hero-chips {
+      display: flex; gap: 8px; margin-top: 10px;
+      animation: slideUp 0.4s ease 0.45s both;
+    }
+    .r-hero-chip {
+      padding: 3px 12px; border-radius: 6px;
+      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700;
+    }
+    .r-hero-chip.chip-min { background: #FEF3C7; color: #92400E; }
+    .r-hero-chip.chip-avg { background: #EEF2FF; color: #3730A3; }
+
     /* ── Score Bar Section ── */
     .r-bar-section {
-      padding: 12px 20px 14px;
+      padding: 16px 20px 14px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      background: var(--bg-input);
     }
-    .r-bench-row {
-      display: flex; align-items: center; gap: 6px; margin-bottom: 12px;
+    .r-bar-above {
+      position: relative; height: 38px; margin-bottom: 4px;
+      overflow: hidden;
       animation: slideUp 0.4s ease 0.4s both;
     }
-    .r-bench-pill {
-      padding: 3px 10px; border-radius: 20px;
-      font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700;
-      white-space: nowrap; flex-shrink: 0;
+    .r-bar-lbl {
+      position: absolute; bottom: 0;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
     }
-    .r-bench-pill.pill-min { background: #FEF3C7; color: #92400E; }
-    .r-bench-pill.pill-avg { background: #EEF2FF; color: #3730A3; }
-    .r-prog-badge {
-      flex: 1; text-align: center; min-width: 0;
-      padding: 4px 10px; border-radius: 6px;
-      font-family: var(--font-body); font-size: 0.7rem; font-weight: 600;
-      background: rgba(255,82,0,0.1); color: #c2410c;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    .r-bar-lbl.lbl-min { transform: translateX(-100%); }
+    .r-bar-lbl.lbl-avg { transform: translateX(0); }
+    .r-bar-lbl-box {
+      padding: 2px 9px; border-radius: 5px;
+      font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; flex-shrink: 0;
     }
+    .r-bar-lbl-box.box-min { background: #FEF3C7; color: #92400E; }
+    .r-bar-lbl-box.box-avg { background: #EEF2FF; color: #3730A3; }
+    .r-bar-lbl-text { font-size: 0.68rem; color: var(--gray-3); }
     .r-bar-track {
       width: 100%; height: 10px; background: var(--gray-5);
       border-radius: 6px; position: relative; overflow: visible;
@@ -624,28 +645,19 @@
     .r-bar-marker.mark-avg .r-bar-marker-line { background: #6366f1; }
     .r-bar-you {
       position: absolute; top: 50%; z-index: 5; transform: translate(-50%, -50%);
-      display: flex; flex-direction: column; align-items: center;
       transition: left 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
     }
     .r-bar-you-dot {
       width: 18px; height: 18px; border-radius: 50%;
       border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.22);
     }
-    .r-bar-you-label {
-      font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700;
-      padding: 2px 6px; border-radius: 4px; white-space: nowrap;
-      position: absolute; bottom: -22px; color: #fff;
+    .r-bar-below { position: relative; height: 26px; }
+    .r-bar-you-tag {
+      position: absolute; top: 5px; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 3px;
+      font-size: 0.7rem; color: var(--gray-2); font-weight: 600; white-space: nowrap;
+      transition: left 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
     }
-    .r-bar-legend {
-      display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 10px;
-      font-size: 0.77rem; color: var(--gray-3);
-    }
-    .r-bar-legend-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
-    .r-bar-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .r-bar-legend-dot.dot-you { background: currentColor; }
-    .r-bar-legend-dot.dot-min { background: #f59e0b; }
-    .r-bar-legend-dot.dot-avg { background: #6366f1; }
-    .r-bar-legend-val { color: var(--gray-1); font-weight: 700; font-family: var(--font-mono); font-size: 0.75rem; }
 
     /* ── Body ── */
     .r-body { padding: 12px 18px 18px; }
@@ -854,9 +866,12 @@
       .r-verdict-icon svg { width: 46px; height: 46px; }
       .r-verdict-text { font-size: 1.3rem; }
       .r-score-num { font-size: 2.2rem; }
-      .r-bar-section { padding: 10px 16px 12px; }
+      .r-bar-section { padding: 12px 14px 10px; }
+      .r-bar-above { height: 32px; }
+      .r-bar-lbl-text { display: none; }
+      .r-prog-pill { font-size: 0.76rem; padding: 7px 14px; }
+      .r-hero-chip { font-size: 0.75rem; padding: 3px 10px; }
       .r-body { padding: 10px 14px 16px; }
-      .r-bar-legend { gap: 3px 8px; font-size: 0.72rem; }
       .section-header { flex-direction: column; align-items: flex-start; }
       .section-sub { text-align: left; }
       footer { flex-direction: column; text-align: center; }
@@ -1026,15 +1041,17 @@
             <span class="r-score-num" id="r-score-num">0</span>
             <span class="r-score-slash">/ 1,000</span>
           </div>
+          <div class="r-prog-pill" id="r-prog-pill"></div>
+          <div class="r-hero-chips" id="r-hero-chips"></div>
         </div>
       </div>
 
       <div class="r-bar-section" id="r-bar-section">
-        <div class="r-bench-row" id="r-bench-row"></div>
+        <div class="r-bar-above" id="r-bar-above"></div>
         <div class="r-bar-track" id="r-bar-track">
           <div class="r-bar-fill" id="r-bar-fill"></div>
         </div>
-        <div class="r-bar-legend" id="r-bar-legend"></div>
+        <div class="r-bar-below" id="r-bar-below"></div>
       </div>
 
       <div class="r-body">
@@ -1443,25 +1460,27 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   barFill.style.boxShadow = '0 0 10px ' + color + '70';
   barSection.style.display = hasFail ? 'none' : '';
 
-  // Bench row: [min pill] [program badge] [avg pill]
-  const benchRow = document.getElementById('r-bench-row');
-  benchRow.innerHTML = '';
+  // Hero: program pill
+  const progPill = document.getElementById('r-prog-pill');
+  progPill.textContent = prog.p;
+  progPill.style.display = hasFail ? 'none' : '';
+
+  // Hero chips: [min] [avg]
+  const heroChips = document.getElementById('r-hero-chips');
+  heroChips.innerHTML = '';
+  heroChips.style.display = hasFail ? 'none' : '';
   if (!hasFail) {
     if (minMin > 0) {
-      const minPill = document.createElement('span');
-      minPill.className = 'r-bench-pill pill-min';
-      minPill.textContent = minMin.toFixed(0);
-      benchRow.appendChild(minPill);
+      const minChip = document.createElement('span');
+      minChip.className = 'r-hero-chip chip-min';
+      minChip.textContent = minMin.toFixed(0);
+      heroChips.appendChild(minChip);
     }
-    const progBadge = document.createElement('div');
-    progBadge.className = 'r-prog-badge';
-    progBadge.textContent = prog.p;
-    benchRow.appendChild(progBadge);
     if (avg3yr > 0) {
-      const avgPill = document.createElement('span');
-      avgPill.className = 'r-bench-pill pill-avg';
-      avgPill.textContent = avg3yr.toFixed(0);
-      benchRow.appendChild(avgPill);
+      const avgChip = document.createElement('span');
+      avgChip.className = 'r-hero-chip chip-avg';
+      avgChip.textContent = avg3yr.toFixed(0);
+      heroChips.appendChild(avgChip);
     }
   }
 
@@ -1469,39 +1488,55 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   const track = document.getElementById('r-bar-track');
   track.querySelectorAll('.r-bar-marker, .r-bar-you').forEach(el => el.remove());
 
-  if (minMin > 0) {
-    const pos1 = Math.min(94, (minMin / barMax) * 100);
-    const m1 = document.createElement('div');
-    m1.className = 'r-bar-marker mark-min';
-    m1.style.left = pos1 + '%';
-    m1.innerHTML = '<div class="r-bar-marker-line"></div>';
-    track.appendChild(m1);
-  }
-
-  if (avg3yr > 0) {
-    const pos2 = Math.min(94, (avg3yr / barMax) * 100);
-    const m2 = document.createElement('div');
-    m2.className = 'r-bar-marker mark-avg';
-    m2.style.left = pos2 + '%';
-    m2.innerHTML = '<div class="r-bar-marker-line"></div>';
-    track.appendChild(m2);
+  // Bar above: positioned labels at marker %
+  const barAbove = document.getElementById('r-bar-above');
+  barAbove.innerHTML = '';
+  if (!hasFail) {
+    if (minMin > 0) {
+      const pos1 = Math.min(94, (minMin / barMax) * 100);
+      const m1 = document.createElement('div');
+      m1.className = 'r-bar-marker mark-min';
+      m1.style.left = pos1 + '%';
+      m1.innerHTML = '<div class="r-bar-marker-line"></div>';
+      track.appendChild(m1);
+      const lbl1 = document.createElement('div');
+      lbl1.className = 'r-bar-lbl lbl-min';
+      lbl1.style.left = pos1 + '%';
+      lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุดของผู้ผ่าน</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
+      barAbove.appendChild(lbl1);
+    }
+    if (avg3yr > 0) {
+      const pos2 = Math.min(94, (avg3yr / barMax) * 100);
+      const m2 = document.createElement('div');
+      m2.className = 'r-bar-marker mark-avg';
+      m2.style.left = pos2 + '%';
+      m2.innerHTML = '<div class="r-bar-marker-line"></div>';
+      track.appendChild(m2);
+      const lbl2 = document.createElement('div');
+      lbl2.className = 'r-bar-lbl lbl-avg';
+      lbl2.style.left = pos2 + '%';
+      lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ยผู้ผ่าน</span>';
+      barAbove.appendChild(lbl2);
+    }
   }
 
   const youMark = document.createElement('div');
   youMark.className = 'r-bar-you';
   youMark.style.left = '0%';
-  youMark.innerHTML = '<div class="r-bar-you-dot" style="background:' + color + '"></div><div class="r-bar-you-label" style="background:' + color + '">' + totalScore.toFixed(0) + '</div>';
+  youMark.innerHTML = '<div class="r-bar-you-dot" style="background:' + color + '"></div>';
   track.appendChild(youMark);
 
-  const legend = document.getElementById('r-bar-legend');
-  let legendHtml = '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-you" style="background:' + color + '"></div>คะแนนของคุณ <span class="r-bar-legend-val">' + totalScore.toFixed(0) + '</span></div>';
-  if (minMin > 0) {
-    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-min"></div>คะแนนต่ำสุดผู้ผ่าน <span class="r-bar-legend-val">' + minMin.toFixed(0) + '</span></div>';
+  // Bar below: "▲ คะแนนของคุณ" at user's position
+  const barBelow = document.getElementById('r-bar-below');
+  barBelow.innerHTML = '';
+  if (!hasFail) {
+    const youTag = document.createElement('div');
+    youTag.className = 'r-bar-you-tag';
+    youTag.id = 'r-bar-you-tag';
+    youTag.style.left = '0%';
+    youTag.innerHTML = '<span style="color:' + color + '">▲</span> คะแนนของคุณ';
+    barBelow.appendChild(youTag);
   }
-  if (avg3yr > 0) {
-    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-avg"></div>คะแนนเฉลี่ยผู้ผ่าน <span class="r-bar-legend-val">' + avg3yr.toFixed(0) + '</span></div>';
-  }
-  legend.innerHTML = legendHtml;
 
   const goodSubjects = [];
   const weakSubjects = [];
@@ -1595,6 +1630,8 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       const fillPct = Math.min(98, (totalScore / barMax) * 100);
       barFill.style.width = fillPct + '%';
       youMark.style.left = fillPct + '%';
+      const youTagEl = document.getElementById('r-bar-you-tag');
+      if (youTagEl) youTagEl.style.left = fillPct + '%';
     });
   });
 }
@@ -1605,6 +1642,8 @@ function closeResult() {
   document.getElementById('r-bar-fill').style.width = '0';
   const youMark = document.querySelector('.r-bar-you');
   if (youMark) youMark.style.left = '0%';
+  const youTag = document.querySelector('.r-bar-you-tag');
+  if (youTag) youTag.style.left = '0%';
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResult(); });
