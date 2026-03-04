@@ -537,7 +537,7 @@
     .rmodal-close:hover { background: rgba(255,255,255,0.95); color: var(--gray-1); transform: rotate(90deg); }
 
     /* ── Hero ── */
-    .r-hero { position: relative; padding: 28px 20px 24px; overflow: hidden; }
+    .r-hero { position: relative; padding: 22px 20px 20px; overflow: hidden; }
     .r-hero::before {
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(155deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
@@ -558,49 +558,65 @@
     }
     .r-ring-1 { width: 260px; height: 260px; top: -90px; right: -90px; }
     .r-ring-2 { width: 170px; height: 170px; top: -50px; right: -50px; }
-    .r-hero-inner {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
+    .r-hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; }
+    /* ── 2-column hero ── */
+    .r-hero-cols { display: flex; align-items: center; margin-bottom: 16px; }
+    .r-hero-score-col {
+      flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start;
+      padding-right: 18px;
     }
+    .r-hero-divider {
+      width: 1px; align-self: stretch;
+      background: rgba(255,255,255,0.15); flex-shrink: 0;
+    }
+    .r-hero-verdict-col {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; align-items: flex-start;
+      padding-left: 18px; gap: 5px;
+    }
+    .r-score-label {
+      font-family: var(--font-body); font-size: 0.66rem; font-weight: 700;
+      color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1px; animation: slideUp 0.4s ease 0.15s both;
+    }
+    .r-score-row { animation: slideUp 0.4s ease 0.2s both; }
+    .r-score-num {
+      font-family: var(--font-mono); font-size: 4.2rem; font-weight: 700;
+      line-height: 1; letter-spacing: -3px; display: block;
+    }
+    .r-score-of {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: rgba(255,255,255,0.38); font-weight: 500;
+      animation: slideUp 0.4s ease 0.25s both;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     .r-verdict-icon {
-      width: 72px; height: 72px; border-radius: 50%;
+      width: 46px; height: 46px; border-radius: 50%;
       background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.18);
       backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
       animation: popIn 0.5s cubic-bezier(0.34,1.5,0.64,1) 0.2s both;
     }
-    .r-verdict-icon svg { width: 38px; height: 38px; }
+    .r-verdict-icon svg { width: 26px; height: 26px; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.3) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
-    .r-score-row {
-      display: flex; align-items: baseline; gap: 6px;
-      margin-bottom: 10px;
+    .r-verdict-text {
+      font-family: var(--font-thai-head); font-size: 1.3rem; font-weight: 800;
+      color: #fff; line-height: 1.2;
       animation: slideUp 0.4s ease 0.25s both;
     }
-    .r-score-num {
-      font-family: var(--font-mono); font-size: 4.5rem; font-weight: 700;
-      line-height: 1; letter-spacing: -3px;
-    }
-    .r-score-slash { font-family: var(--font-mono); font-size: 1.1rem; color: rgba(255,255,255,0.45); font-weight: 500; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .r-verdict-text {
-      font-family: var(--font-thai-head); font-size: 1.4rem; font-weight: 800;
-      color: #fff; line-height: 1.2;
-      animation: slideUp 0.4s ease 0.3s both;
-    }
     .r-verdict-sub {
-      font-family: var(--font-body); font-size: 0.8rem; color: rgba(255,255,255,0.55);
-      line-height: 1.5; margin-top: 4px;
-      animation: slideUp 0.4s ease 0.35s both;
+      font-family: var(--font-body); font-size: 0.75rem; color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+      animation: slideUp 0.4s ease 0.3s both;
     }
     /* ── Hero Program Pill (frosted glass) ── */
     .r-prog-pill {
-      display: block; width: 100%; margin-top: 16px;
+      display: block; width: 100%;
       padding: 9px 20px; border-radius: 100px;
       background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
       backdrop-filter: blur(12px);
       color: rgba(255,255,255,0.92);
-      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
       text-align: center; overflow: hidden;
       text-overflow: ellipsis; white-space: nowrap;
       animation: slideUp 0.4s ease 0.4s both;
@@ -613,15 +629,14 @@
     }
     .r-bar-above {
       position: relative; height: 38px; margin-bottom: 4px;
-      overflow: hidden;
       animation: slideUp 0.4s ease 0.4s both;
     }
     .r-bar-lbl {
       position: absolute; bottom: 0;
       display: flex; align-items: center; gap: 5px; white-space: nowrap;
     }
-    .r-bar-lbl.lbl-min { transform: translateX(-100%); }
-    .r-bar-lbl.lbl-avg { transform: translateX(0); }
+    .r-bar-lbl.lbl-min { left: 0 !important; transform: none; }
+    .r-bar-lbl.lbl-avg { right: 0; left: unset !important; transform: none; }
     .r-bar-lbl-box {
       padding: 2px 9px; border-radius: 5px;
       font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; flex-shrink: 0;
@@ -666,10 +681,13 @@
     .r-body { padding: 12px 18px 18px; }
 
     .r-disclaimer {
-      font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
-      color: #7f1d1d; line-height: 1.6; margin-bottom: 10px;
-      padding: 8px 12px; background: #FEF2F2;
-      border-radius: 8px; border: 1.5px solid rgba(220,38,38,0.28);
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+      color: #7f1d1d; line-height: 1.65; margin-bottom: 12px;
+      padding: 11px 14px;
+      background: #FEF2F2;
+      border-radius: 8px;
+      border: 1px solid rgba(220,38,38,0.3);
+      border-left: 4px solid #dc2626;
     }
     .r-disclaimer strong { color: #dc2626; }
 
@@ -863,15 +881,14 @@
       .seats-num { font-size: 2.2rem; }
       .seats-prog-name { font-size: 0.85rem; }
       .rmodal { max-width: 100%; border-radius: var(--radius-lg); }
-      .r-hero { padding: 22px 16px 18px; }
-      .r-verdict-icon { width: 60px; height: 60px; }
-      .r-verdict-icon svg { width: 32px; height: 32px; }
-      .r-score-num { font-size: 3.6rem; letter-spacing: -2px; }
-      .r-verdict-text { font-size: 1.2rem; }
+      .r-hero { padding: 18px 16px 16px; }
+      .r-hero-score-col { padding-right: 14px; }
+      .r-hero-verdict-col { padding-left: 14px; }
+      .r-score-num { font-size: 3.4rem; letter-spacing: -2px; }
+      .r-verdict-text { font-size: 1.1rem; }
       .r-bar-section { padding: 12px 14px 10px; }
       .r-bar-above { height: 32px; }
-      .r-bar-lbl-text { display: none; }
-      .r-prog-pill { font-size: 0.76rem; padding: 7px 14px; }
+      .r-prog-pill { font-size: 0.82rem; padding: 8px 14px; }
       .r-body { padding: 10px 14px 16px; }
       .section-header { flex-direction: column; align-items: flex-start; }
       .section-sub { text-align: left; }
@@ -1033,13 +1050,21 @@
         <div class="r-hero-ring r-ring-1"></div>
         <div class="r-hero-ring r-ring-2"></div>
         <div class="r-hero-inner">
-          <div class="r-verdict-icon" id="r-emoji"></div>
-          <div class="r-score-row">
-            <span class="r-score-num" id="r-score-num">0</span>
-            <span class="r-score-slash">/ 1,000</span>
+          <div class="r-hero-cols">
+            <div class="r-hero-score-col">
+              <div class="r-score-label">คะแนนรวม</div>
+              <div class="r-score-row">
+                <span class="r-score-num" id="r-score-num">0</span>
+              </div>
+              <div class="r-score-of">/ 1,000</div>
+            </div>
+            <div class="r-hero-divider"></div>
+            <div class="r-hero-verdict-col">
+              <div class="r-verdict-icon" id="r-emoji"></div>
+              <div class="r-verdict-text" id="r-verdict-text"></div>
+              <div class="r-verdict-sub" id="r-verdict-sub"></div>
+            </div>
           </div>
-          <div class="r-verdict-text" id="r-verdict-text"></div>
-          <div class="r-verdict-sub" id="r-verdict-sub"></div>
           <div class="r-prog-pill" id="r-prog-pill"></div>
         </div>
       </div>
@@ -1480,7 +1505,6 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       track.appendChild(m1);
       const lbl1 = document.createElement('div');
       lbl1.className = 'r-bar-lbl lbl-min';
-      lbl1.style.left = pos1 + '%';
       lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุด</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
       barAbove.appendChild(lbl1);
     }
@@ -1493,7 +1517,6 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
       track.appendChild(m2);
       const lbl2 = document.createElement('div');
       lbl2.className = 'r-bar-lbl lbl-avg';
-      lbl2.style.left = pos2 + '%';
       lbl2.innerHTML = '<div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div><span class="r-bar-lbl-text">คะแนนเฉลี่ย</span>';
       barAbove.appendChild(lbl2);
     }
