@@ -537,59 +537,73 @@
     .rmodal-close:hover { background: rgba(255,255,255,0.95); color: var(--gray-1); transform: rotate(90deg); }
 
     /* ── Hero ── */
-    .r-hero { position: relative; padding: 20px 20px 16px; overflow: hidden; }
+    .r-hero { position: relative; padding: 28px 20px 24px; overflow: hidden; }
     .r-hero::before {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, #FAFAFA 0%, var(--orange-light) 100%);
+      background: linear-gradient(155deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
     }
-    .r-hero.hero-A::before { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 55%, #bbf7d0 100%); }
-    .r-hero.hero-B::before { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 55%, #bfdbfe 100%); }
-    .r-hero.hero-C::before { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 55%, #fde68a 100%); }
-    .r-hero.hero-D::before { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 55%, #fed7aa 100%); }
-    .r-hero.hero-F::before { background: linear-gradient(135deg, #fef2f2 0%, #fecaca 55%, #fca5a5 100%); }
+    .r-hero.hero-A::before { background: linear-gradient(155deg, #022c22 0%, #052e16 50%, #166534 100%); }
+    .r-hero.hero-B::before { background: linear-gradient(155deg, #0c1445 0%, #172554 50%, #1d4ed8 100%); }
+    .r-hero.hero-C::before { background: linear-gradient(155deg, #1c1300 0%, #451a03 50%, #92400e 100%); }
+    .r-hero.hero-D::before { background: linear-gradient(155deg, #1f0700 0%, #431407 50%, #9a3412 100%); }
+    .r-hero.hero-F::before { background: linear-gradient(155deg, #190000 0%, #450a0a 50%, #991b1b 100%); }
     .r-hero-glow {
-      position: absolute; top: -60%; left: -20%; width: 140%; height: 200%;
-      border-radius: 50%; opacity: 0.1; filter: blur(60px);
+      position: absolute; top: -40%; left: -10%; width: 120%; height: 180%;
+      border-radius: 50%; opacity: 0.22; filter: blur(80px);
       transition: opacity 0.8s ease; pointer-events: none;
     }
-    .r-hero-inner { position: relative; z-index: 2; }
-
-    .r-verdict-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+    .r-hero-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.07); pointer-events: none;
+    }
+    .r-ring-1 { width: 260px; height: 260px; top: -90px; right: -90px; }
+    .r-ring-2 { width: 170px; height: 170px; top: -50px; right: -50px; }
+    .r-hero-inner {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
     .r-verdict-icon {
-      flex-shrink: 0;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
       animation: popIn 0.5s cubic-bezier(0.34,1.5,0.64,1) 0.2s both;
     }
-    .r-verdict-icon svg { width: 54px; height: 54px; }
+    .r-verdict-icon svg { width: 38px; height: 38px; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.3) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
-    .r-verdict-info { display: flex; flex-direction: column; padding-top: 2px; }
-    .r-verdict-text {
-      font-family: var(--font-thai-head); font-size: 1.55rem; font-weight: 800;
-      color: var(--gray-1); line-height: 1.15;
+    .r-score-row {
+      display: flex; align-items: baseline; gap: 6px;
+      margin-bottom: 10px;
       animation: slideUp 0.4s ease 0.25s both;
     }
+    .r-score-num {
+      font-family: var(--font-mono); font-size: 4.5rem; font-weight: 700;
+      line-height: 1; letter-spacing: -3px;
+    }
+    .r-score-slash { font-family: var(--font-mono); font-size: 1.1rem; color: rgba(255,255,255,0.45); font-weight: 500; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .r-verdict-sub {
-      font-family: var(--font-body); font-size: 0.82rem; color: var(--gray-3);
-      line-height: 1.5; margin-top: 2px;
+    .r-verdict-text {
+      font-family: var(--font-thai-head); font-size: 1.4rem; font-weight: 800;
+      color: #fff; line-height: 1.2;
       animation: slideUp 0.4s ease 0.3s both;
     }
-    .r-score-row {
-      display: flex; align-items: baseline; gap: 5px; margin-top: 4px;
+    .r-verdict-sub {
+      font-family: var(--font-body); font-size: 0.8rem; color: rgba(255,255,255,0.55);
+      line-height: 1.5; margin-top: 4px;
       animation: slideUp 0.4s ease 0.35s both;
     }
-    .r-score-num { font-family: var(--font-mono); font-size: 2.8rem; font-weight: 700; line-height: 1; }
-    .r-score-slash { font-family: var(--font-mono); font-size: 1rem; color: var(--gray-3); font-weight: 500; }
-
-    /* ── Hero Program Pill & Chips ── */
+    /* ── Hero Program Pill (frosted glass) ── */
     .r-prog-pill {
-      display: block; width: 100%; margin-top: 14px;
-      padding: 8px 20px; border-radius: 100px;
-      background: var(--orange); color: #fff;
-      font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+      display: block; width: 100%; margin-top: 16px;
+      padding: 9px 20px; border-radius: 100px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(12px);
+      color: rgba(255,255,255,0.92);
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
       text-align: center; overflow: hidden;
       text-overflow: ellipsis; white-space: nowrap;
       animation: slideUp 0.4s ease 0.4s both;
-      box-shadow: 0 2px 8px rgba(255,82,0,0.28);
     }
     /* ── Score Bar Section ── */
     .r-bar-section {
@@ -849,10 +863,11 @@
       .seats-num { font-size: 2.2rem; }
       .seats-prog-name { font-size: 0.85rem; }
       .rmodal { max-width: 100%; border-radius: var(--radius-lg); }
-      .r-hero { padding: 16px 16px 12px; }
-      .r-verdict-icon svg { width: 46px; height: 46px; }
-      .r-verdict-text { font-size: 1.3rem; }
-      .r-score-num { font-size: 2.2rem; }
+      .r-hero { padding: 22px 16px 18px; }
+      .r-verdict-icon { width: 60px; height: 60px; }
+      .r-verdict-icon svg { width: 32px; height: 32px; }
+      .r-score-num { font-size: 3.6rem; letter-spacing: -2px; }
+      .r-verdict-text { font-size: 1.2rem; }
       .r-bar-section { padding: 12px 14px 10px; }
       .r-bar-above { height: 32px; }
       .r-bar-lbl-text { display: none; }
@@ -1015,18 +1030,16 @@
 
       <div class="r-hero" id="r-hero">
         <div class="r-hero-glow" id="r-glow"></div>
+        <div class="r-hero-ring r-ring-1"></div>
+        <div class="r-hero-ring r-ring-2"></div>
         <div class="r-hero-inner">
-          <div class="r-verdict-row">
-            <div class="r-verdict-icon" id="r-emoji"></div>
-            <div class="r-verdict-info">
-              <div class="r-verdict-text" id="r-verdict-text"></div>
-              <div class="r-verdict-sub" id="r-verdict-sub"></div>
-            </div>
-          </div>
+          <div class="r-verdict-icon" id="r-emoji"></div>
           <div class="r-score-row">
             <span class="r-score-num" id="r-score-num">0</span>
             <span class="r-score-slash">/ 1,000</span>
           </div>
+          <div class="r-verdict-text" id="r-verdict-text"></div>
+          <div class="r-verdict-sub" id="r-verdict-sub"></div>
           <div class="r-prog-pill" id="r-prog-pill"></div>
         </div>
       </div>
