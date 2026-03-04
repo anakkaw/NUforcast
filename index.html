@@ -707,11 +707,24 @@
       border-left: 4px solid #d97706;
     }
     .r-advice-card:nth-child(2) { animation-delay: 0.6s; }
-    .r-advice-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid rgba(0,0,0,0.08); }
-    .r-advice-icon { font-size: 1rem; }
-    .r-advice-title { font-family: var(--font-body); font-size: 0.84rem; font-weight: 700; }
-    .r-advice-title.good { color: #15803d; }
-    .r-advice-title.improve { color: #92400e; }
+    /* ── Card badge header ── */
+    .r-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 13px 5px 5px; border-radius: 100px; margin-bottom: 10px;
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .r-badge-icon {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .r-badge-icon svg { width: 13px; height: 13px; }
+    .badge-good { background: rgba(22,163,74,0.14); color: #15803d; }
+    .badge-good .r-badge-icon { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 2px 6px rgba(22,163,74,0.35); }
+    .badge-weak { background: rgba(217,119,6,0.12); color: #92400e; }
+    .badge-weak .r-badge-icon { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 2px 6px rgba(217,119,6,0.35); }
+    .badge-fail { background: rgba(220,38,38,0.1); color: #b91c1c; }
+    .badge-fail .r-badge-icon { background: linear-gradient(135deg, #f87171, #dc2626); box-shadow: 0 2px 6px rgba(220,38,38,0.35); }
     .r-advice-list { font-size: 0.86rem; color: var(--gray-2); }
     .r-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
     .r-advice-item:last-child { border-bottom: none; }
@@ -728,11 +741,7 @@
       border-left: 4px solid #dc2626;
       border-radius: 10px; padding: 11px 14px;
     }
-    .r-fail-title {
-      font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: #b91c1c;
-      margin-bottom: 7px; padding-bottom: 6px; border-bottom: 1px solid rgba(220,38,38,0.1);
-      display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.05em;
-    }
+    .r-fail-title { display: none; } /* replaced by .r-badge.badge-fail */
     .r-fail-list { display: flex; flex-direction: column; }
     .r-fail-item {
       display: flex; justify-content: space-between; align-items: center;
@@ -1590,7 +1599,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
 
   if (hasFail) {
     adviceHtml += '<div class="r-fail-section">';
-    adviceHtml += '<div class="r-fail-title">&#9888; องค์ประกอบที่ไม่ผ่านเกณฑ์ขั้นต่ำ</div>';
+    adviceHtml += '<div class="r-badge badge-fail"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M8 3 L14.5 13.5 H1.5 Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="8" y1="7.2" x2="8" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="12.2" r="0.85" fill="white"/></svg></div><span>องค์ประกอบที่ไม่ผ่านเกณฑ์ขั้นต่ำ</span></div>';
     adviceHtml += '<div class="r-fail-list">';
     failedCriteria.forEach(f => {
       adviceHtml += '<div class="r-fail-item">';
@@ -1605,7 +1614,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   }
 
   adviceHtml += '<div class="r-advice-card card-good">';
-  adviceHtml += '<div class="r-advice-header"><span class="r-advice-icon">&#9989;</span><span class="r-advice-title good">องค์ประกอบที่ทำได้ดี</span></div>';
+  adviceHtml += '<div class="r-badge badge-good"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="2,9 6.5,13.5 14,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>องค์ประกอบที่ทำได้ดี</span></div>';
   if (goodSubjects.length > 0) {
     adviceHtml += '<div class="r-advice-list">';
     goodSubjects.forEach(s => {
@@ -1619,7 +1628,7 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   adviceHtml += '</div>';
 
   adviceHtml += '<div class="r-advice-card card-weak">';
-  adviceHtml += '<div class="r-advice-header"><span class="r-advice-icon">&#128736;</span><span class="r-advice-title improve">องค์ประกอบที่ยังต้องพัฒนา</span></div>';
+  adviceHtml += '<div class="r-badge badge-weak"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="1,13 5,7.5 9,10 15,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="11,3 15,3 15,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>องค์ประกอบที่ยังต้องพัฒนา</span></div>';
   if (weakSubjects.length > 0) {
     adviceHtml += '<div class="r-advice-list">';
     weakSubjects.forEach(s => {
