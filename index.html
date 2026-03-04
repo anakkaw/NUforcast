@@ -1191,8 +1191,7 @@ function buildScoreInputs(prog) {
       <span class="score-group-label">TGAT / TPAT</span>
       <span class="score-group-badge sg-tgat">${totalW}%</span>
     </div>`;
-    const cols = testSubjects.length <= 2 ? 'fg-2' : testSubjects.length <= 3 ? 'fg-3' : 'fg-4';
-    html += `<div class="fgrid ${cols}">`;
+    html += '<div class="fgrid fg-2">';
     testSubjects.forEach(k => {
       html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
         <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
@@ -1208,8 +1207,7 @@ function buildScoreInputs(prog) {
       <span class="score-group-label">A-Level</span>
       <span class="score-group-badge sg-alev">${totalW}%</span>
     </div>`;
-    const cols = alevSubjects.length <= 2 ? 'fg-2' : alevSubjects.length <= 3 ? 'fg-3' : 'fg-4';
-    html += `<div class="fgrid ${cols}">`;
+    html += '<div class="fgrid fg-2">';
     alevSubjects.forEach(k => {
       html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
         <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
@@ -1226,7 +1224,7 @@ function buildScoreInputs(prog) {
       <span class="score-group-badge sg-alev-other">${prog.ao}%</span>
     </div>`;
     html += `<div class="score-group-note">กรอกคะแนนดิบแต่ละวิชา (ฟิสิกส์ เคมี ชีววิทยา) — ระบบจะคำนวณค่าเฉลี่ยและถ่วงน้ำหนัก ${prog.ao}% ให้อัตโนมัติ</div>`;
-    html += '<div class="fgrid fg-3">';
+    html += '<div class="fgrid fg-2">';
     ALEV_OTHER.forEach(s => {
       html += `<div class="score-field"><label>${s.label}</label>
         <input type="number" id="inp-ao-${s.key}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
@@ -1418,19 +1416,19 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
     color = '#fbbf24';
   } else if (totalScore >= threshold_A) {
     level = 'A'; title = 'โอกาสสูงมาก';
-    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ยค่อนข้างมาก —> มีโอกาสผ่านเกิน 80%';
+    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ยของผู้ผ่านการคัดเลือกค่อนข้างมาก —> มีโอกาสผ่านเกิน 80%';
     color = '#4ade80';
   } else if (totalScore >= threshold_B) {
     level = 'B'; title = 'โอกาสสูง';
-    sub = 'คะแนนของคุณอยู่บริเวณค่าเฉลี่ยของผู้เข้าสอบ —> มีโอกาสผ่านระหว่าง 60–80%';
+    sub = 'คะแนนของคุณอยู่ใกล้เคียงค่าเฉลี่ยของผู้ผ่านการคัดเลือก —> มีโอกาสผ่านระหว่าง 60–80%';
     color = '#60a5fa';
   } else if (totalScore >= minMin) {
     level = 'C'; title = 'โอกาสปานกลาง';
-    sub = 'คะแนนของคุณมากกว่าคะแนนต่ำสุดของผู้ผ่าน — มีโอกาสผ่านระหว่าง 40–60%';
+    sub = 'คะแนนของคุณมากกว่าคะแนนต่ำสุดของผู้ผ่านการคัดเลือกอยู่เล็กน้อย — มีโอกาสผ่านระหว่าง 40–60%';
     color = '#fbbf24';
   } else {
-    level = 'D'; title = 'ต้องพัฒนาเพิ่ม';
-    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน — มีโอกาสผ่านต่ำกว่า 40%';
+    level = 'D'; title = 'โอกาสน้อย';
+    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่านการคัดเลือก — มีโอกาสผ่านต่ำกว่า 40%';
     color = '#f87171';
   }
 
