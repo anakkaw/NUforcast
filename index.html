@@ -388,20 +388,20 @@
 
     /* Icon badge (left column) */
     .sg-badge {
-      width: 88px; min-width: 88px; height: 88px;
-      border-radius: 16px;
+      width: 70px; min-width: 70px; height: 70px;
+      border-radius: 12px;
       display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 6px; flex-shrink: 0;
+      justify-content: center; gap: 4px; flex-shrink: 0;
     }
     .sg-badge-label {
       color: #fff; font-family: var(--font-head);
-      font-size: 0.88rem; font-weight: 800; letter-spacing: 0.04em;
+      font-size: 0.76rem; font-weight: 800; letter-spacing: 0.04em;
       text-align: center; line-height: 1.2;
     }
     .sg-badge-pct {
       color: #fff; background: rgba(255,255,255,0.22);
-      border-radius: 20px; padding: 2px 9px;
-      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+      border-radius: 20px; padding: 1px 7px;
+      font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700;
     }
     /* Orange-theme palette: dark warm → orange main → amber */
     .sg-badge.sg-gpax       { background: linear-gradient(145deg, #431407 0%, #7c2d12 100%); }
@@ -434,9 +434,9 @@
 
     input[type="number"], input[type="text"], select {
       background: var(--bg-input); border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); padding: 9px 12px;
+      border-radius: var(--radius-sm); padding: 6px 10px;
       color: var(--gray-1); font-family: var(--font-body);
-      font-size: 0.93rem; font-weight: 500; outline: none; width: 100%;
+      font-size: 0.88rem; font-weight: 500; outline: none; width: 100%;
       -webkit-appearance: none;
       transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
     }
@@ -850,8 +850,8 @@
       .fstep { padding: 20px 18px; }
       .fstep-btn { padding: 16px 18px; }
       .fgrid.fg-2, .fgrid.fg-3, .fgrid.fg-4 { grid-template-columns: 1fr 1fr; }
-      .sg-badge { width: 84px; min-width: 84px; height: 84px; border-radius: 14px; }
-      .sg-badge-label { font-size: 0.82rem; }
+      .sg-badge { width: 62px; min-width: 62px; height: 62px; border-radius: 10px; }
+      .sg-badge-label { font-size: 0.72rem; }
       .seats-banner { gap: 14px; padding: 16px 18px; }
       .seats-num { font-size: 2.2rem; }
       .seats-prog-name { font-size: 0.85rem; }
@@ -873,9 +873,9 @@
 
     @media (max-width: 500px) {
       .fgrid.fg-2, .fgrid.fg-3, .fgrid.fg-4 { grid-template-columns: 1fr; }
-      .sg-badge { width: 68px; min-width: 68px; height: 68px; border-radius: 12px; }
-      .sg-badge-label { font-size: 0.72rem; }
-      .sg-badge-pct { font-size: 0.68rem; padding: 1px 8px; }
+      .sg-badge { width: 58px; min-width: 58px; height: 58px; border-radius: 9px; }
+      .sg-badge-label { font-size: 0.66rem; }
+      .sg-badge-pct { font-size: 0.58rem; padding: 1px 6px; }
       .hero-stats { flex-direction: row; flex-wrap: nowrap; gap: 1rem; }
       .stats-numbers { flex-direction: column; gap: 0.5rem; }
       .stats-photo { width: 224px; }
