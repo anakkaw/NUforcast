@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NUforecast — เช็กโอกาสเข้า ม.นเรศวร</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --orange:        #FF5200;
+      --orange-light:  #FFF0E8;
+      --orange-grad:   linear-gradient(135deg, #FF5200 0%, #FF8A50 100%);
+
+      --bg:            #FAFAFA;
+      --bg-card:       #FFFFFF;
+      --bg-input:      #F5F5F5;
+      --border:        #E8E8E8;
+      --border-hover:  #D0D0D0;
+
+      --gray-1:        #1A1A1A;
+      --gray-2:        #555555;
+      --gray-3:        #666666;
+      --gray-4:        #BBBBBB;
+      --gray-5:        #F0F0F0;
+
+      --font-head:     'Space Grotesk', sans-serif;
+      --font-thai-head:'IBM Plex Sans Thai', sans-serif;
+      --font-mono:     'JetBrains Mono', monospace;
+      --font-body:     'IBM Plex Sans Thai', sans-serif;
+
+      --radius-sm:     10px;
+      --radius-md:     16px;
+      --radius-lg:     24px;
+      --radius-xl:     32px;
+
+      --shadow-sm:     0 2px 8px rgba(0,0,0,0.04);
+      --shadow-md:     0 8px 30px rgba(0,0,0,0.06);
+      --shadow-lg:     0 20px 60px rgba(0,0,0,0.08);
+      --shadow-orange:  0 12px 40px rgba(255,82,0,0.20);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 18px; }
+
+    body {
+      background: var(--bg);
+      color: var(--gray-1);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══ NAV ═══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px) saturate(1.4);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s;
+    }
+    nav:hover { box-shadow: var(--shadow-sm); }
+
+    .nav-left { display: flex; align-items: center; gap: 10px; }
+    .nav-logo {
+      height: 48px; width: 48px; object-fit: contain; border-radius: 50%;
+      border: 2px solid var(--border);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .nav-logo:hover { transform: rotate(10deg) scale(1.1); border-color: var(--orange); }
+    .nav-name {
+      font-family: var(--font-head); font-size: 1.25rem; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--gray-1);
+    }
+    .nav-name span { color: var(--orange); }
+    .nav-chip {
+      height: 30px; padding: 0 14px; border-radius: 16px;
+      background: var(--orange-grad); color: #fff;
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.04em; display: flex; align-items: center;
+      box-shadow: 0 4px 16px rgba(255,82,0,0.25);
+      transition: transform 0.2s;
+    }
+    .nav-chip:hover { transform: translateY(-1px); }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: grid; grid-template-columns: 52fr 48fr;
+      align-items: center; padding: 80px 6% 72px;
+      gap: 2rem; overflow: hidden; z-index: 1;
+    }
+
+    .hero-stripe {
+      position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+      background: linear-gradient(160deg, var(--orange-light) 0%, #FFF7F2 100%);
+      clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+      z-index: 0;
+    }
+    .hero-stripe::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 30%, rgba(255,82,0,0.08) 0%, transparent 60%);
+    }
+
+    .hero-watermark {
+      position: absolute; bottom: -5%; right: 2%;
+      font-family: var(--font-head); font-size: clamp(180px, 22vw, 320px); font-weight: 700;
+      color: rgba(255,82,0,0.04); line-height: 1; letter-spacing: -0.06em;
+      pointer-events: none; user-select: none; z-index: 0;
+    }
+    .hero-logo-bg {
+      position: absolute; bottom: 28%; right: 3%;
+      width: 450px;
+      opacity: 0.07; pointer-events: none; user-select: none; z-index: 0;
+    }
+
+    .hero-blob {
+      position: absolute; border-radius: 50%; z-index: 0; pointer-events: none;
+      filter: blur(60px); opacity: 0.12;
+    }
+    .hero-blob-1 { width: 400px; height: 400px; background: var(--orange); top: -10%; left: -5%; animation: blobFloat 8s ease-in-out infinite; }
+    .hero-blob-2 { width: 300px; height: 300px; background: #FFB088; bottom: 10%; right: 15%; animation: blobFloat 10s ease-in-out infinite reverse; }
+
+    @keyframes blobFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(20px,-20px) scale(1.05); }
+    }
+
+    .hero-left { position: relative; z-index: 2; padding-right: 1rem; animation: fadeUp 0.7s ease both; }
+
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 1.2rem; }
+    .eyebrow-dot {
+      width: 10px; height: 10px; background: var(--orange); border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+      box-shadow: 0 0 0 4px rgba(255,82,0,0.15);
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 4px rgba(255,82,0,0.15); }
+      50% { box-shadow: 0 0 0 10px rgba(255,82,0,0.05); }
+    }
+    .eyebrow-text {
+      font-family: var(--font-body); font-size: 0.95rem; font-weight: 500;
+      letter-spacing: 0.02em; color: var(--gray-2);
+    }
+
+    .hero-h1 {
+      font-family: var(--font-thai-head); font-size: clamp(2.8rem, 5vw, 4.8rem);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.2rem;
+    }
+    .hero-h1 .line-gray { color: var(--gray-3); }
+    .hero-h1 .line-white { color: var(--gray-1); }
+    .hero-h1 .line-orange { color: var(--orange); }
+    .hero-h1 .line-outline {
+      color: transparent; -webkit-text-stroke: 2px var(--gray-4);
+      transition: all 0.4s;
+    }
+    .hero-h1:hover .line-outline { -webkit-text-stroke-color: var(--orange); }
+
+    .hero-desc {
+      font-size: 1.15rem; font-weight: 400; color: var(--gray-2);
+      line-height: 1.8; max-width: 520px; margin-bottom: 1.8rem;
+    }
+
+    .hero-tagline {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 22px; border-radius: 30px;
+      background: linear-gradient(135deg, #D97706, #FBBF24);
+      font-family: var(--font-body); font-size: 0.92rem; font-weight: 700; color: #1A1A1A;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.7s ease 0.2s both;
+      box-shadow: 0 4px 16px rgba(217,119,6,0.35);
+      letter-spacing: 0.01em;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-tagline::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+    .hero-tagline svg { flex-shrink: 0; }
+
+    .hero-stats {
+      display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;
+      padding-bottom: 2rem; border-bottom: 1px solid var(--border);
+    }
+    .stats-numbers { display: flex; gap: 2rem; }
+    .stats-photo {
+      display: none; /* hidden on desktop, shown on mobile */
+      flex-shrink: 0;
+    }
+    .stat-n {
+      font-family: var(--font-mono); font-size: 2.4rem; font-weight: 600;
+      color: var(--orange); line-height: 1;
+    }
+    .stat-l { font-size: 0.92rem; font-weight: 400; color: var(--gray-3); margin-top: 4px; }
+
+    .hero-actions { display: flex; align-items: center; gap: 16px; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px; background: var(--orange-grad); color: #fff;
+      font-family: var(--font-body); font-size: 1.05rem; font-weight: 700;
+      border: none; border-radius: var(--radius-lg); cursor: pointer;
+      text-decoration: none; transition: all 0.3s ease;
+      box-shadow: var(--shadow-orange); position: relative;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(255,82,0,0.3);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      font-size: 1rem; font-weight: 500; color: var(--gray-3);
+      text-decoration: none; display: flex; align-items: center; gap: 6px;
+      transition: color 0.2s;
+    }
+    .btn-secondary:hover { color: var(--orange); }
+
+    .hero-right {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center;
+      animation: fadeRight 0.8s ease 0.15s both;
+    }
+
+    .hero-photo {
+      width: 100%; max-width: clamp(260px, 38vw, 500px); height: auto;
+      object-fit: contain;
+      transition: transform 0.4s;
+      animation: floatY 6s ease-in-out infinite;
+    }
+    .hero-photo:hover { transform: translateY(-6px) scale(1.02); }
+
+    /* ═══ MARQUEE ═══ */
+    .marquee-strip {
+      position: relative; z-index: 1; overflow: hidden;
+      background: var(--orange-grad); padding: 14px 0; display: flex;
+    }
+    .marquee-track {
+      display: flex; gap: 0;
+      animation: marquee 18s linear infinite; white-space: nowrap;
+    }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 12px; padding: 0 30px;
+      font-family: var(--font-head); font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: #fff;
+    }
+    .marquee-dot {
+      width: 6px; height: 6px; background: rgba(255,255,255,0.5);
+      border-radius: 50%; flex-shrink: 0;
+    }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ═══ FORM SECTION ═══ */
+    .form-section { position: relative; z-index: 1; padding: 72px 5%; }
+
+    .section-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 40px; gap: 1.5rem;
+    }
+    .section-tag {
+      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-thai-head); font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; color: var(--gray-1);
+    }
+    .section-sub {
+      font-size: 1.05rem; font-weight: 400; color: var(--gray-3);
+      max-width: 400px; line-height: 1.7; text-align: right;
+    }
+
+    .fcard {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0;
+      position: relative; max-width: 980px; margin: 0 auto;
+      box-shadow: var(--shadow-md);
+      transition: box-shadow 0.3s;
+      overflow: hidden;
+    }
+    .fcard:hover { box-shadow: var(--shadow-lg); }
+
+    /* ── Step Sections ── */
+    .fstep {
+      padding: 32px 36px;
+      position: relative;
+    }
+    .fstep + .fstep { border-top: 1px solid var(--border); }
+
+    .fstep-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .fstep-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700;
+      color: #fff; background: var(--orange-grad);
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255,82,0,0.25);
+    }
+    .fstep-title {
+      font-family: var(--font-thai-head); font-size: 1.05rem; font-weight: 700;
+      color: var(--gray-1);
+    }
+    .fstep-sub {
+      font-family: var(--font-body); font-size: 0.82rem; color: var(--gray-3); font-weight: 400;
+    }
+
+    /* ── Seats Banner ── */
+    .seats-banner {
+      display: none; align-items: center; gap: 20px;
+      margin-top: 20px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+      border: 1.5px solid rgba(255,82,0,0.15);
+      border-radius: var(--radius-md);
+      animation: fadeSlideIn 0.4s ease;
+    }
+    .seats-banner.show { display: flex; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .seats-num-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      min-width: 80px;
+    }
+    .seats-num {
+      font-family: var(--font-mono); font-size: 2.8rem; font-weight: 800;
+      color: var(--orange); line-height: 1;
+    }
+    .seats-label {
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+      color: var(--orange); margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+    .seats-detail {
+      display: flex; flex-direction: column; gap: 4px; flex: 1;
+    }
+    .seats-prog-name {
+      font-family: var(--font-thai-head); font-size: 0.92rem; font-weight: 600;
+      color: var(--gray-1); line-height: 1.4;
+    }
+    .seats-year-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+      color: #fff; background: var(--orange);
+      padding: 3px 10px; border-radius: 20px;
+      width: fit-content;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Score Group Headers ── */
+    .score-group {
+      margin-bottom: 20px;
+      animation: fadeSlideIn 0.35s ease;
+    }
+    .score-group:last-child { margin-bottom: 0; }
+    .score-group-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    .score-group-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+    .sg-gpax { background: #EDE9FE; color: #7C3AED; }
+    .sg-tgat { background: #DBEAFE; color: #2563EB; }
+    .sg-alev { background: #D1FAE5; color: #059669; }
+    .sg-alev-other { background: #FEF3C7; color: #D97706; }
+    .score-group-label {
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 700;
+      color: var(--gray-1); letter-spacing: 0.02em;
+    }
+    .score-group-badge {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 10px; margin-left: auto;
+    }
+
+    .score-group-note {
+      font-size: 0.72rem; color: var(--gray-3); margin-bottom: 10px;
+      padding: 6px 10px; background: #FFFBEB; border-radius: 6px;
+      border: 1px solid #FEF3C7;
+    }
+
+    .fgrid   { display: grid; gap: 12px; }
+    .fg-1    { grid-template-columns: 1fr; }
+    .fg-2    { grid-template-columns: 1fr 1fr; }
+    .fg-3    { grid-template-columns: repeat(3, 1fr); }
+    .fg-4    { grid-template-columns: repeat(4, 1fr); }
+    .full    { grid-column: 1 / -1; }
+
+    .ff { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-family: var(--font-body); font-size: 0.92rem; font-weight: 500;
+      color: var(--gray-2); letter-spacing: 0.01em;
+    }
+
+    input[type="number"], input[type="text"], select {
+      background: var(--bg-input); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      color: var(--gray-1); font-family: var(--font-body);
+      font-size: 1rem; font-weight: 500; outline: none; width: 100%;
+      -webkit-appearance: none;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    }
+    input[type="number"]:focus, input[type="text"]:focus, select:focus {
+      border-color: var(--orange);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(255,82,0,0.08);
+    }
+    input[type="number"]:hover, select:hover { border-color: var(--border-hover); }
+    input::placeholder { color: var(--gray-4); }
+    select option { background: var(--bg-card); }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px;
+    }
+
+    #score-inputs { min-height: 60px; }
+    .score-empty {
+      text-align: center; padding: 48px 0; color: var(--gray-3);
+      font-size: 1rem; font-weight: 400;
+    }
+    .score-empty-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.5; }
+    .score-unsupported {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 16px; border-radius: 10px; margin: 8px 0;
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      border: 1.5px solid rgba(202,138,4,0.3);
+      font-size: 0.88rem; font-weight: 600; color: #854d0e; line-height: 1.55;
+    }
+    .score-unsupported::before { content: '⚠'; font-size: 1.05rem; flex-shrink: 0; color: #ca8a04; }
+    .score-field { display: flex; flex-direction: column; gap: 6px; }
+    .score-field label { display: flex; justify-content: space-between; align-items: center; }
+    .score-field .weight-tag {
+      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+      color: #fff; background: var(--orange);
+      padding: 2px 10px; border-radius: 10px;
+    }
+
+    .fstep-btn { padding: 20px 36px; background: var(--gray-5); border-top: 1px solid var(--border); }
+    .predict-btn {
+      width: 100%; padding: 18px;
+      background: var(--orange-grad); color: #fff;
+      font-family: var(--font-body); font-size: 1.15rem; font-weight: 700;
+      letter-spacing: 0.02em;
+      border: none; border-radius: var(--radius-md); cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: var(--shadow-orange);
+    }
+    .predict-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%); transition: transform 0.6s ease;
+    }
+    .predict-btn:hover::before { transform: translateX(100%); }
+    .predict-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 50px rgba(255,82,0,0.35);
+    }
+    .predict-btn:active { transform: translateY(0); }
+    .predict-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .predict-btn:disabled:hover { transform: none; box-shadow: var(--shadow-orange); }
+    .predict-btn:disabled::before { display: none; }
+
+    /* ═══ RESULT MODAL ═══ */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(12px);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    }
+    .overlay.show { opacity: 1; pointer-events: all; }
+
+    .rmodal {
+      background: var(--bg-card);
+      border-radius: var(--radius-xl); padding: 0;
+      max-width: 520px; width: 100%; text-align: center;
+      position: relative; overflow: hidden; overflow-y: auto;
+      max-height: 92vh;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+    .overlay.show .rmodal { transform: scale(1) translateY(0); }
+
+    .rmodal-close {
+      position: absolute; top: 12px; right: 12px;
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.7); border: none;
+      color: var(--gray-3); border-radius: 50%;
+      cursor: pointer; font-size: 0.85rem; z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; backdrop-filter: blur(8px);
+    }
+    .rmodal-close:hover { background: rgba(255,255,255,0.95); color: var(--gray-1); transform: rotate(90deg); }
+
+    .r-hero { position: relative; padding: 22px 22px 18px; overflow: hidden; }
+    .r-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, #FAFAFA 0%, var(--orange-light) 100%);
+    }
+    .r-hero.hero-A::before { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%); }
+    .r-hero.hero-B::before { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%); }
+    .r-hero.hero-C::before { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%); }
+    .r-hero.hero-D::before { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fed7aa 100%); }
+    .r-hero.hero-F::before { background: linear-gradient(135deg, #fef2f2 0%, #fecaca 50%, #fca5a5 100%); }
+    .r-hero-glow {
+      position: absolute; top: -60%; left: -20%; width: 140%; height: 200%;
+      border-radius: 50%; opacity: 0.12; filter: blur(60px);
+      transition: opacity 0.8s ease;
+    }
+    .r-hero-content {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: auto 1fr; gap: 0 16px;
+      align-items: center;
+    }
+
+    .r-emoji {
+      grid-row: 1 / 4; grid-column: 1;
+      animation: popIn 0.5s cubic-bezier(0.34,1.5,0.64,1) 0.2s both;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .r-emoji svg { width: 68px; height: 68px; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.3) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+
+    .r-verdict-text {
+      grid-column: 2; font-family: var(--font-thai-head); font-size: 1.4rem; font-weight: 700;
+      color: var(--gray-1); text-align: left;
+      animation: slideUp 0.4s ease 0.3s both;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .r-verdict-sub {
+      grid-column: 2; font-family: var(--font-body); font-size: 0.88rem; color: var(--gray-3); line-height: 1.5;
+      text-align: left; margin-top: 1px;
+      animation: slideUp 0.4s ease 0.35s both;
+    }
+    .r-score-big {
+      grid-column: 2; display: flex; align-items: baseline; gap: 4px;
+      margin-top: 4px; animation: slideUp 0.4s ease 0.4s both;
+    }
+    .r-score-num { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 600; line-height: 1; }
+    .r-score-max { font-family: var(--font-mono); font-size: 0.9rem; color: var(--gray-3); }
+
+    .r-level-badge {
+      grid-column: 1 / -1; text-align: center;
+      display: inline-block; padding: 6px 16px; border-radius: 20px;
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.03em; margin-top: 10px; justify-self: center;
+      max-width: 95%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      animation: slideUp 0.4s ease 0.45s both;
+      color: #fff; border: none;
+    }
+    .r-level-badge.lvl-A { background: #16a34a; }
+    .r-level-badge.lvl-B { background: #2563eb; }
+    .r-level-badge.lvl-C, .r-level-badge.lvl-\? { background: #d97706; }
+    .r-level-badge.lvl-D { background: #ea580c; }
+    .r-level-badge.lvl-F { background: #dc2626; }
+
+    .r-bar-wrap { padding: 0 22px; margin-top: 8px; }
+    .r-bar-track {
+      width: 100%; height: 12px; background: var(--gray-5);
+      border-radius: 6px; position: relative; overflow: visible;
+      border: 1px solid var(--border);
+    }
+    .r-bar-fill {
+      height: 100%; border-radius: 6px; width: 0;
+      transition: width 1.2s cubic-bezier(0.25,1,0.5,1) 0.4s;
+      position: relative; z-index: 2;
+    }
+    .r-bar-marker {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      z-index: 3; display: flex; flex-direction: column; align-items: center;
+    }
+    .r-bar-marker-line {
+      width: 3px; height: 26px; border-radius: 2px;
+    }
+    .r-bar-marker-label {
+      font-size: 0.72rem; font-family: var(--font-mono); font-weight: 600;
+      padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+      position: absolute; top: -24px;
+    }
+    .r-bar-marker.mark-min .r-bar-marker-line { background: #f59e0b; }
+    .r-bar-marker.mark-min .r-bar-marker-label { color: #b45309; background: #FEF3C7; }
+    .r-bar-marker.mark-avg .r-bar-marker-line { background: #6366f1; }
+    .r-bar-marker.mark-avg .r-bar-marker-label { color: #4338ca; background: #EEF2FF; }
+    .r-bar-you {
+      position: absolute; top: 50%; z-index: 5; transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: center;
+      transition: left 1.2s cubic-bezier(0.25,1,0.5,1) 0.4s;
+    }
+    .r-bar-you-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .r-bar-you-label {
+      font-size: 0.72rem; font-family: var(--font-mono); font-weight: 700;
+      padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+      position: absolute; bottom: -22px; color: #fff;
+    }
+    .r-bar-legend {
+      display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 24px;
+      font-size: 0.78rem; color: var(--gray-3); justify-content: center;
+    }
+    .r-bar-legend-item { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .r-bar-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .r-bar-legend-dot.dot-you { border: 2px solid currentColor; background: currentColor; }
+    .r-bar-legend-dot.dot-min { background: #f59e0b; }
+    .r-bar-legend-dot.dot-avg { background: #6366f1; }
+    .r-bar-legend-val { color: var(--gray-1); font-weight: 600; font-family: var(--font-mono); }
+
+    .r-body { padding: 14px 20px 20px; }
+
+    .r-advice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; text-align: left; }
+    .r-advice-card {
+      border-radius: 10px; padding: 11px 14px;
+      animation: slideUp 0.4s ease 0.5s both;
+      border: 1.5px solid transparent;
+    }
+    .r-advice-card.card-good { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: rgba(22,163,74,0.2); }
+    .r-advice-card.card-weak { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-color: rgba(234,88,12,0.2); }
+    .r-advice-card:nth-child(2) { animation-delay: 0.6s; }
+    .r-advice-header { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .r-advice-icon { font-size: 0.95rem; }
+    .r-advice-title { font-family: var(--font-body); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .r-advice-title.good { color: #15803d; }
+    .r-advice-title.improve { color: #c2410c; }
+    .r-advice-list { font-family: var(--font-body); font-size: 0.88rem; color: var(--gray-2); }
+    .r-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .r-advice-item:last-child { border-bottom: none; }
+    .r-advice-item .subj-name { color: var(--gray-1); flex: 1; font-size: 0.86rem; font-weight: 500; }
+    .r-advice-item .subj-pct { font-size: 0.7rem; font-weight: 500; margin: 0 5px; white-space: nowrap; }
+    .r-advice-item .subj-pct.pos { color: #15803d; }
+    .r-advice-item .subj-pct.neg { color: #b91c1c; }
+    .r-advice-item .subj-diff { font-family: var(--font-body); font-size: 0.75rem; font-weight: 700; white-space: nowrap; padding: 1px 8px; border-radius: 20px; }
+    .r-advice-item .subj-diff.pos { color: #15803d; background: rgba(22,163,74,0.12); }
+    .r-advice-item .subj-diff.neg { color: #c2410c; background: rgba(234,88,12,0.1); }
+    .r-advice-empty { font-size: 0.82rem; color: var(--gray-3); font-style: italic; }
+
+    .r-fail-section {
+      text-align: left; margin-bottom: 12px;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border: 1.5px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 11px 14px;
+    }
+    .r-fail-title {
+      font-family: var(--font-body); font-size: 0.75rem; font-weight: 700; color: #b91c1c;
+      margin-bottom: 8px; padding-bottom: 7px; border-bottom: 1px solid rgba(220,38,38,0.1);
+      display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .r-fail-list { display: flex; flex-direction: column; }
+    .r-fail-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 0; border-bottom: 1px solid rgba(220,38,38,0.08); font-size: 0.86rem;
+    }
+    .r-fail-item:last-child { border-bottom: none; }
+    .r-fail-label { color: var(--gray-1); font-weight: 500; }
+    .r-fail-vals { display: flex; align-items: center; gap: 5px; }
+    .r-fail-your { color: #dc2626; font-weight: 700; font-size: 0.78rem; background: rgba(220,38,38,0.1); padding: 1px 8px; border-radius: 20px; }
+    .r-fail-need { color: var(--gray-3); font-size: 0.75rem; }
+    .r-fail-arrow { color: var(--gray-4); font-size: 0.6rem; margin: 0 2px; }
+
+    .r-disclaimer {
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+      color: #7c2d12; line-height: 1.5; margin-bottom: 12px;
+      padding: 9px 12px;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      border-radius: 8px; border: 1.5px solid rgba(255,82,0,0.35);
+      display: flex; gap: 8px; align-items: center;
+    }
+    .r-disclaimer::before {
+      content: '\26A0'; font-size: 1rem; flex-shrink: 0; color: #ea580c;
+    }
+
+    .btn-retry {
+      width: 100%; padding: 12px; background: var(--orange-grad);
+      border: none; color: #fff;
+      font-family: var(--font-body); font-size: 1.05rem; font-weight: 700;
+      border-radius: var(--radius-md); cursor: pointer; transition: all 0.25s;
+      box-shadow: 0 4px 16px rgba(255,82,0,0.2);
+    }
+    .btn-retry:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,82,0,0.3); }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 2px solid var(--orange);
+      padding: 14px 6%;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+      background: var(--bg-card);
+    }
+    .footer-brand { display: flex; align-items: center; gap: 14px; }
+    .footer-logo { height: 108px; opacity: 0.88; transition: opacity 0.3s; }
+    .footer-logo:hover { opacity: 1; }
+    .footer-name { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1; }
+    .footer-name span { color: var(--orange); }
+    .footer-tagline { font-size: 0.82rem; color: var(--gray-3); margin-top: 5px; }
+    .footer-credit { text-align: right; }
+    .footer-credit-tag {
+      display: inline-block; font-family: var(--font-head); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; color: #fff;
+      background: #C2410C; padding: 3px 10px;
+      border-radius: 20px; border: none; margin-bottom: 8px;
+    }
+    .footer-credit-text { font-size: 0.78rem; color: var(--gray-3); line-height: 1.65; }
+
+    /* ═══ HERO EXTRAS ═══ */
+    /* H1 staggered line entrance */
+    .hero-h1 span { display: inline-block; }
+    .hero-h1 .line-gray   { animation: lineIn 0.55s ease 0.45s both; }
+    .hero-h1 .line-white  { animation: lineIn 0.55s ease 0.58s both; }
+    .hero-h1 .line-orange { animation: lineIn 0.6s ease 0.72s both; }
+    .hero-h1 .line-outline{ animation: lineIn 0.65s ease 0.88s both; }
+    @keyframes lineIn {
+      from { opacity: 0; transform: translateX(-18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* CTA pulse ring */
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      border-radius: var(--radius-lg); pointer-events: none;
+      animation: ctaPulse 2.8s ease-out 2s infinite;
+    }
+    @keyframes ctaPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,82,0,0.45); }
+      65%  { box-shadow: 0 0 0 18px rgba(255,82,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,82,0,0); }
+    }
+
+    /* Scroll arrow bounce */
+    .btn-secondary { animation: arrowBounce 1.9s ease-in-out infinite; }
+    .btn-secondary:hover { animation: none; color: var(--orange); }
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
+    }
+
+    /* Floating score chips */
+    .hero-chips { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+    .hero-chip {
+      position: absolute; padding: 5px 13px; border-radius: 20px;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,82,0,0.22);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+      color: var(--orange);
+      box-shadow: 0 4px 14px rgba(255,82,0,0.1);
+      animation: floatChip var(--dur,6s) ease-in-out var(--d,0s) infinite alternate;
+    }
+    .hero-chip.c1 { top: 10%; left: 4%;   --dur:5.5s; --d:0s; }
+    .hero-chip.c2 { top: 26%; right:7%;   --dur:7s;   --d:1.2s; }
+    .hero-chip.c3 { bottom:28%; left:2%;  --dur:6.2s; --d:0.6s; }
+    .hero-chip.c4 { bottom:12%; right:10%;--dur:8.5s; --d:2s; }
+    @keyframes floatChip {
+      from { transform: translateY(0) rotate(-2deg); }
+      to   { transform: translateY(-13px) rotate(2.5deg); }
+    }
+
+    /* Cursor glow */
+    .hero-cursor-glow {
+      position: absolute; width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,82,0,0.07) 0%, transparent 68%);
+      pointer-events: none; z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: left 0.12s ease-out, top 0.12s ease-out;
+      will-change: left, top;
+    }
+
+    /* Marquee pause on hover */
+    .marquee-strip:hover .marquee-track { animation-play-state: paused; }
+
+    /* Scroll reveal */
+    .reveal-anim {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal-anim.in-view { opacity: 1; transform: translateY(0); }
+
+    /* ═══ KEYFRAMES ═══ */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    /* ═══ SCROLL REVEAL ═══ */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 800px) {
+      html { font-size: 16px; }
+      nav { padding: 0 1.2rem; height: 50px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 64px 5% 48px; }
+      .hero-stripe { display: none; }
+      .hero-left { padding-right: 0; }
+      .hero-right { display: none; }
+      .hero-stats {
+        flex-direction: row; align-items: center; gap: 1.2rem;
+        flex-wrap: nowrap;
+      }
+      .stats-numbers { display: flex; flex-direction: column; gap: 0.6rem; }
+      .stats-photo {
+        display: block; width: 256px; height: auto;
+        object-fit: contain; flex-shrink: 0;
+        margin-left: auto;
+      }
+      .fstep { padding: 20px 18px; }
+      .fstep-btn { padding: 16px 18px; }
+      .fgrid.fg-2, .fgrid.fg-3, .fgrid.fg-4 { grid-template-columns: 1fr 1fr; }
+      .seats-banner { gap: 14px; padding: 16px 18px; }
+      .seats-num { font-size: 2.2rem; }
+      .seats-prog-name { font-size: 0.85rem; }
+      .rmodal { max-width: 100%; border-radius: var(--radius-lg); }
+      .r-hero { padding: 18px 14px 14px; }
+      .r-hero-content { gap: 0 12px; }
+      .r-emoji svg { width: 56px; height: 56px; }
+      .r-verdict-text { font-size: 1.2rem; }
+      .r-score-num { font-size: 1.9rem; }
+      .r-body { padding: 14px 16px 20px; }
+      .r-bar-wrap { padding: 0 14px; }
+      .r-bar-legend { gap: 4px 10px; font-size: 0.7rem; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+      .section-sub { text-align: left; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-credit { text-align: center; }
+      .footer-credit-tag { display: block; width: fit-content; margin: 0 auto 8px; }
+    }
+
+    @media (max-width: 500px) {
+      .fgrid.fg-2, .fgrid.fg-3, .fgrid.fg-4 { grid-template-columns: 1fr; }
+      .hero-stats { flex-direction: row; flex-wrap: nowrap; gap: 1rem; }
+      .stats-numbers { flex-direction: column; gap: 0.5rem; }
+      .stats-photo { width: 224px; }
+      .seats-banner { flex-direction: column; text-align: center; gap: 10px; }
+      .seats-num-wrap { flex-direction: row; gap: 8px; align-items: baseline; }
+      .seats-year-badge { margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <img class="nav-logo" src="images/logo1.png" alt="NU" />
+      <div class="nav-name">NU<span>forecast</span></div>
+    </div>
+    <div class="nav-chip">TCAS 2 / 2569</div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-stripe"></div>
+    <div class="hero-watermark">69</div>
+    <img class="hero-logo-bg" src="images/logo1.png" alt="" />
+    <div class="hero-cursor-glow" id="hero-glow"></div>
+    <div class="hero-left">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <div class="eyebrow-text">ระบบวิเคราะห์โอกาส TCAS รอบ 2 (โควตา) ม.นเรศวร ปี 2569</div>
+      </div>
+      <h1 class="hero-h1">
+        <span class="line-gray">เช็ก</span><span class="line-white">โอกาส</span><br/>
+        <span class="line-orange">เข้า ม.นเรศวร</span><br/>
+        <span class="line-outline">TCAS 2</span>
+      </h1>
+      <div class="hero-tagline">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        สร้าง insight จาก Data โดยหลักสูตรวิทยาการข้อมูล คณะวิทยาศาสตร์
+      </div>
+      <p class="hero-desc">
+        กรอกคะแนนของคุณ แล้วระบบจะวิเคราะห์โอกาสผ่านการคัดเลือก
+        พร้อมแสดงคำแนะนำเฉพาะบุคคล
+      </p>
+      <div class="hero-stats">
+        <div class="stats-numbers">
+          <div class="stat"><div class="stat-n">90</div><div class="stat-l">หลักสูตร</div></div>
+          <div class="stat"><div class="stat-n">16</div><div class="stat-l">คณะ/วิทยาลัย</div></div>
+          <div class="stat"><div class="stat-n">3</div><div class="stat-l">ปีย้อนหลัง</div></div>
+        </div>
+        <img class="stats-photo" src="images/photo1.webp" alt="Campus" />
+      </div>
+      <div class="hero-actions">
+        <a href="#calculator" class="btn-primary">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h12M4 10h12M4 16h8"/></svg>
+          เริ่มทำนายผล
+        </a>
+        <a href="#calculator" class="btn-secondary">เลื่อนลง ↓</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img class="hero-photo" src="images/photo1.webp" alt="Campus" />
+      <div class="hero-chips">
+        <div class="hero-chip c1">GPAX</div>
+        <div class="hero-chip c2">O-NET</div>
+        <div class="hero-chip c3">วิชาสามัญ</div>
+        <div class="hero-chip c4">GAT / PAT</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span class="marquee-item"><span class="marquee-dot"></span>TCAS ROUND 2</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>โควตา 2569</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>NARESUAN UNIVERSITY</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>By B.Sc. DATA SCIENCE</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>PREDICT YOUR CHANCE</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>TCAS ROUND 2</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>โควตา 2569</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>NARESUAN UNIVERSITY</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>By B.Sc. DATA SCIENCE</span>
+      <span class="marquee-item"><span class="marquee-dot"></span>PREDICT YOUR CHANCE</span>
+    </div>
+  </div>
+
+  <section class="form-section" id="calculator">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <div class="section-tag">Score Calculator</div>
+        <div class="section-title">คำนวณคะแนนและทำนายโอกาส</div>
+      </div>
+      <div class="section-sub">เลือกคณะ/หลักสูตร และกรอกคะแนนของคุณ เพื่อทำนายโอกาสผ่านการคัดเลือก</div>
+    </div>
+
+    <div class="fcard">
+      <div class="fstep">
+        <div class="fstep-header">
+          <div class="fstep-num">1</div>
+          <div>
+            <div class="fstep-title">เลือกคณะ / หลักสูตร</div>
+          </div>
+        </div>
+        <div class="fgrid fg-2">
+          <div class="ff">
+            <label for="sel-faculty">คณะ / วิทยาลัย</label>
+            <select id="sel-faculty"><option value="">-- เลือกคณะ --</option></select>
+          </div>
+          <div class="ff">
+            <label for="sel-program">หลักสูตร</label>
+            <select id="sel-program" disabled><option value="">-- เลือกคณะก่อน --</option></select>
+          </div>
+        </div>
+        <div id="program-info" class="seats-banner"></div>
+      </div>
+
+      <div class="fstep">
+        <div class="fstep-header">
+          <div class="fstep-num">2</div>
+          <div>
+            <div class="fstep-title">กรอกคะแนนสอบ</div>
+          </div>
+        </div>
+        <div id="score-inputs">
+          <div class="score-empty">
+            <div class="score-empty-icon">📝</div>
+            กรุณาเลือกคณะและหลักสูตรก่อน
+          </div>
+        </div>
+      </div>
+
+      <div class="fstep-btn">
+        <button class="predict-btn" id="btn-predict" disabled onclick="calculate()">
+          <span class="btn-text">คำนวณคะแนนและทำนายผล</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="overlay" id="result-overlay" onclick="if(event.target===this)closeResult()">
+    <div class="rmodal">
+      <button class="rmodal-close" onclick="closeResult()">&#10005;</button>
+
+      <div class="r-hero">
+        <div class="r-hero-glow" id="r-glow"></div>
+        <div class="r-hero-content">
+          <div class="r-emoji" id="r-emoji"></div>
+          <div class="r-verdict-text" id="r-verdict-text"></div>
+          <div class="r-verdict-sub" id="r-verdict-sub"></div>
+          <div class="r-score-big">
+            <span class="r-score-num" id="r-score-num">0</span>
+            <span class="r-score-max">/ 1,000</span>
+          </div>
+          <div class="r-level-badge" id="r-badge"></div>
+        </div>
+      </div>
+
+      <div class="r-bar-wrap">
+        <div class="r-bar-track" id="r-bar-track">
+          <div class="r-bar-fill" id="r-bar-fill"></div>
+        </div>
+        <div class="r-bar-legend" id="r-bar-legend"></div>
+      </div>
+
+      <div class="r-body">
+        <div class="r-disclaimer">
+          ข้อมูลนี้เป็นผลการทำนายจากข้อมูลย้อนหลังเท่านั้น ไม่ใช่ผลการคัดเลือกจริง
+        </div>
+        <div class="r-advice" id="r-advice"></div>
+        <button class="btn-retry" onclick="closeResult()">ทำนายผลอีกครั้ง</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      <img class="footer-logo" src="images/logo2.png" alt="NU" />
+      <div>
+        <div class="footer-name">NU<span>forecast</span></div>
+        <div class="footer-tagline">ระบบเช็กโอกาส TCAS 2 (โควตา) ม.นเรศวร</div>
+      </div>
+    </div>
+    <div class="footer-credit">
+      <div class="footer-credit-tag">TCAS 2 / 2569</div>
+      <div class="footer-credit-text">
+        โดยหลักสูตรวิทยาการข้อมูล คณะวิทยาศาสตร์<br/>
+        อ้างอิงข้อมูลคะแนนย้อนหลัง ปีการศึกษา 2566–2568
+      </div>
+    </div>
+  </footer>
+
+<script>
+const DB =[{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์การเกษตร","s":80,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":370.94,"ms":292.25,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.04,"TGAT90":44.27,"ALEV61":13.72,"ALEV64":17.0,"ALEV65":15.29,"ALEV66":27.06}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์และเทคโนโลยี การอาหาร","s":60,"mg":2.75,"w":{"GPAX":20.0,"TGAT90":20.0,"ALEV61":15.0},"ao":45.0,"mt":null,"ma":null,"a3":431.74,"ms":376.2,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.58,"TGAT90":50.03,"ALEV61":17.15,"ALEV64":17.52,"ALEV65":18.03,"ALEV66":29.29}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาภูมิศาสตร์ (แบบที่ 1)","s":50,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":431.06,"ms":322.02,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.17,"TGAT90":46.72,"ALEV61":16.5,"ALEV64":13.88,"ALEV65":16.25,"ALEV66":26.3}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาภูมิศาสตร์ (แบบที่ 2)","s":50,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV63":20.0,"ALEV70":15.0},"ao":0,"mt":null,"ma":null,"a3":393.07,"ms":349.15,"xm":323.92,"nm":256.75,"sa":{"GPAX":2.97,"TGAT90":39.89,"ALEV61":15.22,"ALEV63":30.72}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์การประมง (แบบที่ 1)","s":50,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":359.12,"ms":233.75,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.21,"TGAT90":39.93,"ALEV61":13.28,"ALEV64":19.08,"ALEV65":15.8,"ALEV66":23.51}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์การประมง (แบบที่ 2)","s":50,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV63":35.0},"ao":0,"mt":null,"ma":null,"a3":415.26,"ms":307.98,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.02,"TGAT90":44.39,"ALEV61":16.0,"ALEV63":31.99}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาทรัพยากรธรรมชาติและสิ่งแวดล้อม","s":30,"mg":2.5,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":376.83,"ms":256.75,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.18,"TGAT90":43.73,"ALEV61":14.39,"ALEV64":16.52,"ALEV65":17.32,"ALEV66":27.86}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาสัตวศาสตร์และเทคโนโลยี อาหารสัตว์ (แบบที่ 1)","s":20,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":431.79,"ms":341.87,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.4,"TGAT90":49.15,"ALEV61":16.1,"ALEV64":16.82,"ALEV65":19.31,"ALEV66":30.1}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาสัตวศาสตร์และเทคโนโลยี อาหารสัตว์ (แบบที่ 2)","s":10,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV63":35.0},"ao":0,"mt":null,"ma":null,"a3":476.87,"ms":371.88,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.45,"TGAT90":48.97,"ALEV61":15.88,"ALEV63":36.69}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเกษตรแม่นยำ (แบบที่ 1)","s":40,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":381.7,"ms":337.08,"xm":323.92,"nm":256.75,"sa":{"GPAX":3.17,"TGAT90":47.8,"ALEV61":12.72,"ALEV64":17.0,"ALEV65":19.64,"ALEV66":24.46}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเกษตรแม่นยำ (แบบที่ 2)","s":40,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV62":15.0,"ALEV63":35.0},"ao":0,"mt":null,"ma":null,"a3":385.17,"ms":341.78,"xm":323.92,"nm":256.75,"sa":{"GPAX":2.71,"TGAT90":39.62,"ALEV61":16.0,"ALEV63":28.7}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคโนโลยีชีวภาพทางการเกษตร (แบบที่ 1)","s":50,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0},"ao":35.0,"mt":null,"ma":null,"a3":353.7,"ms":225.63,"xm":323.92,"nm":256.75,"sa":{"GPAX":2.91,"TGAT90":45.14,"ALEV61":18.89,"ALEV64":12.67,"ALEV65":19.45,"ALEV66":28.53}},{"f":"คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคโนโลยีชีวภาพทางการเกษตร (แบบที่ 2)","s":30,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV63":35.0},"ao":0,"mt":null,"ma":null,"a3":353.7,"ms":225.63,"xm":323.92,"nm":256.75,"sa":{"GPAX":2.91,"TGAT90":45.14,"ALEV61":18.89,"ALEV64":12.67,"ALEV65":19.45,"ALEV66":28.53}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาคณิตศาสตร์","s":50,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":32.0,"ALEV64":6.0,"ALEV65":6.0,"ALEV66":6.0},"ao":0,"mt":null,"ma":null,"a3":411.19,"ms":353.35,"xm":353.35,"nm":353.35,"sa":{"GPAX":3.48,"TGAT90":47.94,"ALEV61":16.77,"ALEV64":18.23,"ALEV65":20.96,"ALEV66":26.65}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเคมี","s":45,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":20.0,"ALEV66":10.0},"ao":0,"mt":null,"ma":null,"a3":437.9,"ms":351.37,"xm":429.2,"nm":351.37,"sa":{"GPAX":3.65,"TGAT90":50.02,"ALEV61":17.27,"ALEV64":18.63,"ALEV65":18.76,"ALEV66":29.3}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาชีววิทยา","s":70,"mg":0,"w":{"GPAX":20.0,"TGAT90":20.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":10.0,"ALEV66":30.0},"ao":0,"mt":null,"ma":null,"a3":449.43,"ms":388.74,"xm":421.33,"nm":388.74,"sa":{"GPAX":3.66,"TGAT90":52.77,"ALEV61":16.3,"ALEV64":19.69,"ALEV65":17.89,"ALEV66":35.12}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาฟิสิกส์","s":60,"mg":2.5,"w":{"GPAX":25.0,"TGAT90":25.0,"ALEV61":15.0,"ALEV64":15.0,"ALEV65":10.0,"ALEV66":10.0},"ao":0,"mt":null,"ma":null,"a3":466.04,"ms":406.17,"xm":427.48,"nm":406.17,"sa":{"GPAX":3.6,"TGAT90":48.72,"ALEV61":16.36,"ALEV64":21.07,"ALEV65":18.39,"ALEV66":36.63}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาฟิสิกส์ประยุกต์","s":70,"mg":2.25,"w":{"GPAX":25.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV64":10.0,"ALEV65":10.0,"ALEV66":10.0},"ao":0,"mt":null,"ma":null,"a3":419.86,"ms":353.48,"xm":486.23,"nm":353.48,"sa":{"GPAX":3.1,"TGAT90":46.32,"ALEV61":6.0,"ALEV64":21.0,"ALEV65":28.75,"ALEV66":28.4}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาการคอมพิวเตอร์ (แบบที่ 1)","s":20,"mg":2.5,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":20.0,"ALEV64":10.0,"ALEV65":10.0,"ALEV66":10.0},"ao":0,"mt":null,"ma":null,"a3":483.98,"ms":384.08,"xm":503.88,"nm":384.08,"sa":{"GPAX":3.61,"TGAT90":56.3,"ALEV61":19.81,"ALEV64":22.68,"ALEV65":18.46,"ALEV66":29.35}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาการคอมพิวเตอร์ (แบบที่ 2)","s":5,"mg":2.5,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":20.0,"ALEV63":30.0},"ao":0,"mt":null,"ma":null,"a3":486.04,"ms":329.01,"xm":522.32,"nm":329.01,"sa":{"GPAX":3.31,"TGAT90":49.39,"ALEV61":16.08,"ALEV63":39.27}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคโนโลยีสารสนเทศ (แบบที่ 1)","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":20.0,"ALEV64":10.0,"ALEV65":10.0,"ALEV66":10.0},"ao":0,"mt":null,"ma":null,"a3":416.09,"ms":300.5,"xm":382.13,"nm":300.5,"sa":{"GPAX":3.24,"TGAT90":50.78,"ALEV61":16.9,"ALEV64":18.87,"ALEV65":20.0,"ALEV66":28.47}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคโนโลยีสารสนเทศ (แบบที่ 2)","s":5,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":20.0,"ALEV63":30.0},"ao":0,"mt":null,"ma":null,"a3":469.41,"ms":454.08,"xm":454.08,"nm":454.08,"sa":{"GPAX":3.28,"TGAT90":52.59,"ALEV61":17.33,"ALEV63":37.6}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาสถิติ","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":32.0,"ALEV64":6.0,"ALEV65":6.0,"ALEV66":6.0},"ao":0,"mt":null,"ma":null,"a3":426.46,"ms":374.74,"xm":374.74,"nm":374.74,"sa":{"GPAX":3.24,"TGAT90":51.2,"ALEV61":21.0,"ALEV64":22.0,"ALEV65":21.67,"ALEV66":28.8}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต วิทยาการข้อมูลและการวิเคราะห์","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":32.0,"ALEV64":6.0,"ALEV65":6.0,"ALEV66":6.0},"ao":0,"mt":null,"ma":null,"a3":392.49,"ms":340.37,"xm":340.37,"nm":340.37,"sa":{"GPAX":3.13,"TGAT90":46.21,"ALEV61":16.25,"ALEV64":17.75,"ALEV65":25.63,"ALEV66":32.2}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต เทคโนโลยีนวัตกรรมพลังงานและสิ่งแวดล้อม (แบบที่ 1)","s":40,"mg":2.25,"w":{"GPAX":25.0,"TGAT90":30.0,"ALEV61":15.0,"ALEV64":15.0,"ALEV65":10.0,"ALEV66":5.0},"ao":0,"mt":null,"ma":null,"a3":432.26,"ms":358.25,"xm":396.08,"nm":358.25,"sa":{"GPAX":3.2,"TGAT90":44.61,"ALEV61":14.96,"ALEV64":16.8,"ALEV65":17.92,"ALEV66":25.82}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต เทคโนโลยีนวัตกรรมพลังงานและสิ่งแวดล้อม (แบบที่ 2)","s":30,"mg":2.25,"w":{"GPAX":25.0,"TGAT90":35.0,"ALEV61":20.0,"ALEV63":20.0},"ao":0,"mt":null,"ma":null,"a3":487.56,"ms":388.98,"xm":503.48,"nm":388.98,"sa":{"GPAX":3.18,"TGAT90":45.96,"ALEV61":16.21,"ALEV63":40.74}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต เทคโนโลยีการวัดและระบบอัจฉริยะ (แบบที่ 1)","s":20,"mg":2.25,"w":{"GPAX":30.0,"TGAT90":35.0,"ALEV61":15.0,"ALEV64":10.0,"ALEV65":5.0,"ALEV66":5.0},"ao":0,"mt":null,"ma":null,"a3":466.02,"ms":373.78,"xm":495.55,"nm":373.78,"sa":{"GPAX":3.36,"TGAT90":45.3,"ALEV61":11.14,"ALEV64":16.71,"ALEV65":16.79,"ALEV66":24.57}},{"f":"คณะวิทยาศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต เทคโนโลยีการวัดและระบบอัจฉริยะ (แบบที่ 2)","s":20,"mg":2.25,"w":{"GPAX":30.0,"TGAT90":35.0,"ALEV61":15.0,"ALEV63":20.0},"ao":0,"mt":null,"ma":null,"a3":517.21,"ms":516.88,"xm":517.54,"nm":516.88,"sa":{"GPAX":3.41,"TGAT90":50.35,"ALEV61":19.5,"ALEV63":33.5}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมคอมพิวเตอร์","s":40,"mg":2.0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":565.72,"ms":528.94,"xm":553.58,"nm":528.94,"sa":{"GPAX":3.75,"TGAT90":63.39,"TPAT30":60.62,"ALEV61":35.47,"ALEV64":33.07}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเครื่องกล","s":20,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":466.31,"ms":375.91,"xm":496.53,"nm":375.91,"sa":{"GPAX":3.5,"TGAT90":54.05,"TPAT30":53.5,"ALEV61":21.75,"ALEV64":20.06,"ALEV65":14.46}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมไฟฟ้า วิชาเอก วิศวกรรมไฟฟ้ากำลัง","s":15,"mg":2.0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":489.59,"ms":420.25,"xm":553.58,"nm":528.94,"sa":{"GPAX":3.74,"TGAT90":49.95,"TPAT30":61.44,"ALEV61":30.5,"ALEV64":31.5,"ALEV65":16.25}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมไฟฟ้า วิชาเอก วิศวกรรมไฟฟ้าสื่อสาร","s":10,"mg":2.0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":474.02,"ms":333.41,"xm":525.0,"nm":333.41,"sa":{"GPAX":3.52,"TGAT90":54.48,"TPAT30":43.5,"ALEV61":24.0,"ALEV64":27.75}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมโยธา","s":70,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":478.13,"ms":416.25,"xm":489.77,"nm":416.25,"sa":{"GPAX":3.63,"TGAT90":57.47,"TPAT30":55.13,"ALEV61":24.79,"ALEV64":24.06,"ALEV65":16.17}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมอุตสาหการ","s":40,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":435.01,"ms":344.19,"xm":452.0,"nm":344.19,"sa":{"GPAX":3.56,"TGAT90":52.97,"TPAT30":49.74,"ALEV61":19.55,"ALEV64":18.13,"ALEV65":14.38}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมวัสดุ","s":20,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":10.0},"ao":0,"mt":null,"ma":null,"a3":384.28,"ms":292.97,"xm":373.64,"nm":292.97,"sa":{"GPAX":3.34,"TGAT90":46.63,"TPAT30":43.04,"ALEV61":15.19,"ALEV64":17.24,"ALEV65":18.66}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมสิ่งแวดล้อม","s":25,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":10.0},"ao":0,"mt":null,"ma":null,"a3":427.62,"ms":322.89,"xm":442.75,"nm":322.89,"sa":{"GPAX":3.61,"TGAT90":53.81,"TPAT30":48.03,"ALEV61":19.23,"ALEV64":18.77,"ALEV65":18.75}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเคมี","s":30,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":10.0},"ao":0,"mt":null,"ma":null,"a3":468.13,"ms":411.39,"xm":471.94,"nm":411.39,"sa":{"GPAX":3.75,"TGAT90":59.31,"TPAT30":52.84,"ALEV61":20.78,"ALEV64":20.48,"ALEV65":22.87}},{"f":"คณะวิศวกรรมศาสตร์","p":"หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมนวัตกรรมอัจฉริยะ (หลักสูตรภาษาอังกฤษ)","s":20,"mg":2.0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT30":40.0,"ALEV61":15.0,"ALEV64":15.0},"ao":0,"mt":null,"ma":null,"a3":430.49,"ms":319.5,"xm":410.1,"nm":319.5,"sa":{"GPAX":3.29,"TGAT90":57.09,"TPAT30":47.57,"ALEV61":21.21,"ALEV64":22.14}},{"f":"คณะสถาปัตยกรรมศาสตร์","p":"หลักสูตรสถาปัตยกรรมศาสตรบัณฑิต","s":25,"mg":0,"w":{"TGAT90":40.0,"TPAT40":60.0},"ao":0,"mt":null,"ma":null,"a3":653.84,"ms":560.44,"xm":574.0,"nm":527.25,"sa":{"TGAT90":55.79,"TPAT40":72.48}},{"f":"คณะสถาปัตยกรรมศาสตร์","p":"หลักสูตรศิลปกรรมศาสตรบัณฑิต สาขาวิชาออกแบบผลิตภัณฑ์ และบรรจุภัณฑ์","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT20":40.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":519.1,"ms":444.42,"xm":574.0,"nm":527.25,"sa":{"GPAX":3.25,"TGAT90":45.57,"TPAT20":45.4,"ALEV62":18.31,"ALEV63":38.63,"ALEV82":38.33}},{"f":"คณะสถาปัตยกรรมศาสตร์","p":"หลักสูตรศิลปกรรมศาสตรบัณฑิต สาขาวิชาการออกแบบสื่อนวัตกรรม","s":20,"mg":0,"w":{"GPAX":30.0,"TGAT90":30.0,"TPAT20":30.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":621.12,"ms":442.83,"xm":574.0,"nm":527.25,"sa":{"GPAX":3.51,"TGAT90":51.81,"TPAT20":51.88,"ALEV82":45.12}},{"f":"คณะสถาปัตยกรรมศาสตร์","p":"หลักสูตรศิลปกรรมศาสตรบัณฑิต สาขาวิชาทัศนศิลป์","s":15,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT20":40.0,"ALEV62":5.0,"ALEV82":5.0},"ao":0,"mt":null,"ma":null,"a3":492.08,"ms":342.96,"xm":574.0,"nm":527.25,"sa":{"GPAX":3.12,"TGAT90":42.33,"TPAT20":44.03,"ALEV62":15.6,"ALEV82":31.25}},{"f":"คณะสถาปัตยกรรมศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต เทคโนโลยีสถาปัตยกรรม","s":10,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT40":50.0},"ao":0,"mt":null,"ma":null,"a3":582.56,"ms":527.25,"xm":574.0,"nm":527.25,"sa":{"GPAX":3.24,"TGAT90":41.03,"TPAT40":62.5}},{"f":"คณะโลจิสติกส์และดิจิทัลซัพพลายเชน","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาโลจิสติกส์และดิจิทัลซัพพลายเชน (แบบที่ 1)","s":10,"mg":0,"w":{"GPAX":25.0,"TGAT90":25.0,"TPAT30":10.0,"ALEV61":20.0,"ALEV63":20.0},"ao":0,"mt":null,"ma":null,"a3":512.26,"ms":461.43,"xm":486.13,"nm":461.43,"sa":{"GPAX":3.63,"TGAT90":48.82,"TPAT30":42.27,"ALEV61":19.17,"ALEV63":40.75}},{"f":"คณะโลจิสติกส์และดิจิทัลซัพพลายเชน","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาโลจิสติกส์และดิจิทัลซัพพลายเชน (แบบที่ 2)","s":10,"mg":0,"w":{"GPAX":25.0,"TGAT90":25.0,"TPAT30":10.0,"ALEV62":20.0,"ALEV63":20.0},"ao":0,"mt":null,"ma":null,"a3":542.74,"ms":469.61,"xm":486.13,"nm":461.43,"sa":{"GPAX":3.63,"TGAT90":52.36,"TPAT30":41.11,"ALEV62":31.91,"ALEV63":39.94}},{"f":"คณะเภสัชศาสตร์","p":"หลักสูตรเภสัชศาสตรบัณฑิต สาขาวิชาการบริบาลทางเภสัชกรรม","s":30,"mg":3.0,"w":{},"ao":0,"mt":null,"ma":null,"a3":556.99,"ms":414.33,"xm":697.24,"nm":414.33,"sa":{"TGAT90":68.38,"ALEV61":37.8,"ALEV64":39.7,"ALEV65":33.0,"ALEV66":58.4,"ALEV82":60.0}},{"f":"คณะเภสัชศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์เครื่องสำอางและ ผลิตภัณฑ์ธรรมชาติ","s":20,"mg":3.0,"w":{"GPAX":10.0,"TGAT90":30.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":15.0,"ALEV66":15.0,"ALEV82":10.0},"ao":0,"mt":20.0,"ma":null,"a3":576.64,"ms":534.7,"xm":574.13,"nm":534.7,"sa":{"GPAX":3.83,"TGAT90":70.64,"ALEV61":27.83,"ALEV64":28.83,"ALEV65":37.09,"ALEV66":58.0,"ALEV82":69.58},"mc":[{"t":"sum","s":["ALEV61","ALEV64","ALEV65","ALEV66","ALEV82"],"m":100}]},{"f":"คณะพยาบาลศาสตร์","p":"หลักสูตรพยาบาลศาสตรบัณฑิต","s":50,"mg":0,"w":{"TGAT90":35.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":15.0,"ALEV66":15.0,"ALEV82":15.0},"ao":0,"mt":null,"ma":null,"a3":508.05,"ms":447.79,"xm":512.03,"nm":447.79,"sa":{"TGAT90":66.67,"ALEV61":24.6,"ALEV65":22.67,"ALEV66":45.3,"ALEV82":63.0}},{"f":"คณะวิทยาศาสตร์การแพทย์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":10.0,"ALEV65":20.0,"ALEV66":20.0},"ao":0,"mt":null,"ma":null,"a3":523.17,"ms":444.38,"xm":522.33,"nm":444.38,"sa":{"GPAX":3.78,"TGAT90":60.93,"ALEV61":19.41,"ALEV65":19.06,"ALEV66":41.95}},{"f":"คณะวิทยาศาสตร์การแพทย์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์การแพทย์","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":5.0,"ALEV64":5.0,"ALEV65":20.0,"ALEV66":20.0},"ao":0,"mt":null,"ma":null,"a3":543.82,"ms":515.3,"xm":559.05,"nm":515.3,"sa":{"GPAX":3.89,"TGAT90":62.03,"ALEV61":17.8,"ALEV64":22.13,"ALEV65":21.56,"ALEV66":50.3}},{"f":"คณะวิทยาศาสตร์การแพทย์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์การแพทย์ (ตรีต่อเนื่องโท)","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":5.0,"ALEV64":5.0,"ALEV65":20.0,"ALEV66":20.0},"ao":0,"mt":null,"ma":null,"a3":525.26,"ms":476.3,"xm":517.1,"nm":476.3,"sa":{"GPAX":3.76,"TGAT90":60.74,"ALEV61":24.0,"ALEV64":21.23,"ALEV65":25.57,"ALEV66":43.09}},{"f":"คณะวิทยาศาสตร์การแพทย์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาชีวเคมีและชีววิทยาโมเลกุล","s":100,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV61":10.0,"ALEV65":20.0,"ALEV66":20.0},"ao":0,"mt":null,"ma":null,"a3":457.89,"ms":294.41,"xm":475.13,"nm":294.41,"sa":{"GPAX":3.69,"TGAT90":51.98,"TPAT30":44.7,"ALEV61":17.82,"ALEV65":19.75,"ALEV66":33.55}},{"f":"คณะวิทยาศาสตร์การแพทย์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาพยาธิวิทยากายวิภาค","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV64":10.0,"ALEV65":5.0,"ALEV66":35.0},"ao":0,"mt":null,"ma":null,"a3":566.84,"ms":510.61,"xm":569.23,"nm":510.61,"sa":{"GPAX":3.78,"TGAT90":60.62,"ALEV64":20.75,"ALEV65":19.63,"ALEV66":47.64}},{"f":"คณะสหเวชศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคนิคการแพทย์","s":25,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"ALEV61":10.0,"ALEV65":25.0,"ALEV66":25.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":494.42,"ms":399.92,"xm":414.97,"nm":399.92,"sa":{"GPAX":3.9,"TGAT90":62.06,"ALEV61":25.82,"ALEV65":30.94,"ALEV66":47.05,"ALEV82":52.03},"mc":[{"t":"min","s":"ALEV65","m":30},{"t":"min","s":"ALEV66","m":30}]},{"f":"คณะสหเวชศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาเทคโนโลยีหัวใจและทรวงอก","s":15,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"ALEV61":20.0,"ALEV64":20.0,"ALEV66":20.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":514.76,"ms":419.43,"xm":534.33,"nm":419.43,"sa":{"GPAX":3.83,"TGAT90":64.37,"ALEV61":33.61,"ALEV64":31.89,"ALEV66":47.07,"ALEV82":57.22},"mc":[{"t":"each","m":25}]},{"f":"คณะสหเวชศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชารังสีเทคนิค","s":15,"mg":0,"w":{"TGAT90":30.0,"ALEV61":20.0,"ALEV64":25.0,"ALEV66":25.0},"ao":0,"mt":null,"ma":null,"a3":482.17,"ms":402.5,"xm":529.17,"nm":402.5,"sa":{"TGAT90":62.29,"ALEV61":32.31,"ALEV64":35.69,"ALEV66":49.35},"mc":[{"t":"each","m":25}]},{"f":"คณะสหเวชศาสตร์","p":"หลักสูตรทัศนมาตรศาสตรบัณฑิต","s":10,"mg":3.0,"w":{"GPAX":10.0,"TGAT90":20.0,"ALEV61":20.0,"ALEV64":20.0,"ALEV66":30.0},"ao":0,"mt":null,"ma":null,"a3":477.52,"ms":443.5,"xm":456.65,"nm":443.5,"sa":{"GPAX":3.88,"TGAT90":64.12,"ALEV61":28.6,"ALEV64":28.0,"ALEV66":46.32},"mc":[{"t":"each","m":22}]},{"f":"คณะสาธารณสุขศาสตร์","p":"หลักสูตรสาธารณสุขศาสตรบัณฑิต สาขาวิชาอนามัยชุมชน","s":50,"mg":0,"w":{"ALEV61":25.0,"ALEV65":25.0,"ALEV66":25.0,"ALEV82":25.0},"ao":0,"mt":null,"ma":null,"a3":339.95,"ms":279.38,"xm":343.75,"nm":279.38,"sa":{"ALEV61":23.02,"ALEV65":25.51,"ALEV66":38.79,"ALEV82":50.84}},{"f":"คณะสาธารณสุขศาสตร์","p":"หลักสูตรสาธารณสุขศาสตรบัณฑิต สาขาวิชาอนามัยสิ่งแวดล้อม","s":25,"mg":0,"w":{"ALEV61":25.0,"ALEV65":25.0,"ALEV66":25.0,"ALEV82":25.0},"ao":0,"mt":null,"ma":null,"a3":278.21,"ms":162.0,"xm":435.36,"nm":366.52,"sa":{"ALEV61":18.04,"ALEV65":21.13,"ALEV66":34.01,"ALEV82":38.67}},{"f":"คณะสาธารณสุขศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาอาชีวอนามัยและความปลอดภัย","s":15,"mg":0,"w":{"ALEV64":25.0,"ALEV65":25.0,"ALEV66":25.0,"ALEV82":25.0},"ao":0,"mt":null,"ma":null,"a3":318.47,"ms":261.38,"xm":312.75,"nm":261.38,"sa":{"ALEV64":23.0,"ALEV65":23.27,"ALEV66":38.89,"ALEV82":43.99}},{"f":"คณะสาธารณสุขศาสตร์","p":"หลักสูตรการแพทย์แผนไทยประยุกต์บัณฑิต","s":10,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"TPAT10":20.0,"ALEV61":10.0,"ALEV64":10.0,"ALEV65":10.0,"ALEV66":10.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":451.22,"ms":366.52,"xm":435.36,"nm":366.52,"sa":{"GPAX":3.73,"TGAT90":57.27,"TPAT10":50.36,"ALEV61":18.18,"ALEV64":20.64,"ALEV65":22.73,"ALEV66":34.18,"ALEV82":50.8}},{"f":"คณะสาธารณสุขศาสตร์","p":"หลักสูตรสาธารณสุขศาสตรบัณฑิต สาขาวิชาการดูแลและการจัดการ สุขภาพผู้สูงอายุ","s":20,"mg":0,"w":{"ALEV61":20.0,"ALEV65":20.0,"ALEV66":30.0,"ALEV82":30.0},"ao":0,"mt":null,"ma":null,"a3":280.06,"ms":210.15,"xm":289.6,"nm":210.15,"sa":{"ALEV61":18.52,"ALEV65":18.59,"ALEV66":32.8,"ALEV82":35.11}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรนิเทศศาสตรบัณฑิต","s":20,"mg":0,"w":{"GPAX":10.0,"TGAT90":30.0,"ALEV70":20.0,"ALEV81":20.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":525.21,"ms":456.75,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.56,"TGAT90":54.79,"ALEV62":28.74,"ALEV70":41.06,"ALEV81":63.11}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาการท่องเที่ยว","s":30,"mg":0,"w":{"GPAX":10.0,"TGAT90":20.0,"ALEV70":20.0,"ALEV81":20.0,"ALEV82":30.0},"ao":0,"mt":null,"ma":null,"a3":577.91,"ms":505.92,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.6,"TGAT90":55.41,"ALEV70":41.88,"ALEV81":61.49,"ALEV82":50.86}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาบริหารธุรกิจ","s":15,"mg":0,"w":{"GPAX":20.0,"TGAT90":20.0,"ALEV62":20.0,"ALEV81":20.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":597.04,"ms":518.67,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.65,"TGAT90":54.98,"ALEV62":36.21,"ALEV81":63.74,"ALEV82":47.77}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาธุรกิจดิจิทัล","s":10,"mg":0,"w":{"GPAX":10.0,"TGAT90":30.0,"ALEV62":20.0,"ALEV81":20.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":556.71,"ms":426.25,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.41,"ALEV62":28.08,"ALEV81":61.04,"ALEV82":51.71}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาการเงิน (แบบที่ 1)","s":20,"mg":0,"w":{"GPAX":20.0,"ALEV61":40.0,"ALEV82":40.0},"ao":0,"mt":null,"ma":null,"a3":471.01,"ms":418.5,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.6,"ALEV61":21.94,"ALEV82":50.94}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาการเงิน (แบบที่ 2)","s":20,"mg":0,"w":{"GPAX":20.0,"ALEV62":40.0,"ALEV82":40.0},"ao":0,"mt":null,"ma":null,"a3":495.33,"ms":428.5,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.6,"ALEV62":37.1,"ALEV82":43.0}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรบัญชีบัณฑิต","s":20,"mg":0,"w":{"GPAX":10.0,"TGAT90":40.0,"ALEV62":30.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":647.31,"ms":495.25,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.76,"TGAT90":59.75,"ALEV62":53.84}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรเศรษฐศาสตรบัณฑิต","s":30,"mg":0,"w":{"GPAX":20.0,"TGAT90":60.0,"ALEV62":20.0},"ao":0,"mt":null,"ma":null,"a3":570.57,"ms":521.0,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.53,"TGAT90":54.49,"ALEV62":36.54}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรเศรษฐศาสตรบัณฑิต (ตรีต่อเนื่องโท)","s":5,"mg":0,"w":{"GPAX":20.0,"TGAT90":60.0,"ALEV62":20.0},"ao":0,"mt":null,"ma":null,"a3":570.57,"ms":521.0,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.53,"TGAT90":54.49,"ALEV62":36.54}},{"f":"คณะบริหารธุรกิจ เศรษฐศาสตร์ และการสื่อสาร","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชานวัตกรรมและการตลาดเชิงสร้างสรรค์","s":10,"mg":0,"w":{"GPAX":10.0,"TGAT90":90.0},"ao":0,"mt":null,"ma":null,"a3":591.18,"ms":525.74,"xm":579.71,"nm":579.71,"sa":{"GPAX":3.33,"TGAT90":55.01}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาพม่าศึกษา","s":5,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":521.75,"ms":411.05,"xm":544.1,"nm":411.05,"sa":{"GPAX":3.23,"TGAT90":44.26}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาจีน","s":15,"mg":0,"w":{"GPAX":20.0,"TGAT90":50.0,"ALEV87":30.0},"ao":0,"mt":null,"ma":null,"a3":622.05,"ms":564.61,"xm":643.1,"nm":564.61,"sa":{"GPAX":3.73,"TGAT90":54.17,"ALEV87":42.5}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาญี่ปุ่น","s":15,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":613.12,"ms":430.5,"xm":610.1,"nm":430.5,"sa":{"GPAX":3.47,"TGAT90":54.02}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาไทย","s":15,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":600.04,"ms":537.94,"xm":597.83,"nm":537.94,"sa":{"GPAX":3.56,"TGAT90":52.06}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาฝรั่งเศส","s":10,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":573.19,"ms":449.28,"xm":518.55,"nm":449.28,"sa":{"GPAX":3.47,"TGAT90":51.05}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาอังกฤษ","s":25,"mg":0,"w":{"GPAX":10.0,"ALEV70":20.0,"ALEV81":20.0,"ALEV82":50.0},"ao":0,"mt":null,"ma":null,"a3":647.82,"ms":532.0,"xm":610.5,"nm":532.0,"sa":{"GPAX":3.54,"ALEV70":41.95,"ALEV81":63.14,"ALEV82":69.65}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาเกาหลี","s":10,"mg":0,"w":{"GPAX":20.0,"TGAT90":50.0,"ALEV86":30.0},"ao":0,"mt":null,"ma":null,"a3":530.38,"ms":435.69,"xm":502.17,"nm":435.69,"sa":{"GPAX":3.59,"TGAT90":48.73,"ALEV86":35.06}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชานาฏศิลป์ไทย","s":5,"mg":0,"w":{"GPAX":100.0},"ao":0,"mt":null,"ma":null,"a3":823.36,"ms":570.0,"xm":827.5,"nm":570.0,"sa":{"GPAX":3.27}},{"f":"คณะมนุษยศาสตร์","p":"หลักสูตรดุริยางคศาสตรบัณฑิต","s":10,"mg":0,"w":{"GPAX":100.0},"ao":0,"mt":null,"ma":null,"a3":815.0,"ms":637.5,"xm":862.5,"nm":637.5,"sa":{"GPAX":3.22}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกประถมศึกษา","s":10,"mg":2.75,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT50":25.0,"ALEV61":5.0,"ALEV63":5.0,"ALEV70":5.0,"ALEV81":5.0,"ALEV82":5.0},"ao":0,"mt":null,"ma":null,"a3":683.49,"ms":650.86,"xm":664.2,"nm":650.86,"sa":{"GPAX":3.79,"TGAT90":59.77,"TPAT50":81.16,"ALEV61":22.23,"ALEV63":46.2,"ALEV70":40.24,"ALEV81":62.0}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกปฐมวัย","s":4,"mg":0,"w":{"GPAX":20.0,"TGAT90":40.0,"TPAT50":40.0},"ao":0,"mt":null,"ma":null,"a3":731.12,"ms":684.28,"xm":708.0,"nm":684.28,"sa":{"GPAX":3.67,"TGAT90":59.43,"TPAT50":77.77}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกคอมพิวเตอร์","s":10,"mg":2.5,"w":{"GPAX":20.0,"TGAT90":50.0,"TPAT50":30.0},"ao":0,"mt":null,"ma":null,"a3":645.83,"ms":438.53,"xm":646.86,"nm":438.53,"sa":{"GPAX":3.38,"TGAT90":51.1,"TPAT50":70.5}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกวิทยาศาสตร์","s":30,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT50":20.0,"ALEV63":30.0},"ao":0,"mt":null,"ma":null,"a3":685.82,"ms":639.75,"xm":642.91,"nm":639.75,"sa":{"GPAX":3.75,"TGAT90":58.42,"TPAT50":77.21,"ALEV63":55.83}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกภาษาอังกฤษ","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT50":20.0,"ALEV70":5.0,"ALEV81":5.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":742.52,"ms":657.41,"xm":715.83,"nm":657.41,"sa":{"GPAX":3.74,"TGAT90":66.52,"TPAT50":79.59,"ALEV70":44.35,"ALEV81":66.24,"ALEV82":69.08}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกภาษาไทย","s":20,"mg":0,"w":{"GPAX":20.0,"TGAT90":20.0,"TPAT50":20.0,"ALEV70":5.0,"ALEV81":30.0,"ALEV82":5.0},"ao":0,"mt":null,"ma":null,"a3":737.92,"ms":689.42,"xm":761.85,"nm":689.42,"sa":{"GPAX":3.76,"TGAT90":58.48,"TPAT50":79.94,"ALEV70":46.54,"ALEV81":70.4,"ALEV82":40.92}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกพลศึกษา และวิทยาศาสตร์การออกกำลังกาย","s":20,"mg":2.0,"w":{"GPAX":20.0,"TGAT90":30.0,"TPAT50":50.0},"ao":0,"mt":null,"ma":null,"a3":714.84,"ms":652.25,"xm":688.16,"nm":652.25,"sa":{"GPAX":3.51,"TGAT90":53.81,"TPAT50":75.85}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกคณิตศาสตร์","s":20,"mg":3.0,"w":{"GPAX":20.0,"TGAT90":20.0,"TPAT50":10.0,"ALEV61":30.0,"ALEV81":10.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":603.06,"ms":555.02,"xm":602.97,"nm":555.02,"sa":{"GPAX":3.85,"TGAT90":61.5,"TPAT50":82.04,"ALEV61":31.66,"ALEV63":55.51,"ALEV81":66.61,"ALEV82":46.85}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรการศึกษาบัณฑิต สาขาวิชาการศึกษา (4 ปี) วิชาเอกศิลปศึกษา","s":5,"mg":0,"w":{"GPAX":20.0,"TGAT90":50.0,"TPAT50":30.0},"ao":0,"mt":null,"ma":null,"a3":667.2,"ms":610.42,"xm":656.0,"nm":610.42,"sa":{"GPAX":3.51,"TGAT90":52.13,"TPAT50":75.22}},{"f":"คณะศึกษาศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาเทคโนโลยีดิจิทัลและนวัตกรรมเพื่อการเรียนรู้","s":20,"mg":0,"w":{"GPAX":30.0,"TGAT90":60.0,"TPAT30":10.0},"ao":0,"mt":null,"ma":null,"a3":533.82,"ms":504.16,"xm":504.16,"nm":504.16,"sa":{"GPAX":3.26,"TGAT90":41.31,"TPAT30":41.33}},{"f":"คณะนิติศาสตร์","p":"หลักสูตรนิติศาสตรบัณฑิต (แบบที่ 1)","s":77,"mg":0,"w":{"GPAX":20.0,"TGAT90":20.0,"ALEV61":15.0,"ALEV70":15.0,"ALEV81":15.0,"ALEV82":15.0},"ao":0,"mt":null,"ma":null,"a3":515.53,"ms":416.49,"xm":501.39,"nm":416.49,"sa":{"GPAX":3.5,"TGAT90":51.74,"ALEV61":18.42,"ALEV70":38.37,"ALEV81":58.33,"ALEV82":37.43}},{"f":"คณะนิติศาสตร์","p":"หลักสูตรนิติศาสตรบัณฑิต (แบบที่ 2)","s":33,"mg":0,"w":{"GPAX":20.0,"TGAT90":20.0,"ALEV62":15.0,"ALEV70":15.0,"ALEV81":15.0,"ALEV82":15.0},"ao":0,"mt":null,"ma":null,"a3":543.42,"ms":454.78,"xm":537.22,"nm":454.78,"sa":{"GPAX":3.58,"TGAT90":52.83,"ALEV62":26.04,"ALEV70":40.55,"ALEV81":60.43,"ALEV82":38.46}},{"f":"คณะสังคมศาสตร์","p":"หลักสูตรรัฐศาสตรบัณฑิต","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":633.24,"ms":572.72,"xm":633.16,"nm":572.72,"sa":{"GPAX":3.61,"TGAT90":56.43}},{"f":"คณะสังคมศาสตร์","p":"หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจิตวิทยา","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":80.0},"ao":0,"mt":null,"ma":null,"a3":723.49,"ms":675.5,"xm":708.0,"nm":675.5,"sa":{"GPAX":3.74,"TGAT90":67.47}},{"f":"คณะสังคมศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาประวัติศาสตร์","s":50,"mg":0,"w":{"GPAX":20.0,"TGAT90":30.0,"ALEV70":50.0},"ao":0,"mt":null,"ma":null,"a3":511.13,"ms":382.94,"xm":516.78,"nm":382.94,"sa":{"GPAX":3.16,"TGAT90":43.75,"ALEV70":40.64}},{"f":"คณะสังคมศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาพัฒนาสังคม","s":40,"mg":2.8,"w":{"GPAX":20.0,"ALEV70":60.0,"ALEV82":20.0},"ao":0,"mt":null,"ma":null,"a3":583.41,"ms":496.5,"xm":584.0,"nm":496.5,"sa":{"GPAX":3.45,"ALEV70":46.58}},{"f":"คณะสังคมศาสตร์","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาประชาคมโลกศึกษา (หลักสูตรสองภาษา)","s":15,"mg":3.0,"w":{"GPAX":20.0,"TGAT90":50.0,"ALEV82":30.0},"ao":0,"mt":null,"ma":null,"a3":546.93,"ms":401.78,"xm":606.42,"nm":401.78,"sa":{"GPAX":3.19,"TGAT90":48.75,"ALEV82":41.5}},{"f":"วิทยาลัยนานาชาติ","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาการจัดการธุรกิจระหว่างประเทศ (หลักสูตรนานาชาติ)","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":60.0,"ALEV62":20.0},"ao":0,"mt":null,"ma":null,"a3":511.35,"ms":323.33,"xm":406.33,"nm":323.33,"sa":{"GPAX":3.25,"TGAT90":49.65,"ALEV62":27.75}},{"f":"วิทยาลัยนานาชาติ","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาการจัดการการอีเวนต์ โรงแรมและการท่องเที่ยว (หลักสูตรนานาชาติ)","s":30,"mg":0,"w":{"GPAX":20.0,"TGAT90":60.0,"ALEV62":20.0},"ao":0,"mt":null,"ma":null,"a3":477.38,"ms":448.0,"xm":487.5,"nm":448.0,"sa":{"GPAX":3.26,"TGAT90":46.39,"ALEV62":24.5}},{"f":"วิทยาลัยนานาชาติ","p":"หลักสูตรบริหารธุรกิจบัณฑิต สาขาวิชาการจัดการและการพัฒนา ทรัพยากรมนุษย์ระหว่างประเทศ (หลักสูตรนานาชาติ)","s":30,"mg":0,"w":{"GPAX":20.0,"TGAT90":60.0,"ALEV62":20.0},"ao":0,"mt":null,"ma":null,"a3":null,"ms":null,"xm":406.33,"nm":323.33,"sa":{}},{"f":"วิทยาลัยนานาชาติ","p":"หลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาภาษาอังกฤษเพื่อการสื่อสารธุรกิจ (หลักสูตรนานาชาติ)","s":40,"mg":0,"w":{"GPAX":20.0,"TGAT90":70.0,"ALEV82":10.0},"ao":0,"mt":null,"ma":null,"a3":571.46,"ms":497.44,"xm":530.8,"nm":497.44,"sa":{"GPAX":3.45,"TGAT90":51.3,"ALEV82":41.33}}];
+
+const SUBJ ={"GPAX": {"label": "GPAX (5 ภาคเรียน)", "max": 4, "type": "gpax"}, "TGAT90": {"label": "TGAT 90 ความถนัดทั่วไป", "max": 100, "type": "tgat"}, "TPAT10": {"label": "TPAT 10 วิชาเฉพาะ กสพท.", "max": 100, "type": "tpat"}, "TPAT20": {"label": "TPAT 20 ศิลปกรรมศาสตร์", "max": 100, "type": "tpat"}, "TPAT30": {"label": "TPAT 30 วิทย์-เทคโน-วิศวะ", "max": 100, "type": "tpat"}, "TPAT40": {"label": "TPAT 40 สถาปัตยกรรม", "max": 100, "type": "tpat"}, "TPAT50": {"label": "TPAT 50 ครุศาสตร์-ศึกษาศาสตร์", "max": 100, "type": "tpat"}, "ALEV61": {"label": "A-Level 61 คณิตประยุกต์ 1", "max": 100, "type": "alev"}, "ALEV62": {"label": "A-Level 62 คณิตประยุกต์ 2", "max": 100, "type": "alev"}, "ALEV63": {"label": "A-Level 63 วิทย์ประยุกต์", "max": 100, "type": "alev"}, "ALEV64": {"label": "A-Level 64 ฟิสิกส์", "max": 100, "type": "alev"}, "ALEV65": {"label": "A-Level 65 เคมี", "max": 100, "type": "alev"}, "ALEV66": {"label": "A-Level 66 ชีววิทยา", "max": 100, "type": "alev"}, "ALEV70": {"label": "A-Level 70 สังคมศึกษา", "max": 100, "type": "alev"}, "ALEV81": {"label": "A-Level 81 ภาษาไทย", "max": 100, "type": "alev"}, "ALEV82": {"label": "A-Level 82 ภาษาอังกฤษ", "max": 100, "type": "alev"}, "ALEV86": {"label": "A-Level 86 ภาษาเกาหลี", "max": 100, "type": "alev"}, "ALEV87": {"label": "A-Level 87 ภาษาจีน", "max": 100, "type": "alev"}};
+
+const SUBJ_ORDER =['GPAX','TGAT90','TPAT10','TPAT20','TPAT30','TPAT40','TPAT50','ALEV61','ALEV62','ALEV63','ALEV64','ALEV65','ALEV66','ALEV70','ALEV81','ALEV82','ALEV86','ALEV87'];
+
+let currentProgram = null;
+
+function resetScorePanel() {
+  document.getElementById('program-info').classList.remove('show');
+  document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกหลักสูตร</div>';
+  document.getElementById('btn-predict').disabled = true;
+  currentProgram = null;
+}
+
+(function init() {
+  const faculties = [...new Set(DB.map(d => d.f))].sort((a, b) => a.localeCompare(b, 'th'));
+  const sel = document.getElementById('sel-faculty');
+  faculties.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f;
+    o.textContent = f;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', onFacultyChange);
+  document.getElementById('sel-program').addEventListener('change', onProgramChange);
+})();
+
+function onFacultyChange() {
+  const fac = this.value;
+  const pSel = document.getElementById('sel-program');
+  pSel.innerHTML = '<option value="">-- เลือกหลักสูตร --</option>';
+  pSel.disabled = !fac;
+  resetScorePanel();
+
+  if (!fac) return;
+
+  const progs = DB.filter(d => d.f === fac).sort((a, b) => a.p.localeCompare(b.p, 'th'));
+  progs.forEach((p, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = p.p;
+    pSel.appendChild(o);
+  });
+}
+
+function onProgramChange() {
+  const fac = document.getElementById('sel-faculty').value;
+  const pSel = this;
+  if (!pSel.value) {
+    resetScorePanel();
+    return;
+  }
+
+  const progs = DB.filter(d => d.f === fac);
+  progs.sort((a, b) => a.p.localeCompare(b.p, 'th'));
+  const idx = parseInt(pSel.value);
+  const prog = progs[idx];
+  currentProgram = prog;
+
+  const info = document.getElementById('program-info');
+  info.classList.add('show');
+  info.innerHTML = `
+    <div class="seats-num-wrap">
+      <div class="seats-num">${prog.s}</div>
+      <div class="seats-label">ที่นั่ง</div>
+    </div>
+    <div class="seats-detail">
+      <div class="seats-prog-name">${prog.p}</div>
+      <div class="seats-year-badge">TCAS 2 / 2569</div>
+    </div>`;
+
+  if (Object.keys(prog.w).length === 0 && prog.ao === 0) {
+    document.getElementById('score-inputs').innerHTML = '<div class="score-unsupported">หลักสูตรนี้ใช้ระบบการคิดคะแนนแบบ Adj. T-score จึงไม่สามารถทำนายผลด้วยระบบนี้ได้</div>';
+    document.getElementById('btn-predict').disabled = true;
+    return;
+  }
+
+  buildScoreInputs(prog);
+  document.getElementById('btn-predict').disabled = false;
+}
+
+const ALEV_OTHER = [
+  {key:'ALEV64', label:'A-Level 64 ฟิสิกส์'},
+  {key:'ALEV65', label:'A-Level 65 เคมี'},
+  {key:'ALEV66', label:'A-Level 66 ชีววิทยา'}
+];
+
+const SVG_ICONS = {
+  A: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#DCFCE7" stroke="#22c55e" stroke-width="3"/><path d="M24 50l10 10 16-18" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M42 50l10 10 20-22" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  B: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#DBEAFE" stroke="#3b82f6" stroke-width="3"/><path d="M30 50l12 12 24-28" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  C: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#FEF3C7" stroke="#f59e0b" stroke-width="3"/><path d="M48 24L28 68h40L48 24z" stroke="#d97706" stroke-width="4" stroke-linejoin="round" fill="#FDE68A" opacity="0.5"/><rect x="45" y="38" width="6" height="16" rx="3" fill="#b45309"/><circle cx="48" cy="60" r="3.5" fill="#b45309"/></svg>',
+  D: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#FFEDD5" stroke="#f97316" stroke-width="3"/><path d="M48 28v30" stroke="#ea580c" stroke-width="5" stroke-linecap="round"/><path d="M36 52l12 14 12-14" stroke="#ea580c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  F: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#FEE2E2" stroke="#dc2626" stroke-width="3"/><path d="M34 34l28 28M62 34L34 62" stroke="#b91c1c" stroke-width="5.5" stroke-linecap="round"/></svg>',
+  '?': '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#F3F4F6" stroke="#9ca3af" stroke-width="3"/><path d="M38 36c0-7 5-12 12-12s12 6 12 12c0 7-6 9-12 14" stroke="#6b7280" stroke-width="4.5" stroke-linecap="round" fill="none"/><circle cx="50" cy="68" r="4" fill="#6b7280"/></svg>'
+};
+
+function buildScoreInputs(prog) {
+  const container = document.getElementById('score-inputs');
+  let html = '';
+
+  const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
+  const hasAlevOther = prog.ao > 0;
+
+  const gpaxSubjects = activeSubjects.filter(k => SUBJ[k].type === 'gpax');
+  const tgatSubjects = activeSubjects.filter(k => SUBJ[k].type === 'tgat');
+  const tpatSubjects = activeSubjects.filter(k => SUBJ[k].type === 'tpat');
+  const alevSubjects = activeSubjects.filter(k => SUBJ[k].type === 'alev');
+
+  if (gpaxSubjects.length > 0) {
+    const totalW = gpaxSubjects.reduce((s,k) => s + prog.w[k], 0);
+    html += '<div class="score-group">';
+    html += `<div class="score-group-header">
+      <div class="score-group-icon sg-gpax">📊</div>
+      <span class="score-group-label">GPAX</span>
+      <span class="score-group-badge sg-gpax">${totalW}%</span>
+    </div>`;
+    html += '<div class="fgrid fg-2">';
+    gpaxSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="${SUBJ[k].max}" placeholder="0.00 - ${SUBJ[k].max}" /></div>`;
+    });
+    html += '</div></div>';
+  }
+
+  const testSubjects = [...tgatSubjects, ...tpatSubjects];
+  if (testSubjects.length > 0) {
+    const totalW = testSubjects.reduce((s,k) => s + prog.w[k], 0);
+    html += '<div class="score-group">';
+    html += `<div class="score-group-header">
+      <div class="score-group-icon sg-tgat">🧠</div>
+      <span class="score-group-label">TGAT / TPAT</span>
+      <span class="score-group-badge sg-tgat">${totalW}%</span>
+    </div>`;
+    const cols = testSubjects.length <= 2 ? 'fg-2' : testSubjects.length <= 3 ? 'fg-3' : 'fg-4';
+    html += `<div class="fgrid ${cols}">`;
+    testSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div>';
+  }
+
+  if (alevSubjects.length > 0) {
+    const totalW = alevSubjects.reduce((s,k) => s + prog.w[k], 0);
+    html += '<div class="score-group">';
+    html += `<div class="score-group-header">
+      <div class="score-group-icon sg-alev">🔬</div>
+      <span class="score-group-label">A-Level</span>
+      <span class="score-group-badge sg-alev">${totalW}%</span>
+    </div>`;
+    const cols = alevSubjects.length <= 2 ? 'fg-2' : alevSubjects.length <= 3 ? 'fg-3' : 'fg-4';
+    html += `<div class="fgrid ${cols}">`;
+    alevSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div>';
+  }
+
+  // A-Level อื่น ๆ (3 วิชาคงที่: ฟิสิกส์ เคมี ชีววิทยา)
+  if (hasAlevOther) {
+    html += '<div class="score-group">';
+    html += `<div class="score-group-header">
+      <div class="score-group-icon sg-alev-other">⚗️</div>
+      <span class="score-group-label">A-Level วิทย์</span>
+      <span class="score-group-badge sg-alev-other">${prog.ao}%</span>
+    </div>`;
+    html += `<div class="score-group-note">กรอกคะแนนดิบแต่ละวิชา (ฟิสิกส์ เคมี ชีววิทยา) — ระบบจะคำนวณค่าเฉลี่ยและถ่วงน้ำหนัก ${prog.ao}% ให้อัตโนมัติ</div>`;
+    html += '<div class="fgrid fg-3">';
+    ALEV_OTHER.forEach(s => {
+      html += `<div class="score-field"><label>${s.label}</label>
+        <input type="number" id="inp-ao-${s.key}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div>';
+  }
+
+  container.innerHTML = html;
+
+  container.querySelectorAll('input[type="number"]').forEach(inp => {
+    inp.addEventListener('focus', () => { setTimeout(() => inp.select(), 0); });
+
+    inp.addEventListener('input', () => {
+      if (inp.value === '' || inp.value === '-') return;
+      let val = parseFloat(inp.value);
+      if (isNaN(val)) return;
+      const mx = parseFloat(inp.max);
+      const mn = parseFloat(inp.min);
+      if (!isNaN(mx) && val > mx) { inp.value = mx; }
+      if (!isNaN(mn) && val < mn) { inp.value = mn; }
+    });
+
+    inp.addEventListener('blur', () => {
+      if (inp.value === '') return;
+      let val = parseFloat(inp.value);
+      if (isNaN(val)) { inp.value = ''; return; }
+      const mx = parseFloat(inp.max);
+      const mn = parseFloat(inp.min);
+      if (!isNaN(mx) && val > mx) val = mx;
+      if (!isNaN(mn) && val < mn) val = mn;
+      inp.value = val;
+    });
+  });
+}
+
+function calculate() {
+  if (!currentProgram) return;
+  const prog = currentProgram;
+  const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
+  const hasAlevOther = prog.ao > 0;
+
+  const failedCriteria = [];
+
+  if (prog.mg > 0) {
+    const gpaxInp = document.getElementById('inp-GPAX');
+    const gpaxVal = gpaxInp ? parseFloat(gpaxInp.value) : 0;
+    if (isNaN(gpaxVal) || gpaxVal < prog.mg) {
+      failedCriteria.push({ label: 'GPAX', yours: isNaN(gpaxVal) ? 0 : gpaxVal, required: prog.mg, unit: '' });
+    }
+  }
+
+  if (prog.mt) {
+    const tgatInp = document.getElementById('inp-TGAT90');
+    const tgatVal = tgatInp ? parseFloat(tgatInp.value) : 0;
+    if (isNaN(tgatVal) || tgatVal < prog.mt) {
+      failedCriteria.push({ label: 'TGAT ความถนัดทั่วไป', yours: isNaN(tgatVal) ? 0 : tgatVal, required: prog.mt, unit: ' คะแนน' });
+    }
+  }
+
+  if (prog.ma) {
+    const alevKeys = activeSubjects.filter(k => SUBJ[k].type === 'alev');
+    alevKeys.forEach(k => {
+      const inp = document.getElementById('inp-' + k);
+      const val = inp ? parseFloat(inp.value) : 0;
+      if (isNaN(val) || val < prog.ma) {
+        failedCriteria.push({ label: SUBJ[k].label, yours: isNaN(val) ? 0 : val, required: prog.ma, unit: ' คะแนน' });
+      }
+    });
+    if (hasAlevOther) {
+      ALEV_OTHER.forEach(s => {
+        const inp = document.getElementById('inp-ao-' + s.key);
+        const val = inp ? parseFloat(inp.value) : 0;
+        if (isNaN(val) || val < prog.ma) {
+          failedCriteria.push({ label: s.label, yours: isNaN(val) ? 0 : val, required: prog.ma, unit: ' คะแนน' });
+        }
+      });
+    }
+  }
+
+  if (prog.mc && prog.mc.length > 0) {
+    function getSubjScore(key) {
+      let inp = document.getElementById('inp-' + key);
+      if (!inp) inp = document.getElementById('inp-ao-' + key);
+      const val = inp ? parseFloat(inp.value) : 0;
+      return isNaN(val) ? 0 : val;
+    }
+
+    prog.mc.forEach(rule => {
+      if (rule.t === 'each') {
+        const alevKeys = activeSubjects.filter(k => SUBJ[k].type === 'alev');
+        alevKeys.forEach(k => {
+          const val = getSubjScore(k);
+          if (val < rule.m) {
+            failedCriteria.push({ label: SUBJ[k].label, yours: val, required: rule.m, unit: ' คะแนน' });
+          }
+        });
+        if (hasAlevOther) {
+          ALEV_OTHER.forEach(s => {
+            const val = getSubjScore(s.key);
+            if (val < rule.m) {
+              failedCriteria.push({ label: s.label, yours: val, required: rule.m, unit: ' คะแนน' });
+            }
+          });
+        }
+      } else if (rule.t === 'sum') {
+        let total = 0;
+        const labels = [];
+        rule.s.forEach(key => {
+          total += getSubjScore(key);
+          labels.push(SUBJ[key] ? SUBJ[key].label.replace('A-Level ', '') : key);
+        });
+        if (total < rule.m) {
+          failedCriteria.push({ label: 'รวม A-Level (' + labels.join('+') + ')', yours: total.toFixed(1), required: rule.m, unit: ' คะแนน' });
+        }
+      } else if (rule.t === 'min') {
+        const key = rule.s;
+        const val = getSubjScore(key);
+        if (val < rule.m) {
+          const lbl = SUBJ[key] ? SUBJ[key].label : key;
+          failedCriteria.push({ label: lbl, yours: val, required: rule.m, unit: ' คะแนน' });
+        }
+      }
+    });
+  }
+
+  let totalScore = 0;
+  let breakdown = [];
+
+  activeSubjects.forEach(k => {
+    const inp = document.getElementById('inp-' + k);
+    const val = parseFloat(inp.value);
+    const score = isNaN(val) ? 0 : Math.max(0, val);
+    const weight = prog.w[k];
+    const maxScore = SUBJ[k].max;
+
+    let computed;
+    if (SUBJ[k].type === 'gpax') {
+      computed = (10 * weight * score) / 4;
+    } else {
+      computed = (10 * weight * score) / maxScore;
+    }
+
+    totalScore += computed;
+    breakdown.push({ label: SUBJ[k].label, weight: weight + '%', raw: score, computed: computed });
+  });
+
+  if (hasAlevOther) {
+    let sumScores = 0;
+    ALEV_OTHER.forEach(s => {
+      const inp = document.getElementById('inp-ao-' + s.key);
+      const val = parseFloat(inp.value);
+      sumScores += isNaN(val) ? 0 : Math.max(0, val);
+    });
+
+    const aoComputed = (10 * prog.ao * sumScores) / (3 * 100);
+    totalScore += aoComputed;
+    breakdown.push({
+      label: 'A-Level วิทย์ (ฟิสิกส์+เคมี+ชีวะ)',
+      weight: prog.ao + '%',
+      raw: (sumScores / 3).toFixed(1) + ' เฉลี่ย',
+      computed: aoComputed
+    });
+  }
+
+  showResult(totalScore, breakdown, prog, failedCriteria);
+}
+
+function showResult(totalScore, breakdown, prog, failedCriteria) {
+  failedCriteria = failedCriteria || [];
+  const hasFail = failedCriteria.length > 0;
+
+  const avg3yr = prog.a3 || 0;
+  const minMin = prog.nm || 0;
+
+  const threshold_A = avg3yr * 1.10;
+  const range = threshold_A - minMin;
+  const threshold_B = minMin + 0.55 * range;
+  const threshold_C = minMin + 0.20 * range;
+
+  let level, title, sub, color;
+
+  if (hasFail) {
+    level = 'F'; title = 'ไม่ผ่านเกณฑ์ขั้นต่ำ';
+    sub = 'คะแนนบางองค์ประกอบต่ำกว่าเกณฑ์ขั้นต่ำที่หลักสูตรกำหนด';
+    color = '#dc2626';
+  } else if (!avg3yr) {
+    level = '?'; title = 'ไม่มีข้อมูลเปรียบเทียบ';
+    sub = 'หลักสูตรนี้ยังไม่มีข้อมูลคะแนนย้อนหลัง จึงยังไม่สามารถประเมินโอกาสได้';
+    color = '#fbbf24';
+  } else if (totalScore >= threshold_A) {
+    level = 'A'; title = 'โอกาสสูงมาก';
+    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ย 3 ปี +10% — มีโอกาสเกิน 80%';
+    color = '#4ade80';
+  } else if (totalScore >= threshold_B) {
+    level = 'B'; title = 'โอกาสสูง';
+    sub = 'คะแนนอยู่ในเกณฑ์ดี ใกล้เคียงค่าเฉลี่ย — โอกาส 60–80%';
+    color = '#60a5fa';
+  } else if (totalScore >= threshold_C) {
+    level = 'C'; title = 'โอกาสปานกลาง';
+    sub = 'คะแนนอยู่ในช่วงกลาง ยังมีลุ้น — โอกาส 40–60%';
+    color = '#fbbf24';
+  } else {
+    level = 'D'; title = 'ต้องพัฒนาเพิ่ม';
+    sub = 'คะแนนต่ำกว่าค่าเฉลี่ยค่อนข้างมาก — โอกาสต่ำกว่า 40%';
+    color = '#f87171';
+  }
+
+  document.getElementById('r-emoji').innerHTML = SVG_ICONS[level];
+  const badge = document.getElementById('r-badge');
+  badge.textContent = prog.p;
+  badge.className = 'r-level-badge lvl-' + level;
+  document.getElementById('r-verdict-text').textContent = title;
+  document.getElementById('r-verdict-sub').textContent = sub;
+
+  const scoreNum = document.getElementById('r-score-num');
+  scoreNum.textContent = Math.round(totalScore);
+  scoreNum.style.color = color;
+
+  const glow = document.getElementById('r-glow');
+  glow.style.background = color;
+  const rHero = document.querySelector('.r-hero');
+  rHero.className = 'r-hero hero-' + level;
+
+  const barWrap = document.querySelector('.r-bar-wrap');
+  const barFill = document.getElementById('r-bar-fill');
+  barFill.style.background = color;
+  barFill.style.width = '0';
+  barFill.style.boxShadow = '0 0 12px ' + color + '80';
+
+  barWrap.style.display = hasFail ? 'none' : '';
+
+  const barMax = Math.max(avg3yr * 1.3, totalScore * 1.1, 1000);
+  const track = document.getElementById('r-bar-track');
+
+  track.querySelectorAll('.r-bar-marker, .r-bar-you').forEach(el => el.remove());
+
+  if (minMin > 0) {
+    const pos1 = Math.min(94, (minMin / barMax) * 100);
+    const m1 = document.createElement('div');
+    m1.className = 'r-bar-marker mark-min';
+    m1.style.left = pos1 + '%';
+    m1.innerHTML = '<div class="r-bar-marker-line"></div><div class="r-bar-marker-label">' + minMin.toFixed(0) + '</div>';
+    track.appendChild(m1);
+  }
+
+  if (avg3yr > 0) {
+    const pos2 = Math.min(94, (avg3yr / barMax) * 100);
+    const m2 = document.createElement('div');
+    m2.className = 'r-bar-marker mark-avg';
+    m2.style.left = pos2 + '%';
+    m2.innerHTML = '<div class="r-bar-marker-line"></div><div class="r-bar-marker-label">' + avg3yr.toFixed(0) + '</div>';
+    track.appendChild(m2);
+  }
+
+  const youMark = document.createElement('div');
+  youMark.className = 'r-bar-you';
+  youMark.style.left = '0%';
+  youMark.innerHTML = '<div class="r-bar-you-dot" style="background:' + color + '"></div><div class="r-bar-you-label" style="background:' + color + '">' + totalScore.toFixed(0) + '</div>';
+  track.appendChild(youMark);
+
+  const legend = document.getElementById('r-bar-legend');
+  let legendHtml = '';
+  legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-you" style="color:' + color + ';background:' + color + '"></div>คะแนนของคุณ</div>';
+  if (minMin > 0) {
+    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-min"></div>ต่ำสุดผู้ติด 3 ปี</div>';
+  }
+  if (avg3yr > 0) {
+    legendHtml += '<div class="r-bar-legend-item"><div class="r-bar-legend-dot dot-avg"></div>เฉลี่ย 3 ปี</div>';
+  }
+  legend.innerHTML = legendHtml;
+
+  const goodSubjects = [];
+  const weakSubjects = [];
+  const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
+
+  activeSubjects.forEach(k => {
+    const inp = document.getElementById('inp-' + k);
+    const raw = parseFloat(inp.value);
+    if (isNaN(raw)) return;
+    const avg = prog.sa[k];
+    if (avg == null) return;
+    const diff = raw - avg;
+    const pct = avg > 0 ? ((diff / avg) * 100) : 0;
+    const isGpax = (k === 'GPAX');
+    if (diff >= 0) {
+      goodSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+    } else {
+      weakSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+    }
+  });
+
+  if (prog.ao > 0) {
+    ALEV_OTHER.forEach(s => {
+      const inp = document.getElementById('inp-ao-' + s.key);
+      const raw = parseFloat(inp.value);
+      if (isNaN(raw)) return;
+      const avg = prog.sa[s.key];
+      if (avg == null) return;
+      const diff = raw - avg;
+      if (diff >= 0) {
+        goodSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+      } else {
+        weakSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+      }
+    });
+  }
+
+  let adviceHtml = '';
+
+  if (hasFail) {
+    adviceHtml += '<div class="r-fail-section">';
+    adviceHtml += '<div class="r-fail-title">&#9888; องค์ประกอบที่ไม่ผ่านเกณฑ์ขั้นต่ำ</div>';
+    adviceHtml += '<div class="r-fail-list">';
+    failedCriteria.forEach(f => {
+      adviceHtml += '<div class="r-fail-item">';
+      adviceHtml += '<span class="r-fail-label">' + f.label + '</span>';
+      adviceHtml += '<span class="r-fail-vals">';
+      adviceHtml += '<span class="r-fail-your">' + (typeof f.yours === 'number' ? f.yours.toFixed(2) : f.yours) + '</span>';
+      adviceHtml += '<span class="r-fail-arrow">&#9654;</span>';
+      adviceHtml += '<span class="r-fail-need">ขั้นต่ำ ' + f.required + f.unit + '</span>';
+      adviceHtml += '</span></div>';
+    });
+    adviceHtml += '</div></div>';
+  }
+
+  adviceHtml += '<div class="r-advice-card card-good">';
+  adviceHtml += '<div class="r-advice-header"><span class="r-advice-icon">&#9989;</span><span class="r-advice-title good">องค์ประกอบที่ทำได้ดี</span></div>';
+  if (goodSubjects.length > 0) {
+    adviceHtml += '<div class="r-advice-list">';
+    goodSubjects.forEach(s => {
+      const descText = s.isGpax ? 'สูงกว่า GPAX เฉลี่ย ' + s.diff : 'สูงกว่าคะแนนเฉลี่ย ' + s.diff + ' คะแนน';
+      adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff pos">' + descText + '</span></div>';
+    });
+    adviceHtml += '</div>';
+  } else {
+    adviceHtml += '<div class="r-advice-empty">ยังไม่มีวิชาที่สูงกว่าค่าเฉลี่ย</div>';
+  }
+  adviceHtml += '</div>';
+
+  adviceHtml += '<div class="r-advice-card card-weak">';
+  adviceHtml += '<div class="r-advice-header"><span class="r-advice-icon">&#128736;</span><span class="r-advice-title improve">องค์ประกอบที่ยังต้องพัฒนา</span></div>';
+  if (weakSubjects.length > 0) {
+    adviceHtml += '<div class="r-advice-list">';
+    weakSubjects.forEach(s => {
+      const absDiff = Math.abs(parseFloat(s.diff)).toFixed(2);
+      const descText = s.isGpax ? 'ต่ำกว่า GPAX เฉลี่ย ' + absDiff : 'ต่ำกว่าคะแนนเฉลี่ย ' + absDiff + ' คะแนน';
+      adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff neg">' + descText + '</span></div>';
+    });
+    adviceHtml += '</div>';
+  } else {
+    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าค่าเฉลี่ย</div>';
+  }
+  adviceHtml += '</div>';
+
+  document.getElementById('r-advice').innerHTML = adviceHtml;
+
+  const overlay = document.getElementById('result-overlay');
+  overlay.classList.add('show');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const fillPct = Math.min(98, (totalScore / barMax) * 100);
+      barFill.style.width = fillPct + '%';
+      youMark.style.left = fillPct + '%';
+    });
+  });
+}
+
+function closeResult() {
+  const overlay = document.getElementById('result-overlay');
+  overlay.classList.remove('show');
+  document.getElementById('r-bar-fill').style.width = '0';
+  const youMark = document.querySelector('.r-bar-you');
+  if (youMark) youMark.style.left = '0%';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResult(); });
+
+/* ═══ HERO ANIMATIONS ═══ */
+// Stat count-up
+(function () {
+  function countUp(el, target) {
+    const dur = 1400, t0 = performance.now();
+    (function tick(now) {
+      const p = Math.min((now - t0) / dur, 1);
+      el.textContent = Math.round((1 - (1 - p) ** 3) * target);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  document.querySelectorAll('.stat-n').forEach(el => {
+    const val = parseInt(el.textContent);
+    el.dataset.v = val; el.textContent = '0';
+    setTimeout(() => countUp(el, val), 700);
+  });
+})();
+
+// Cursor glow
+(function () {
+  const hero = document.querySelector('.hero');
+  const glow = document.getElementById('hero-glow');
+  if (!hero || !glow) return;
+  let active = false;
+  hero.addEventListener('mouseenter', () => { active = true; glow.style.opacity = '1'; });
+  hero.addEventListener('mouseleave', () => { active = false; glow.style.opacity = '0'; });
+  hero.addEventListener('mousemove', e => {
+    if (!active) return;
+    const r = hero.getBoundingClientRect();
+    glow.style.left = (e.clientX - r.left) + 'px';
+    glow.style.top  = (e.clientY - r.top) + 'px';
+  });
+  glow.style.opacity = '0';
+  glow.style.transition += ', opacity 0.4s ease';
+})();
+
+// Scroll reveal
+(function () {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal-anim').forEach(el => obs.observe(el));
+})();
+</script>
+
+</body>
+</html>
