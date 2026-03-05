@@ -6,7 +6,7 @@
   <title>NUforecast — เช็กโอกาสเข้า ม.นเรศวร</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Kanit:wght@700;800;900&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Kanit:wght@600;700;800;900&family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -864,7 +864,7 @@
     .footer-brand { display: flex; align-items: center; gap: 14px; }
     .footer-logo { height: 108px; opacity: 0.88; transition: opacity 0.3s; }
     .footer-logo:hover { opacity: 1; }
-    .footer-name { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1; }
+    .footer-name { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--gray-1); line-height: 1; }
     .footer-name span { color: var(--orange); }
     .footer-tagline { font-size: 0.82rem; color: var(--gray-3); margin-top: 5px; }
     .footer-credit { text-align: right; }
@@ -987,16 +987,6 @@
       .seats-banner { gap: 14px; padding: 16px 18px; }
       .seats-num { font-size: 2.2rem; }
       .seats-prog-name { font-size: 0.85rem; }
-      .rmodal { max-width: 100%; border-radius: var(--radius-lg); }
-      .r-hero { padding: 18px 16px 16px; }
-      .r-hero-score-col { padding-right: 14px; }
-      .r-hero-verdict-col { padding-left: 14px; }
-      .r-score-num { font-size: 3.4rem; letter-spacing: -2px; }
-      .r-verdict-text { font-size: 1.1rem; }
-      .r-bar-section { padding: 12px 14px 10px; }
-      .r-bar-above { height: 32px; }
-      .r-prog-pill { font-size: 0.82rem; padding: 10px 14px; }
-      .r-body { padding: 10px 14px 16px; }
       .result-compare { padding: 30px 16px; grid-template-columns: 1fr; }
       .rc-score-num { font-size: 2.6rem; }
       .rc-verdict-text { font-size: 1rem; }
@@ -1029,7 +1019,6 @@
       .rc-hero-score-col { padding-right: 0; }
       .rc-hero-verdict-col { padding-left: 0; }
       .channels-grid { grid-template-columns: 1fr; }
-      .rating-btn { width: 30px; height: 30px; font-size: 0.78rem; }
     }
 
     /* ═══ SURVEY STEP ═══ */
@@ -1064,7 +1053,7 @@
     .ch-label:has(input:checked) { border-color: rgba(255,82,0,0.3); background: rgba(255,82,0,0.05); color: var(--gray-1); font-weight: 600; }
     .rating-row { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
     .rating-btn {
-      width: 38px; height: 38px; border-radius: 8px;
+      width: 44px; height: 44px; border-radius: 8px;
       border: 1.5px solid var(--border); background: var(--bg-input);
       font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700;
       color: var(--gray-2); cursor: pointer; transition: all 0.2s;
@@ -1441,7 +1430,7 @@ function sendToSheets(data) {
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify(data),
     mode: 'no-cors'
-  }).catch(() => {});
+  }).catch(err => console.warn('Sheets send failed:', err));
 }
 
 function resetScorePanel() {
@@ -1579,95 +1568,6 @@ const SVG_ICONS = {
   F: '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#FEE2E2" stroke="#dc2626" stroke-width="3"/><path d="M34 34l28 28M62 34L34 62" stroke="#b91c1c" stroke-width="5.5" stroke-linecap="round"/></svg>',
   '?': '<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="48" cy="48" r="44" fill="#F3F4F6" stroke="#9ca3af" stroke-width="3"/><path d="M38 36c0-7 5-12 12-12s12 6 12 12c0 7-6 9-12 14" stroke="#6b7280" stroke-width="4.5" stroke-linecap="round" fill="none"/><circle cx="50" cy="68" r="4" fill="#6b7280"/></svg>'
 };
-
-function buildScoreInputs(prog) {
-  const container = document.getElementById('score-inputs');
-  let html = '';
-
-  const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
-  const hasAlevOther = prog.ao > 0;
-
-  const gpaxSubjects = activeSubjects.filter(k => SUBJ[k].type === 'gpax');
-  const tgatSubjects = activeSubjects.filter(k => SUBJ[k].type === 'tgat');
-  const tpatSubjects = activeSubjects.filter(k => SUBJ[k].type === 'tpat');
-  const alevSubjects = activeSubjects.filter(k => SUBJ[k].type === 'alev');
-
-  if (gpaxSubjects.length > 0) {
-    const totalW = gpaxSubjects.reduce((s,k) => s + prog.w[k], 0);
-    html += '<div class="score-group">';
-    html += `<div class="sg-badge sg-gpax"><span class="sg-badge-label">GPAX</span><span class="sg-badge-pct">${totalW}%</span></div>`;
-    html += '<div class="sg-fields"><div class="fgrid fg-2">';
-    gpaxSubjects.forEach(k => {
-      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
-        <input type="number" id="inp-${k}" step="0.01" min="0" max="${SUBJ[k].max}" placeholder="0.00 - ${SUBJ[k].max}" /></div>`;
-    });
-    html += '</div></div></div>';
-  }
-
-  const testSubjects = [...tgatSubjects, ...tpatSubjects];
-  if (testSubjects.length > 0) {
-    const totalW = testSubjects.reduce((s,k) => s + prog.w[k], 0);
-    html += '<div class="score-group">';
-    html += `<div class="sg-badge sg-tgat"><span class="sg-badge-label">TGAT /<br>TPAT</span><span class="sg-badge-pct">${totalW}%</span></div>`;
-    html += '<div class="sg-fields"><div class="fgrid fg-2">';
-    testSubjects.forEach(k => {
-      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
-        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
-    });
-    html += '</div></div></div>';
-  }
-
-  if (alevSubjects.length > 0) {
-    const totalW = alevSubjects.reduce((s,k) => s + prog.w[k], 0);
-    html += '<div class="score-group">';
-    html += `<div class="sg-badge sg-alev"><span class="sg-badge-label">A-Level</span><span class="sg-badge-pct">${totalW}%</span></div>`;
-    html += '<div class="sg-fields"><div class="fgrid fg-2">';
-    alevSubjects.forEach(k => {
-      html += `<div class="score-field"><label>${SUBJ[k].label} <span class="weight-tag">${prog.w[k]}%</span></label>
-        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
-    });
-    html += '</div></div></div>';
-  }
-
-  // A-Level อื่น ๆ (3 วิชาคงที่: ฟิสิกส์ เคมี ชีววิทยา)
-  if (hasAlevOther) {
-    html += '<div class="score-group">';
-    html += `<div class="sg-badge sg-alev-other"><span class="sg-badge-label">A-Level<br>วิทย์</span><span class="sg-badge-pct">${prog.ao}%</span></div>`;
-    html += `<div class="sg-fields"><div class="score-group-note">กรอกคะแนนดิบแต่ละวิชา (ฟิสิกส์ เคมี ชีววิทยา) — ระบบจะคำนวณค่าเฉลี่ยและถ่วงน้ำหนัก ${prog.ao}% ให้อัตโนมัติ</div><div class="fgrid fg-2">`;
-    ALEV_OTHER.forEach(s => {
-      html += `<div class="score-field"><label>${s.label}</label>
-        <input type="number" id="inp-ao-${s.key}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
-    });
-    html += '</div></div></div>';
-  }
-
-  container.innerHTML = html;
-
-  container.querySelectorAll('input[type="number"]').forEach(inp => {
-    inp.addEventListener('focus', () => { setTimeout(() => inp.select(), 0); });
-
-    inp.addEventListener('input', () => {
-      if (inp.value === '' || inp.value === '-') return;
-      let val = parseFloat(inp.value);
-      if (isNaN(val)) return;
-      const mx = parseFloat(inp.max);
-      const mn = parseFloat(inp.min);
-      if (!isNaN(mx) && val > mx) { inp.value = mx; }
-      if (!isNaN(mn) && val < mn) { inp.value = mn; }
-    });
-
-    inp.addEventListener('blur', () => {
-      if (inp.value === '') return;
-      let val = parseFloat(inp.value);
-      if (isNaN(val)) { inp.value = ''; return; }
-      const mx = parseFloat(inp.max);
-      const mn = parseFloat(inp.min);
-      if (!isNaN(mx) && val > mx) val = mx;
-      if (!isNaN(mn) && val < mn) val = mn;
-      inp.value = val;
-    });
-  });
-}
 
 function buildScoreInputsMulti(programs) {
   const container = document.getElementById('score-inputs');
@@ -1976,6 +1876,14 @@ function calculateForProgram(prog) {
 function calculate() {
   if (selectedPrograms.length === 0) return;
 
+  // Validate that at least one score input has a value
+  const inputs = document.querySelectorAll('#score-inputs input[type="number"]');
+  const hasAnyScore = Array.from(inputs).some(inp => inp.value !== '' && parseFloat(inp.value) > 0);
+  if (!hasAnyScore) {
+    alert('กรุณากรอกคะแนนอย่างน้อย 1 วิชาก่อนทำนายผล');
+    return;
+  }
+
   const results = selectedPrograms.map(prog => calculateForProgram(prog));
 
   // Sort: A > B > C > ? > D > F, then by score desc
@@ -2174,6 +2082,7 @@ function showCompareResults(results) {
 function closeCompareResults() {
   document.getElementById('result-compare').style.display = 'none';
   document.getElementById('result-compare').innerHTML = '';
+  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
 }
 
 /* ═══ HERO ANIMATIONS ═══ */
