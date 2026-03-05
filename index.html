@@ -548,215 +548,274 @@
     .predict-btn:disabled:hover { transform: none; box-shadow: var(--shadow-orange); }
     .predict-btn:disabled::before { display: none; }
 
-    /* ═══ RESULT MODAL ═══ */
-    .overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 16px; z-index: 1000;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease;
+    /* ═══ MULTI-SELECT PROGRAM ═══ */
+    .sel-program-row {
+      display: flex; gap: 8px; align-items: stretch;
     }
-    .overlay.show { opacity: 1; pointer-events: all; }
+    .sel-program-row select { flex: 1; min-width: 0; }
+    .btn-add-prog {
+      flex-shrink: 0; padding: 0 18px;
+      background: var(--orange-grad); color: #fff;
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+      border: none; border-radius: var(--radius-sm); cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(255,82,0,0.2);
+    }
+    .btn-add-prog:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,82,0,0.3); }
+    .btn-add-prog:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .rmodal {
+    .selected-programs {
+      display: flex; flex-direction: column; gap: 8px;
+      margin-top: 12px;
+    }
+    .selected-programs:empty { margin-top: 0; }
+    .sp-card {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+      border: 1.5px solid rgba(255,82,0,0.15);
+      border-radius: var(--radius-md);
+      animation: fadeSlideIn 0.3s ease;
+      position: relative;
+    }
+    .sp-card-num-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      min-width: 52px;
+    }
+    .sp-card-num {
+      font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800;
+      color: var(--orange); line-height: 1;
+    }
+    .sp-card-label {
+      font-family: var(--font-body); font-size: 0.68rem; font-weight: 600;
+      color: var(--orange); margin-top: 1px;
+    }
+    .sp-card-detail {
+      display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0;
+    }
+    .sp-card-name {
+      font-family: var(--font-thai-head); font-size: 0.85rem; font-weight: 600;
+      color: var(--gray-1); line-height: 1.35;
+    }
+    .sp-card-faculty {
+      font-size: 0.72rem; color: var(--gray-3); line-height: 1.3;
+    }
+    .sp-card-remove {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: none; background: rgba(0,0,0,0.06); color: var(--gray-3);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; transition: all 0.2s; flex-shrink: 0;
+    }
+    .sp-card-remove:hover { background: #fecaca; color: #dc2626; }
+
+    /* ═══ RESULT COMPARE CARDS ═══ */
+    .result-compare {
+      max-width: 1400px; margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .result-compare-title, .result-compare-sub { grid-column: 1 / -1; }
+    .result-compare-title {
+      font-family: var(--font-thai-head); font-size: 1.3rem; font-weight: 800;
+      color: var(--gray-1); text-align: center; margin-bottom: 4px;
+    }
+    .result-compare-sub {
+      font-size: 0.82rem; color: var(--gray-3); text-align: center; margin-bottom: 12px;
+    }
+    .rc-card {
+      min-width: 0;
       background: var(--bg-card);
-      border-radius: var(--radius-xl); padding: 0;
-      max-width: 680px; width: 100%;
-      position: relative; overflow: hidden; overflow-y: auto;
-      max-height: 94vh;
-      transform: scale(0.92) translateY(20px);
-      transition: transform 0.4s cubic-bezier(0.34,1.5,0.64,1);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
+      border-radius: var(--radius-xl); overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+      animation: fadeSlideIn 0.5s ease both;
     }
-    .overlay.show .rmodal { transform: scale(1) translateY(0); }
-
-    .rmodal-close {
-      position: absolute; top: 12px; right: 12px;
-      width: 28px; height: 28px;
-      background: rgba(255,255,255,0.75); border: none;
-      color: var(--gray-3); border-radius: 50%;
-      cursor: pointer; font-size: 0.8rem; z-index: 5;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; backdrop-filter: blur(8px);
-    }
-    .rmodal-close:hover { background: rgba(255,255,255,0.95); color: var(--gray-1); transform: rotate(90deg); }
-
-    /* ── Hero ── */
-    .r-hero { position: relative; padding: 22px 20px 20px; overflow: hidden; }
-    .r-hero::before {
+    .rc-card:nth-child(3) { animation-delay: 0.1s; }
+    .rc-card:nth-child(4) { animation-delay: 0.2s; }
+    .rc-card:nth-child(5) { animation-delay: 0.3s; }
+    /* rc hero reuses same design as r-hero */
+    .rc-hero { position: relative; padding: 20px; overflow: hidden; }
+    .rc-hero::before {
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(155deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
     }
-    .r-hero.hero-A::before { background: linear-gradient(155deg, #022c22 0%, #052e16 50%, #166534 100%); }
-    .r-hero.hero-B::before { background: linear-gradient(155deg, #0c1445 0%, #172554 50%, #1d4ed8 100%); }
-    .r-hero.hero-C::before { background: linear-gradient(155deg, #1c1300 0%, #451a03 50%, #92400e 100%); }
-    .r-hero.hero-D::before { background: linear-gradient(155deg, #1f0700 0%, #431407 50%, #9a3412 100%); }
-    .r-hero.hero-F::before { background: linear-gradient(155deg, #190000 0%, #450a0a 50%, #991b1b 100%); }
-    .r-hero-glow {
+    .rc-hero.hero-A::before { background: linear-gradient(155deg, #022c22 0%, #052e16 50%, #166534 100%); }
+    .rc-hero.hero-B::before { background: linear-gradient(155deg, #0c1445 0%, #172554 50%, #1d4ed8 100%); }
+    .rc-hero.hero-C::before { background: linear-gradient(155deg, #1c1300 0%, #451a03 50%, #92400e 100%); }
+    .rc-hero.hero-D::before { background: linear-gradient(155deg, #1f0700 0%, #431407 50%, #9a3412 100%); }
+    .rc-hero.hero-F::before { background: linear-gradient(155deg, #190000 0%, #450a0a 50%, #991b1b 100%); }
+    .rc-hero-glow {
       position: absolute; top: -40%; left: -10%; width: 120%; height: 180%;
       border-radius: 50%; opacity: 0.22; filter: blur(80px);
-      transition: opacity 0.8s ease; pointer-events: none;
+      pointer-events: none;
     }
-    .r-hero-ring {
+    .rc-hero-ring {
       position: absolute; border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.07); pointer-events: none;
     }
-    .r-ring-1 { width: 260px; height: 260px; top: -90px; right: -90px; }
-    .r-ring-2 { width: 170px; height: 170px; top: -50px; right: -50px; }
-    .r-hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; }
-    /* ── 2-column hero ── */
-    .r-hero-cols { display: flex; align-items: center; margin-bottom: 16px; }
-    .r-hero-score-col {
+    .rc-ring-1 { width: 220px; height: 220px; top: -80px; right: -80px; }
+    .rc-ring-2 { width: 140px; height: 140px; top: -40px; right: -40px; }
+    .rc-hero-inner { position: relative; z-index: 2; }
+    .rc-hero-cols { display: flex; align-items: center; }
+    .rc-hero-score-col {
       flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start;
       padding-right: 18px;
     }
-    .r-hero-divider {
+    .rc-hero-divider {
       width: 1px; align-self: stretch;
       background: rgba(255,255,255,0.15); flex-shrink: 0;
     }
-    .r-hero-verdict-col {
+    .rc-hero-verdict-col {
       flex: 1; min-width: 0;
       display: flex; flex-direction: column; align-items: flex-start;
-      padding-left: 18px; gap: 5px;
+      padding-left: 18px; gap: 4px;
     }
-    .r-score-label {
-      font-family: var(--font-body); font-size: 0.66rem; font-weight: 700;
+    .rc-score-label {
+      font-family: var(--font-body); font-size: 0.62rem; font-weight: 700;
       color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase;
-      margin-bottom: 1px; animation: slideUp 0.4s ease 0.15s both;
+      margin-bottom: 1px;
     }
-    .r-score-row { animation: slideUp 0.4s ease 0.2s both; }
-    .r-score-num {
-      font-family: var(--font-mono); font-size: 4.2rem; font-weight: 700;
-      line-height: 1; letter-spacing: -3px; display: block;
+    .rc-score-num {
+      font-family: var(--font-mono); font-size: 3.2rem; font-weight: 700;
+      line-height: 1; letter-spacing: -2px;
     }
-    .r-score-of {
-      font-family: var(--font-mono); font-size: 0.85rem;
+    .rc-score-of {
+      font-family: var(--font-mono); font-size: 0.78rem;
       color: rgba(255,255,255,0.38); font-weight: 500;
-      animation: slideUp 0.4s ease 0.25s both;
     }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    .r-verdict-icon {
-      width: 46px; height: 46px; border-radius: 50%;
+    .rc-verdict-icon {
+      width: 40px; height: 40px; border-radius: 50%;
       background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.18);
       backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
-      animation: popIn 0.5s cubic-bezier(0.34,1.5,0.64,1) 0.2s both;
     }
-    .r-verdict-icon svg { width: 26px; height: 26px; }
-    @keyframes popIn { from { opacity: 0; transform: scale(0.3) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
-    .r-verdict-text {
-      font-family: var(--font-thai-head); font-size: 1.3rem; font-weight: 800;
+    .rc-verdict-icon svg { width: 22px; height: 22px; }
+    .rc-verdict-text {
+      font-family: var(--font-thai-head); font-size: 1.15rem; font-weight: 800;
       color: #fff; line-height: 1.2;
-      animation: slideUp 0.4s ease 0.25s both;
     }
-    .r-verdict-sub {
-      font-family: var(--font-body); font-size: 0.75rem; color: rgba(255,255,255,0.55);
-      line-height: 1.5;
-      animation: slideUp 0.4s ease 0.3s both;
+    .rc-verdict-sub {
+      font-family: var(--font-body); font-size: 0.72rem; color: rgba(255,255,255,0.55);
+      line-height: 1.4;
     }
-    /* ── Hero Program Pill (frosted glass) ── */
-    .r-prog-pill {
+    .rc-prog-pill {
       display: block; width: 100%;
-      padding: 9px 20px; border-radius: 100px;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
-      backdrop-filter: blur(12px);
-      color: rgba(255,255,255,0.92);
-      font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
-      text-align: center; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
-      animation: slideUp 0.4s ease 0.4s both;
+      padding: 10px 16px;
+      background: var(--gray-1); color: #fff;
+      font-family: var(--font-thai-head); font-size: 0.8rem; font-weight: 600;
+      text-align: center; line-height: 1.35;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
-    /* ── Score Bar Section ── */
-    .r-bar-section {
-      padding: 16px 20px 14px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    /* rc bar */
+    .rc-bar-section { padding: 14px 20px 6px; }
+    .rc-bar-above { position: relative; height: 36px; }
+    .rc-bar-lbl {
+      position: absolute; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
     }
-    .r-bar-above {
-      position: relative; height: 48px; margin-bottom: 4px;
-      animation: slideUp 0.4s ease 0.4s both;
+    .rc-bar-lbl-box {
+      font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700;
+      padding: 1px 7px; border-radius: 6px;
     }
-    .r-bar-lbl {
-      position: absolute; bottom: 0;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 2px; white-space: nowrap;
-      transform: translateX(-50%);
+    .rc-bar-lbl-box.box-min { background: #FEF3C7; color: #92400E; }
+    .rc-bar-lbl-box.box-avg { background: #EEF2FF; color: #3730A3; }
+    .rc-bar-lbl-text { font-size: 0.58rem; color: var(--gray-3); }
+    .rc-bar-track {
+      position: relative; height: 10px; border-radius: 6px;
+      background: var(--bg-input); overflow: visible;
     }
-    .r-bar-lbl-box {
-      padding: 2px 9px; border-radius: 5px;
-      font-family: var(--font-mono); font-size: 0.76rem; font-weight: 700; flex-shrink: 0;
+    .rc-bar-fill {
+      position: absolute; top: 0; left: 0; height: 100%;
+      border-radius: 6px; transition: width 1s cubic-bezier(0.22,0.61,0.36,1);
     }
-    .r-bar-lbl-box.box-min { background: #FEF3C7; color: #92400E; }
-    .r-bar-lbl-box.box-avg { background: #EEF2FF; color: #3730A3; }
-    .r-bar-lbl-text { font-size: 0.62rem; color: var(--gray-3); }
-    .r-bar-track {
-      width: 100%; height: 10px; background: var(--gray-5);
-      border-radius: 6px; position: relative; overflow: visible;
-      border: 1px solid var(--border);
+    .rc-bar-marker {
+      position: absolute; top: -4px; transform: translateX(-50%); z-index: 2;
     }
-    .r-bar-fill {
-      height: 100%; border-radius: 6px; width: 0;
-      transition: width 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
-      position: relative; z-index: 2;
+    .rc-bar-marker-line { width: 2px; height: 18px; border-radius: 2px; }
+    .rc-bar-marker.mark-min .rc-bar-marker-line { background: #f59e0b; }
+    .rc-bar-marker.mark-avg .rc-bar-marker-line { background: #6366f1; }
+    .rc-bar-you {
+      position: absolute; top: -5px; transform: translateX(-50%); z-index: 3;
+      transition: left 1s cubic-bezier(0.22,0.61,0.36,1);
     }
-    .r-bar-marker {
-      position: absolute; top: 50%; transform: translate(-50%, -50%);
-      z-index: 3; display: flex; flex-direction: column; align-items: center;
+    .rc-bar-you-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .r-bar-marker-line { width: 2px; height: 22px; border-radius: 2px; }
-    .r-bar-marker.mark-min .r-bar-marker-line { background: #f59e0b; }
-    .r-bar-marker.mark-avg .r-bar-marker-line { background: #6366f1; }
-    .r-bar-you {
-      position: absolute; top: 50%; z-index: 5; transform: translate(-50%, -50%);
-      transition: left 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
+    .rc-bar-below { position: relative; height: 22px; }
+    .rc-bar-you-tag {
+      position: absolute; transform: translateX(-50%);
+      font-size: 0.62rem; font-weight: 700; color: var(--gray-2);
+      transition: left 1s cubic-bezier(0.22,0.61,0.36,1);
+      white-space: nowrap; padding-top: 3px;
     }
-    .r-bar-you-dot {
-      width: 18px; height: 18px; border-radius: 50%;
-      border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.22);
-    }
-    .r-bar-below { position: relative; height: 26px; }
-    .r-bar-you-tag {
-      position: absolute; top: 5px; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 3px;
-      font-size: 0.7rem; color: var(--gray-2); font-weight: 600; white-space: nowrap;
-      transition: left 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
-    }
-
-    /* ── Body ── */
-    .r-body { padding: 12px 18px 18px; }
-
-    .r-disclaimer {
-      font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
-      color: #7f1d1d; line-height: 1.65; margin-bottom: 12px;
-      padding: 11px 14px;
+    /* rc body */
+    .rc-body { padding: 12px 20px 20px; }
+    .rc-disclaimer {
+      font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+      color: #7f1d1d; line-height: 1.6; margin-bottom: 10px;
+      padding: 10px 12px;
       background: #FEF2F2;
       border-radius: 8px;
       border: 1px solid rgba(220,38,38,0.3);
       border-left: 4px solid #dc2626;
     }
-    .r-disclaimer strong { color: #dc2626; }
+    .rc-disclaimer strong { color: #dc2626; }
+    /* rc fail */
+    .rc-fail-section {
+      background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: var(--radius-sm); padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .rc-fail-list { display: flex; flex-direction: column; }
+    .rc-fail-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 0; border-bottom: 1px solid rgba(220,38,38,0.08);
+      font-size: 0.78rem;
+    }
+    .rc-fail-item:last-child { border-bottom: none; }
+    /* rc advice */
+    .rc-advice { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .rc-advice-card {
+      border-radius: var(--radius-sm); padding: 10px 14px;
+    }
+    .rc-advice-card.card-good {
+      background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+    .rc-advice-card.card-weak {
+      background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .rc-advice-list { font-size: 0.78rem; color: var(--gray-2); }
+    .rc-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .rc-advice-item:last-child { border-bottom: none; }
+    .rc-advice-item .subj-weight {
+      font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+      color: var(--gray-3); background: rgba(0,0,0,0.05);
+      padding: 1px 5px; border-radius: 4px; flex-shrink: 0; margin-right: 6px;
+    }
+    .rc-advice-item .subj-name { color: var(--gray-1); flex: 1; font-size: 0.76rem; font-weight: 500; }
+    .rc-advice-item .subj-diff { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; white-space: nowrap; padding: 1px 8px; border-radius: 20px; }
+    .rc-advice-item .subj-diff.pos { color: #15803d; background: rgba(22,163,74,0.12); }
+    .rc-advice-item .subj-diff.neg { color: #92400e; background: rgba(217,119,6,0.12); }
+    .rc-advice-empty { font-size: 0.76rem; color: var(--gray-3); font-style: italic; }
 
-    .r-advice { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; text-align: left; }
-    .r-advice-card {
-      border-radius: 10px; padding: 11px 14px;
-      animation: slideUp 0.4s ease 0.5s both;
+    .btn-retry-compare {
+      grid-column: 1 / -1;
+      display: block; margin: 12px auto 0; padding: 14px 40px;
+      background: var(--orange-grad); color: #fff;
+      font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+      border: none; border-radius: var(--radius-md); cursor: pointer;
+      box-shadow: var(--shadow-orange); transition: all 0.3s;
     }
-    .r-advice-card.card-good {
-      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-      border: 1px solid rgba(22,163,74,0.22);
-      border-left: 4px solid #16a34a;
-    }
-    .r-advice-card.card-weak {
-      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-      border: 1px solid rgba(217,119,6,0.22);
-      border-left: 4px solid #d97706;
-    }
-    .r-advice-card:nth-child(2) { animation-delay: 0.6s; }
-    /* ── Card badge header ── */
+    .btn-retry-compare:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(255,82,0,0.3); }
+
+    /* ═══ SHARED BADGE & ADVICE STYLES ═══ */
     .r-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 13px 5px 5px; border-radius: 100px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 8px 14px; border-radius: 10px; margin-bottom: 10px;
       font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
       letter-spacing: 0.01em;
     }
@@ -765,20 +824,13 @@
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .r-badge-icon svg { width: 13px; height: 13px; }
+    .r-badge-desc { font-weight: 400; font-size: 0.72rem; opacity: 0.7; }
     .badge-good { background: rgba(22,163,74,0.14); color: #15803d; }
     .badge-good .r-badge-icon { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 2px 6px rgba(22,163,74,0.35); }
     .badge-weak { background: rgba(217,119,6,0.12); color: #92400e; }
     .badge-weak .r-badge-icon { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 2px 6px rgba(217,119,6,0.35); }
     .badge-fail { background: rgba(220,38,38,0.1); color: #b91c1c; }
     .badge-fail .r-badge-icon { background: linear-gradient(135deg, #f87171, #dc2626); box-shadow: 0 2px 6px rgba(220,38,38,0.35); }
-    .r-advice-list { font-size: 0.86rem; color: var(--gray-2); }
-    .r-advice-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-    .r-advice-item:last-child { border-bottom: none; }
-    .r-advice-item .subj-name { color: var(--gray-1); flex: 1; font-size: 0.84rem; font-weight: 500; }
-    .r-advice-item .subj-diff { font-family: var(--font-body); font-size: 0.74rem; font-weight: 700; white-space: nowrap; padding: 2px 9px; border-radius: 20px; }
-    .r-advice-item .subj-diff.pos { color: #15803d; background: rgba(22,163,74,0.12); }
-    .r-advice-item .subj-diff.neg { color: #92400e; background: rgba(217,119,6,0.12); }
-    .r-advice-empty { font-size: 0.82rem; color: var(--gray-3); font-style: italic; }
 
     .r-fail-section {
       text-align: left; margin-bottom: 8px;
@@ -787,7 +839,7 @@
       border-left: 4px solid #dc2626;
       border-radius: 10px; padding: 11px 14px;
     }
-    .r-fail-title { display: none; } /* replaced by .r-badge.badge-fail */
+    .r-fail-title { display: none; }
     .r-fail-list { display: flex; flex-direction: column; }
     .r-fail-item {
       display: flex; justify-content: space-between; align-items: center;
@@ -799,15 +851,6 @@
     .r-fail-your { color: #dc2626; font-weight: 700; font-size: 0.76rem; background: rgba(220,38,38,0.1); padding: 1px 8px; border-radius: 20px; }
     .r-fail-need { color: var(--gray-3); font-size: 0.74rem; }
     .r-fail-arrow { color: var(--gray-4); font-size: 0.6rem; margin: 0 2px; }
-
-    .btn-retry {
-      width: 100%; padding: 13px; background: var(--orange-grad);
-      border: none; color: #fff;
-      font-family: var(--font-body); font-size: 1rem; font-weight: 700;
-      border-radius: var(--radius-md); cursor: pointer; transition: all 0.25s;
-      box-shadow: 0 4px 16px rgba(255,82,0,0.2);
-    }
-    .btn-retry:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,82,0,0.3); }
 
     /* ═══ FOOTER ═══ */
     footer {
@@ -951,8 +994,12 @@
       .r-verdict-text { font-size: 1.1rem; }
       .r-bar-section { padding: 12px 14px 10px; }
       .r-bar-above { height: 32px; }
-      .r-prog-pill { font-size: 0.82rem; padding: 8px 14px; }
+      .r-prog-pill { font-size: 0.82rem; padding: 10px 14px; }
       .r-body { padding: 10px 14px 16px; }
+      .result-compare { padding: 30px 16px; grid-template-columns: 1fr; }
+      .rc-score-num { font-size: 2.6rem; }
+      .rc-verdict-text { font-size: 1rem; }
+      .rc-hero { padding: 16px; }
       .section-header { flex-direction: column; align-items: flex-start; }
       .section-sub { text-align: left; }
       footer { flex-direction: column; text-align: center; }
@@ -971,6 +1018,15 @@
       .seats-banner { flex-direction: column; text-align: center; gap: 10px; }
       .seats-num-wrap { flex-direction: row; gap: 8px; align-items: baseline; }
       .seats-year-badge { margin: 0 auto; }
+      .sel-program-row { flex-direction: column; }
+      .sp-card { gap: 10px; padding: 10px 14px; }
+      .sp-card-num { font-size: 1.4rem; }
+      .sp-card-num-wrap { min-width: 40px; }
+      .sp-card-name { font-size: 0.78rem; }
+      .rc-hero-cols { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .rc-hero-divider { width: 100%; height: 1px; }
+      .rc-hero-score-col { padding-right: 0; }
+      .rc-hero-verdict-col { padding-left: 0; }
       .channels-grid { grid-template-columns: 1fr; }
       .rating-btn { width: 30px; height: 30px; font-size: 0.78rem; }
     }
@@ -1251,6 +1307,7 @@
           <div class="fstep-num">2</div>
           <div>
             <div class="fstep-title">เลือกคณะ / หลักสูตร</div>
+            <div class="fstep-sub">เลือกได้สูงสุด 3 หลักสูตร</div>
           </div>
         </div>
         <div class="fgrid fg-2">
@@ -1260,10 +1317,14 @@
           </div>
           <div class="ff">
             <label for="sel-program">หลักสูตร</label>
-            <select id="sel-program" disabled><option value="">-- เลือกคณะก่อน --</option></select>
+            <div class="sel-program-row">
+              <select id="sel-program" disabled><option value="">-- เลือกคณะก่อน --</option></select>
+              <button type="button" class="btn-add-prog" id="btn-add-prog" disabled onclick="addProgram()">+ เพิ่ม</button>
+            </div>
           </div>
         </div>
         <div id="program-info" class="seats-banner"></div>
+        <div id="selected-programs" class="selected-programs"></div>
       </div>
 
       <div class="fstep">
@@ -1287,53 +1348,10 @@
         </button>
       </div>
     </div>
+
+    <!-- ── Result Compare Cards ── -->
+    <div id="result-compare" class="result-compare" style="display:none;"></div>
   </section>
-
-  <div class="overlay" id="result-overlay" onclick="if(event.target===this)closeResult()">
-    <div class="rmodal">
-      <button class="rmodal-close" onclick="closeResult()">&#10005;</button>
-
-      <div class="r-hero" id="r-hero">
-        <div class="r-hero-glow" id="r-glow"></div>
-        <div class="r-hero-ring r-ring-1"></div>
-        <div class="r-hero-ring r-ring-2"></div>
-        <div class="r-hero-inner">
-          <div class="r-hero-cols">
-            <div class="r-hero-score-col">
-              <div class="r-score-label">คะแนนรวม</div>
-              <div class="r-score-row">
-                <span class="r-score-num" id="r-score-num">0</span>
-              </div>
-              <div class="r-score-of">/ 1,000</div>
-            </div>
-            <div class="r-hero-divider"></div>
-            <div class="r-hero-verdict-col">
-              <div class="r-verdict-icon" id="r-emoji"></div>
-              <div class="r-verdict-text" id="r-verdict-text"></div>
-              <div class="r-verdict-sub" id="r-verdict-sub"></div>
-            </div>
-          </div>
-          <div class="r-prog-pill" id="r-prog-pill"></div>
-        </div>
-      </div>
-
-      <div class="r-bar-section" id="r-bar-section">
-        <div class="r-bar-above" id="r-bar-above"></div>
-        <div class="r-bar-track" id="r-bar-track">
-          <div class="r-bar-fill" id="r-bar-fill"></div>
-        </div>
-        <div class="r-bar-below" id="r-bar-below"></div>
-      </div>
-
-      <div class="r-body">
-        <div class="r-disclaimer">
-          ข้อมูลนี้เป็นผลการทำนายจากข้อมูลย้อนหลังเท่านั้น <strong>ไม่ใช่ผลการคัดเลือกจริง</strong>
-        </div>
-        <div class="r-advice" id="r-advice"></div>
-        <button class="btn-retry" onclick="closeResult()">ทำนายผลอีกครั้ง</button>
-      </div>
-    </div>
-  </div>
 
   <footer>
     <div class="footer-brand">
@@ -1360,6 +1378,7 @@ const SUBJ ={"GPAX": {"label": "GPAX (5 ภาคเรียน)", "max": 4, "t
 const SUBJ_ORDER =['GPAX','TGAT90','TPAT10','TPAT20','TPAT30','TPAT40','TPAT50','ALEV61','ALEV62','ALEV63','ALEV64','ALEV65','ALEV66','ALEV70','ALEV81','ALEV82','ALEV86','ALEV87'];
 
 let currentProgram = null;
+let selectedPrograms = [];
 
 // ═══ GOOGLE SHEETS ═══
 // วิธีตั้งค่า:
@@ -1426,9 +1445,68 @@ function sendToSheets(data) {
 
 function resetScorePanel() {
   document.getElementById('program-info').classList.remove('show');
-  document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกหลักสูตร</div>';
+  document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกคณะและหลักสูตรก่อน</div>';
   document.getElementById('btn-predict').disabled = true;
+  document.getElementById('btn-add-prog').disabled = true;
   currentProgram = null;
+}
+
+function updatePredictButton() {
+  document.getElementById('btn-predict').disabled = selectedPrograms.length === 0;
+}
+
+function renderChips() {
+  const container = document.getElementById('selected-programs');
+  if (selectedPrograms.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = selectedPrograms.map((prog, i) =>
+    '<div class="sp-card">' +
+      '<div class="sp-card-num-wrap">' +
+        '<div class="sp-card-num">' + prog.s + '</div>' +
+        '<div class="sp-card-label">ที่นั่ง</div>' +
+      '</div>' +
+      '<div class="sp-card-detail">' +
+        '<div class="sp-card-name">' + prog.p + '</div>' +
+        '<div class="sp-card-faculty">' + prog.f + '</div>' +
+      '</div>' +
+      '<button type="button" class="sp-card-remove" onclick="removeProgram(' + i + ')" title="ลบหลักสูตร">&#10005;</button>' +
+    '</div>'
+  ).join('');
+}
+
+function addProgram() {
+  if (selectedPrograms.length >= 3) return;
+  if (!currentProgram) return;
+
+  // Prevent duplicates
+  if (selectedPrograms.some(p => p.f === currentProgram.f && p.p === currentProgram.p)) return;
+
+  selectedPrograms.push(currentProgram);
+  renderChips();
+  buildScoreInputsMulti(selectedPrograms);
+  updatePredictButton();
+
+  // Hide preview card — the selected card now shows the info
+  document.getElementById('program-info').classList.remove('show');
+
+  // Update add button state
+  document.getElementById('btn-add-prog').disabled = selectedPrograms.length >= 3;
+}
+
+function removeProgram(idx) {
+  selectedPrograms.splice(idx, 1);
+  renderChips();
+  if (selectedPrograms.length > 0) {
+    buildScoreInputsMulti(selectedPrograms);
+  } else {
+    document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกคณะและหลักสูตรก่อน</div>';
+  }
+  updatePredictButton();
+  document.getElementById('btn-add-prog').disabled = selectedPrograms.length >= 3 || !currentProgram;
+  // Hide compare results if visible
+  document.getElementById('result-compare').style.display = 'none';
 }
 
 (function init() {
@@ -1449,7 +1527,9 @@ function onFacultyChange() {
   const pSel = document.getElementById('sel-program');
   pSel.innerHTML = '<option value="">-- เลือกหลักสูตร --</option>';
   pSel.disabled = !fac;
-  resetScorePanel();
+  currentProgram = null;
+  document.getElementById('program-info').classList.remove('show');
+  document.getElementById('btn-add-prog').disabled = true;
 
   if (!fac) return;
 
@@ -1466,7 +1546,9 @@ function onProgramChange() {
   const fac = document.getElementById('sel-faculty').value;
   const pSel = this;
   if (!pSel.value) {
-    resetScorePanel();
+    currentProgram = null;
+    document.getElementById('program-info').classList.remove('show');
+    document.getElementById('btn-add-prog').disabled = true;
     return;
   }
 
@@ -1478,6 +1560,10 @@ function onProgramChange() {
 
   const info = document.getElementById('program-info');
   info.classList.add('show');
+
+  const isUnsupported = Object.keys(prog.w).length === 0 && prog.ao === 0;
+  const isDuplicate = selectedPrograms.some(p => p.f === prog.f && p.p === prog.p);
+
   info.innerHTML = `
     <div class="seats-num-wrap">
       <div class="seats-num">${prog.s}</div>
@@ -1486,16 +1572,11 @@ function onProgramChange() {
     <div class="seats-detail">
       <div class="seats-prog-name">${prog.p}</div>
       <div class="seats-year-badge">TCAS 2 / 2569</div>
+      ${isUnsupported ? '<div style="font-size:0.75rem;color:#ca8a04;margin-top:4px;">⚠ หลักสูตรนี้ใช้ Adj. T-score ไม่สามารถทำนายได้</div>' : ''}
+      ${isDuplicate ? '<div style="font-size:0.75rem;color:var(--gray-3);margin-top:4px;">เลือกหลักสูตรนี้แล้ว</div>' : ''}
     </div>`;
 
-  if (Object.keys(prog.w).length === 0 && prog.ao === 0) {
-    document.getElementById('score-inputs').innerHTML = '<div class="score-unsupported">หลักสูตรนี้ใช้ระบบการคิดคะแนนแบบ Adj. T-score จึงไม่สามารถทำนายผลด้วยระบบนี้ได้</div>';
-    document.getElementById('btn-predict').disabled = true;
-    return;
-  }
-
-  buildScoreInputs(prog);
-  document.getElementById('btn-predict').disabled = false;
+  document.getElementById('btn-add-prog').disabled = isUnsupported || isDuplicate || selectedPrograms.length >= 3;
 }
 
 const ALEV_OTHER = [
@@ -1602,12 +1683,112 @@ function buildScoreInputs(prog) {
   });
 }
 
-function calculate() {
-  if (!currentProgram) return;
-  const prog = currentProgram;
+function buildScoreInputsMulti(programs) {
+  const container = document.getElementById('score-inputs');
+
+  // Collect union of all subjects across programs
+  const allSubjects = new Set();
+  let needAlevOther = false;
+  programs.forEach(prog => {
+    SUBJ_ORDER.forEach(k => { if (prog.w[k] && prog.w[k] > 0) allSubjects.add(k); });
+    if (prog.ao > 0) needAlevOther = true;
+  });
+
+  const unionSubjects = SUBJ_ORDER.filter(k => allSubjects.has(k));
+  const gpaxSubjects = unionSubjects.filter(k => SUBJ[k].type === 'gpax');
+  const tgatSubjects = unionSubjects.filter(k => SUBJ[k].type === 'tgat');
+  const tpatSubjects = unionSubjects.filter(k => SUBJ[k].type === 'tpat');
+  const alevSubjects = unionSubjects.filter(k => SUBJ[k].type === 'alev');
+
+  // Save current values before rebuilding
+  const savedValues = {};
+  container.querySelectorAll('input[type="number"]').forEach(inp => {
+    if (inp.value !== '') savedValues[inp.id] = inp.value;
+  });
+
+  let html = '';
+
+  if (gpaxSubjects.length > 0) {
+    html += '<div class="score-group">';
+    html += '<div class="sg-badge sg-gpax"><span class="sg-badge-label">GPAX</span></div>';
+    html += '<div class="sg-fields"><div class="fgrid fg-2">';
+    gpaxSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label}</label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="${SUBJ[k].max}" placeholder="0.00 - ${SUBJ[k].max}" /></div>`;
+    });
+    html += '</div></div></div>';
+  }
+
+  const testSubjects = [...tgatSubjects, ...tpatSubjects];
+  if (testSubjects.length > 0) {
+    html += '<div class="score-group">';
+    html += '<div class="sg-badge sg-tgat"><span class="sg-badge-label">TGAT /<br>TPAT</span></div>';
+    html += '<div class="sg-fields"><div class="fgrid fg-2">';
+    testSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label}</label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div></div>';
+  }
+
+  if (alevSubjects.length > 0) {
+    html += '<div class="score-group">';
+    html += '<div class="sg-badge sg-alev"><span class="sg-badge-label">A-Level</span></div>';
+    html += '<div class="sg-fields"><div class="fgrid fg-2">';
+    alevSubjects.forEach(k => {
+      html += `<div class="score-field"><label>${SUBJ[k].label}</label>
+        <input type="number" id="inp-${k}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div></div>';
+  }
+
+  if (needAlevOther) {
+    html += '<div class="score-group">';
+    html += '<div class="sg-badge sg-alev-other"><span class="sg-badge-label">A-Level<br>วิทย์</span></div>';
+    html += '<div class="sg-fields"><div class="score-group-note">กรอกคะแนนดิบแต่ละวิชา (ฟิสิกส์ เคมี ชีววิทยา)</div><div class="fgrid fg-2">';
+    ALEV_OTHER.forEach(s => {
+      html += `<div class="score-field"><label>${s.label}</label>
+        <input type="number" id="inp-ao-${s.key}" step="0.01" min="0" max="100" placeholder="0 - 100" /></div>`;
+    });
+    html += '</div></div></div>';
+  }
+
+  container.innerHTML = html;
+
+  // Restore saved values
+  Object.keys(savedValues).forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) inp.value = savedValues[id];
+  });
+
+  // Add input validation listeners
+  container.querySelectorAll('input[type="number"]').forEach(inp => {
+    inp.addEventListener('focus', () => { setTimeout(() => inp.select(), 0); });
+    inp.addEventListener('input', () => {
+      if (inp.value === '' || inp.value === '-') return;
+      let val = parseFloat(inp.value);
+      if (isNaN(val)) return;
+      const mx = parseFloat(inp.max);
+      const mn = parseFloat(inp.min);
+      if (!isNaN(mx) && val > mx) { inp.value = mx; }
+      if (!isNaN(mn) && val < mn) { inp.value = mn; }
+    });
+    inp.addEventListener('blur', () => {
+      if (inp.value === '') return;
+      let val = parseFloat(inp.value);
+      if (isNaN(val)) { inp.value = ''; return; }
+      const mx = parseFloat(inp.max);
+      const mn = parseFloat(inp.min);
+      if (!isNaN(mx) && val > mx) val = mx;
+      if (!isNaN(mn) && val < mn) val = mn;
+      inp.value = val;
+    });
+  });
+}
+
+function calculateForProgram(prog) {
   const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
   const hasAlevOther = prog.ao > 0;
-
   const failedCriteria = [];
 
   if (prog.mg > 0) {
@@ -1697,7 +1878,7 @@ function calculate() {
 
   activeSubjects.forEach(k => {
     const inp = document.getElementById('inp-' + k);
-    const val = parseFloat(inp.value);
+    const val = parseFloat(inp ? inp.value : 0);
     const score = isNaN(val) ? 0 : Math.max(0, val);
     const weight = prog.w[k];
     const maxScore = SUBJ[k].max;
@@ -1717,7 +1898,7 @@ function calculate() {
     let sumScores = 0;
     ALEV_OTHER.forEach(s => {
       const inp = document.getElementById('inp-ao-' + s.key);
-      const val = parseFloat(inp.value);
+      const val = parseFloat(inp ? inp.value : 0);
       sumScores += isNaN(val) ? 0 : Math.max(0, val);
     });
 
@@ -1731,21 +1912,13 @@ function calculate() {
     });
   }
 
-  const surveyData = getSurveyData();
-  showResult(totalScore, breakdown, prog, failedCriteria, surveyData);
-}
-
-function showResult(totalScore, breakdown, prog, failedCriteria, surveyData) {
-  failedCriteria = failedCriteria || [];
+  // Determine level
   const hasFail = failedCriteria.length > 0;
-
   const avg3yr = prog.a3 || 0;
   const minMin = prog.nm || 0;
-
   const threshold_A = avg3yr * 1.10;
-  const range = threshold_A - minMin;
+  const range = Math.max(0, avg3yr - minMin);
   const threshold_B = minMin + 0.50 * range;
-  // threshold C/D = minMin เอง: D = ต่ำกว่าคะแนนต่ำสุดของผู้ผ่านจริงๆ
 
   let level, title, sub, color;
 
@@ -1755,227 +1928,264 @@ function showResult(totalScore, breakdown, prog, failedCriteria, surveyData) {
     color = '#dc2626';
   } else if (!avg3yr) {
     level = '?'; title = 'ไม่มีข้อมูลเปรียบเทียบ';
-    sub = 'หลักสูตรนี้ยังไม่มีข้อมูลคะแนนย้อนหลัง จึงยังไม่สามารถประเมินโอกาสได้';
+    sub = 'หลักสูตรนี้ยังไม่มีข้อมูลคะแนนย้อนหลัง';
     color = '#fbbf24';
   } else if (totalScore >= threshold_A) {
     level = 'A'; title = 'โอกาสสูงมาก';
-    sub = 'คะแนนของคุณสูงกว่าค่าเฉลี่ยของผู้ผ่านการคัดเลือกค่อนข้างมาก —> มีโอกาสผ่านเกิน 80%';
+    sub = 'คะแนนสูงกว่าค่าเฉลี่ยผู้ผ่านค่อนข้างมาก — โอกาสผ่านเกิน 80%';
     color = '#4ade80';
   } else if (totalScore >= threshold_B) {
     level = 'B'; title = 'โอกาสสูง';
-    sub = 'คะแนนของคุณอยู่ใกล้เคียงค่าเฉลี่ยของผู้ผ่านการคัดเลือก —> มีโอกาสผ่านระหว่าง 60–80%';
+    sub = 'คะแนนใกล้เคียงค่าเฉลี่ยผู้ผ่าน — โอกาสผ่าน 60–80%';
     color = '#60a5fa';
   } else if (totalScore >= minMin) {
     level = 'C'; title = 'โอกาสปานกลาง';
-    sub = 'คะแนนของคุณมากกว่าคะแนนต่ำสุดของผู้ผ่านการคัดเลือกอยู่เล็กน้อย — มีโอกาสผ่านระหว่าง 40–60%';
+    sub = 'คะแนนมากกว่าคะแนนต่ำสุดของผู้ผ่าน — โอกาสผ่าน 40–60%';
     color = '#fbbf24';
   } else {
     level = 'D'; title = 'โอกาสน้อย';
-    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่านการคัดเลือก — มีโอกาสผ่านต่ำกว่า 40%';
+    sub = 'คะแนนต่ำกว่าคะแนนต่ำสุดของผู้ผ่าน — โอกาสผ่านต่ำกว่า 40%';
     color = '#f87171';
   }
 
-  document.getElementById('r-emoji').innerHTML = SVG_ICONS[level];
-  document.getElementById('r-verdict-text').textContent = title;
-  document.getElementById('r-verdict-sub').textContent = sub;
-
-  const scoreNum = document.getElementById('r-score-num');
-  scoreNum.textContent = Math.round(totalScore);
-  scoreNum.style.color = color;
-
-  const glow = document.getElementById('r-glow');
-  glow.style.background = color;
-  document.getElementById('r-hero').className = 'r-hero hero-' + level;
-
-  // Bar section
-  const barSection = document.getElementById('r-bar-section');
-  const barFill = document.getElementById('r-bar-fill');
-  barFill.style.background = color;
-  barFill.style.width = '0';
-  barFill.style.boxShadow = '0 0 10px ' + color + '70';
-  barSection.style.display = hasFail ? 'none' : '';
-
-  // Hero: program pill
-  const progPill = document.getElementById('r-prog-pill');
-  progPill.textContent = prog.p;
-  progPill.style.display = hasFail ? 'none' : '';
-
-  const barMax = Math.max(avg3yr * 1.3, totalScore * 1.1, 1000);
-  const track = document.getElementById('r-bar-track');
-  track.querySelectorAll('.r-bar-marker, .r-bar-you').forEach(el => el.remove());
-
-  // Bar above: positioned labels at marker %
-  const barAbove = document.getElementById('r-bar-above');
-  barAbove.innerHTML = '';
-  if (!hasFail) {
-    if (minMin > 0) {
-      const pos1 = Math.min(94, (minMin / barMax) * 100);
-      const m1 = document.createElement('div');
-      m1.className = 'r-bar-marker mark-min';
-      m1.style.left = pos1 + '%';
-      m1.innerHTML = '<div class="r-bar-marker-line"></div>';
-      track.appendChild(m1);
-      const lbl1 = document.createElement('div');
-      lbl1.className = 'r-bar-lbl lbl-min';
-      lbl1.style.left = pos1 + '%';
-      lbl1.innerHTML = '<span class="r-bar-lbl-text">คะแนนต่ำสุด</span><div class="r-bar-lbl-box box-min">' + minMin.toFixed(0) + '</div>';
-      barAbove.appendChild(lbl1);
-    }
-    if (avg3yr > 0) {
-      const pos2 = Math.min(94, (avg3yr / barMax) * 100);
-      const m2 = document.createElement('div');
-      m2.className = 'r-bar-marker mark-avg';
-      m2.style.left = pos2 + '%';
-      m2.innerHTML = '<div class="r-bar-marker-line"></div>';
-      track.appendChild(m2);
-      const lbl2 = document.createElement('div');
-      lbl2.className = 'r-bar-lbl lbl-avg';
-      lbl2.style.left = pos2 + '%';
-      lbl2.innerHTML = '<span class="r-bar-lbl-text">คะแนนเฉลี่ย</span><div class="r-bar-lbl-box box-avg">' + avg3yr.toFixed(0) + '</div>';
-      barAbove.appendChild(lbl2);
-    }
-  }
-
-  const youMark = document.createElement('div');
-  youMark.className = 'r-bar-you';
-  youMark.style.left = '0%';
-  youMark.innerHTML = '<div class="r-bar-you-dot" style="background:' + color + '"></div>';
-  track.appendChild(youMark);
-
-  // Bar below: "▲ คะแนนของคุณ" at user's position
-  const barBelow = document.getElementById('r-bar-below');
-  barBelow.innerHTML = '';
-  if (!hasFail) {
-    const youTag = document.createElement('div');
-    youTag.className = 'r-bar-you-tag';
-    youTag.id = 'r-bar-you-tag';
-    youTag.style.left = '0%';
-    youTag.innerHTML = 'คะแนนของคุณ';
-    barBelow.appendChild(youTag);
-  }
-
+  // Collect good/weak subjects
   const goodSubjects = [];
   const weakSubjects = [];
-  const activeSubjects = SUBJ_ORDER.filter(k => prog.w[k] && prog.w[k] > 0);
-
   activeSubjects.forEach(k => {
     const inp = document.getElementById('inp-' + k);
-    const raw = parseFloat(inp.value);
+    const raw = parseFloat(inp ? inp.value : 0);
     if (isNaN(raw)) return;
     const avg = prog.sa[k];
     if (avg == null) return;
     const diff = raw - avg;
     const isGpax = (k === 'GPAX');
+    const weight = prog.w[k];
     if (diff >= 0) {
-      goodSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+      goodSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax, weight });
     } else {
-      weakSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax: isGpax });
+      weakSubjects.push({ name: SUBJ[k].label, diff: diff.toFixed(2), isGpax, weight });
     }
   });
 
   if (prog.ao > 0) {
     ALEV_OTHER.forEach(s => {
       const inp = document.getElementById('inp-ao-' + s.key);
-      const raw = parseFloat(inp.value);
+      const raw = parseFloat(inp ? inp.value : 0);
       if (isNaN(raw)) return;
       const avg = prog.sa[s.key];
       if (avg == null) return;
       const diff = raw - avg;
+      const weight = +(prog.ao / 3).toFixed(1);
       if (diff >= 0) {
-        goodSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+        goodSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false, weight });
       } else {
-        weakSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false });
+        weakSubjects.push({ name: s.label, diff: diff.toFixed(2), isGpax: false, weight });
       }
     });
   }
 
-  let adviceHtml = '';
+  return { prog, totalScore, breakdown, failedCriteria, level, title, sub, color, avg3yr, minMin, goodSubjects, weakSubjects };
+}
 
-  if (hasFail) {
-    adviceHtml += '<div class="r-fail-section">';
-    adviceHtml += '<div class="r-badge badge-fail"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M8 3 L14.5 13.5 H1.5 Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="8" y1="7.2" x2="8" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="12.2" r="0.85" fill="white"/></svg></div><span>องค์ประกอบที่ไม่ผ่านเกณฑ์ขั้นต่ำ</span></div>';
-    adviceHtml += '<div class="r-fail-list">';
-    failedCriteria.forEach(f => {
-      adviceHtml += '<div class="r-fail-item">';
-      adviceHtml += '<span class="r-fail-label">' + f.label + '</span>';
-      adviceHtml += '<span class="r-fail-vals">';
-      adviceHtml += '<span class="r-fail-your">' + (typeof f.yours === 'number' ? f.yours.toFixed(2) : f.yours) + '</span>';
-      adviceHtml += '<span class="r-fail-arrow">&#9654;</span>';
-      adviceHtml += '<span class="r-fail-need">ขั้นต่ำ ' + f.required + f.unit + '</span>';
-      adviceHtml += '</span></div>';
+function calculate() {
+  if (selectedPrograms.length === 0) return;
+
+  const results = selectedPrograms.map(prog => calculateForProgram(prog));
+
+  // Sort: A > B > C > ? > D > F, then by score desc
+  if (results.length > 1) {
+    const levelOrder = { A: 0, B: 1, C: 2, '?': 3, D: 4, F: 5 };
+    results.sort((a, b) => {
+      const lo = (levelOrder[a.level] ?? 9) - (levelOrder[b.level] ?? 9);
+      if (lo !== 0) return lo;
+      return b.totalScore - a.totalScore;
     });
-    adviceHtml += '</div></div>';
   }
 
-  adviceHtml += '<div class="r-advice-card card-good">';
-  adviceHtml += '<div class="r-badge badge-good"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="2,9 6.5,13.5 14,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>องค์ประกอบที่ทำได้ดี</span></div>';
-  if (goodSubjects.length > 0) {
-    adviceHtml += '<div class="r-advice-list">';
-    goodSubjects.forEach(s => {
-      const descText = s.isGpax ? 'สูงกว่า GPAX เฉลี่ย ' + s.diff : 'สูงกว่าคะแนนเฉลี่ย ' + s.diff + ' คะแนน';
-      adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff pos">' + descText + '</span></div>';
+  const surveyData = getSurveyData();
+  results.forEach(r => {
+    sendToSheets({
+      school: surveyData.school || '',
+      province: surveyData.province || '',
+      knew_nu: surveyData.knewNu || '',
+      channels: surveyData.channels || '',
+      interest: surveyData.interest !== undefined ? surveyData.interest : '',
+      faculty: r.prog.f,
+      program: r.prog.p,
+      total_score: Math.round(r.totalScore),
+      result_level: r.level
     });
-    adviceHtml += '</div>';
-  } else {
-    adviceHtml += '<div class="r-advice-empty">ยังไม่มีวิชาที่สูงกว่าค่าเฉลี่ย</div>';
-  }
-  adviceHtml += '</div>';
-
-  adviceHtml += '<div class="r-advice-card card-weak">';
-  adviceHtml += '<div class="r-badge badge-weak"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="1,13 5,7.5 9,10 15,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="11,3 15,3 15,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>องค์ประกอบที่ยังต้องพัฒนา</span></div>';
-  if (weakSubjects.length > 0) {
-    adviceHtml += '<div class="r-advice-list">';
-    weakSubjects.forEach(s => {
-      const absDiff = Math.abs(parseFloat(s.diff)).toFixed(2);
-      const descText = s.isGpax ? 'ต่ำกว่า GPAX เฉลี่ย ' + absDiff : 'ต่ำกว่าคะแนนเฉลี่ย ' + absDiff + ' คะแนน';
-      adviceHtml += '<div class="r-advice-item"><span class="subj-name">' + s.name + '</span><span class="subj-diff neg">' + descText + '</span></div>';
-    });
-    adviceHtml += '</div>';
-  } else {
-    adviceHtml += '<div class="r-advice-empty">ทุกวิชาสูงกว่าค่าเฉลี่ย</div>';
-  }
-  adviceHtml += '</div>';
-
-  document.getElementById('r-advice').innerHTML = adviceHtml;
-
-  // ── ส่งข้อมูลไป Google Sheets ──
-  sendToSheets({
-    school:       (surveyData && surveyData.school)   || '',
-    province:     (surveyData && surveyData.province) || '',
-    knew_nu:      (surveyData && surveyData.knewNu)   || '',
-    channels:     (surveyData && surveyData.channels) || '',
-    interest:     (surveyData && surveyData.interest !== undefined) ? surveyData.interest : '',
-    faculty:      prog.f,
-    program:      prog.p,
-    total_score:  Math.round(totalScore),
-    result_level: level
   });
 
-  const overlay = document.getElementById('result-overlay');
-  overlay.classList.add('show');
+  showCompareResults(results);
+}
 
+
+function showCompareResults(results) {
+  const container = document.getElementById('result-compare');
+  let html = '';
+  html += '<div class="result-compare-title">ผลการทำนาย</div>';
+  if (results.length > 1) {
+    html += '<div class="result-compare-sub">เปรียบเทียบ ' + results.length + ' หลักสูตร — เรียงจากโอกาสสูงสุด</div>';
+  }
+
+  results.forEach((r, idx) => {
+    const hasFail = r.failedCriteria.length > 0;
+    const barMax = Math.max((r.avg3yr || 0) * 1.3, r.totalScore * 1.1, 1000);
+    const fillPct = Math.min(98, (r.totalScore / barMax) * 100);
+
+    html += '<div class="rc-card">';
+
+    // Program name at top
+    html += '<div class="rc-prog-pill">' + r.prog.p + '</div>';
+
+    // Hero
+    html += '<div class="rc-hero hero-' + r.level + '">';
+    html += '<div class="rc-hero-glow" style="background:' + r.color + '"></div>';
+    html += '<div class="rc-hero-ring rc-ring-1"></div>';
+    html += '<div class="rc-hero-ring rc-ring-2"></div>';
+    html += '<div class="rc-hero-inner">';
+    html += '<div class="rc-hero-cols">';
+
+    // Score col
+    html += '<div class="rc-hero-score-col">';
+    html += '<div class="rc-score-label">คะแนนรวม</div>';
+    html += '<div class="rc-score-num" style="color:' + r.color + '">' + Math.round(r.totalScore) + '</div>';
+    html += '<div class="rc-score-of">/ 1,000</div>';
+    html += '</div>';
+
+    html += '<div class="rc-hero-divider"></div>';
+
+    // Verdict col
+    html += '<div class="rc-hero-verdict-col">';
+    html += '<div class="rc-verdict-icon">' + SVG_ICONS[r.level] + '</div>';
+    html += '<div class="rc-verdict-text">' + r.title + '</div>';
+    html += '<div class="rc-verdict-sub">' + r.sub + '</div>';
+    html += '</div>';
+
+    html += '</div>'; // cols
+    html += '</div>'; // inner
+    html += '</div>'; // hero
+
+    // Bar section (skip if failed)
+    if (!hasFail && r.avg3yr) {
+      html += '<div class="rc-bar-section">';
+      html += '<div class="rc-bar-above" id="rc-bar-above-' + idx + '">';
+      if (r.minMin > 0) {
+        const pos1 = Math.min(94, (r.minMin / barMax) * 100);
+        html += '<div class="rc-bar-lbl" style="left:' + pos1 + '%"><span class="rc-bar-lbl-text">ต่ำสุด</span><div class="rc-bar-lbl-box box-min">' + r.minMin.toFixed(0) + '</div></div>';
+      }
+      if (r.avg3yr > 0) {
+        const pos2 = Math.min(94, (r.avg3yr / barMax) * 100);
+        html += '<div class="rc-bar-lbl" style="left:' + pos2 + '%"><span class="rc-bar-lbl-text">เฉลี่ย</span><div class="rc-bar-lbl-box box-avg">' + r.avg3yr.toFixed(0) + '</div></div>';
+      }
+      html += '</div>'; // above
+
+      html += '<div class="rc-bar-track">';
+      html += '<div class="rc-bar-fill" data-fill="' + fillPct + '" style="background:' + r.color + ';box-shadow:0 0 10px ' + r.color + '70;width:0"></div>';
+      if (r.minMin > 0) {
+        const pos1 = Math.min(94, (r.minMin / barMax) * 100);
+        html += '<div class="rc-bar-marker mark-min" style="left:' + pos1 + '%"><div class="rc-bar-marker-line"></div></div>';
+      }
+      if (r.avg3yr > 0) {
+        const pos2 = Math.min(94, (r.avg3yr / barMax) * 100);
+        html += '<div class="rc-bar-marker mark-avg" style="left:' + pos2 + '%"><div class="rc-bar-marker-line"></div></div>';
+      }
+      html += '<div class="rc-bar-you" data-pos="' + fillPct + '" style="left:0"><div class="rc-bar-you-dot" style="background:' + r.color + '"></div></div>';
+      html += '</div>'; // track
+
+      html += '<div class="rc-bar-below">';
+      html += '<div class="rc-bar-you-tag" data-pos="' + fillPct + '" style="left:0">คะแนนของคุณ</div>';
+      html += '</div>';
+      html += '</div>'; // bar-section
+    }
+
+    // Body
+    html += '<div class="rc-body">';
+    html += '<div class="rc-disclaimer">ข้อมูลนี้เป็นผลการทำนายจากข้อมูลย้อนหลังเท่านั้น <strong>ไม่ใช่ผลการคัดเลือกจริง</strong></div>';
+
+    // Failed criteria
+    if (hasFail) {
+      html += '<div class="rc-fail-section">';
+      html += '<div class="r-badge badge-fail"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M8 3 L14.5 13.5 H1.5 Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><line x1="8" y1="7.2" x2="8" y2="10" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="12.2" r="0.85" fill="white"/></svg></div><span>ไม่ผ่านเกณฑ์ขั้นต่ำ</span></div>';
+      html += '<div class="rc-fail-list">';
+      r.failedCriteria.forEach(f => {
+        html += '<div class="rc-fail-item">';
+        html += '<span class="r-fail-label">' + f.label + '</span>';
+        html += '<span class="r-fail-vals">';
+        html += '<span class="r-fail-your">' + (typeof f.yours === 'number' ? f.yours.toFixed(2) : f.yours) + '</span>';
+        html += '<span class="r-fail-arrow">&#9654;</span>';
+        html += '<span class="r-fail-need">ขั้นต่ำ ' + f.required + f.unit + '</span>';
+        html += '</span></div>';
+      });
+      html += '</div></div>';
+    }
+
+    // Advice
+    html += '<div class="rc-advice">';
+
+    html += '<div class="rc-advice-card card-good">';
+    html += '<div class="r-badge badge-good"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="2,9 6.5,13.5 14,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>ทำได้ดี</span><span class="r-badge-desc">— สูงกว่าคะแนนเฉลี่ยของผู้ผ่านการคัดเลือก</span></div>';
+    if (r.goodSubjects.length > 0) {
+      html += '<div class="rc-advice-list">';
+      r.goodSubjects.forEach(s => {
+        const diffText = s.isGpax ? 'สูงกว่า ' + s.diff : 'สูงกว่า ' + s.diff + ' คะแนน';
+        html += '<div class="rc-advice-item"><span class="subj-weight">' + s.weight + '%</span><span class="subj-name">' + s.name + '</span><span class="subj-diff pos">' + diffText + '</span></div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="rc-advice-empty">ยังไม่มีวิชาที่สูงกว่าค่าเฉลี่ย</div>';
+    }
+    html += '</div>';
+
+    html += '<div class="rc-advice-card card-weak">';
+    html += '<div class="r-badge badge-weak"><div class="r-badge-icon"><svg viewBox="0 0 16 16" fill="none"><polyline points="1,13 5,7.5 9,10 15,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="11,3 15,3 15,7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>ต้องพัฒนา</span><span class="r-badge-desc">— ต่ำกว่าคะแนนเฉลี่ยของผู้ผ่านการคัดเลือก</span></div>';
+    if (r.weakSubjects.length > 0) {
+      html += '<div class="rc-advice-list">';
+      r.weakSubjects.forEach(s => {
+        const absDiff = Math.abs(parseFloat(s.diff)).toFixed(2);
+        const diffText = s.isGpax ? 'ต่ำกว่า ' + absDiff : 'ต่ำกว่า ' + absDiff + ' คะแนน';
+        html += '<div class="rc-advice-item"><span class="subj-weight">' + s.weight + '%</span><span class="subj-name">' + s.name + '</span><span class="subj-diff neg">' + diffText + '</span></div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="rc-advice-empty">ทุกวิชาสูงกว่าค่าเฉลี่ย</div>';
+    }
+    html += '</div>';
+
+    html += '</div>'; // advice
+    html += '</div>'; // body
+    html += '</div>'; // card
+  });
+
+  html += '<button class="btn-retry-compare" onclick="closeCompareResults()">ทำนายผลใหม่</button>';
+
+  container.innerHTML = html;
+  container.style.display = 'grid';
+
+  // Scroll to results
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Animate bars
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const fillPct = Math.min(98, (totalScore / barMax) * 100);
-      barFill.style.width = fillPct + '%';
-      youMark.style.left = fillPct + '%';
-      const youTagEl = document.getElementById('r-bar-you-tag');
-      if (youTagEl) youTagEl.style.left = fillPct + '%';
+      container.querySelectorAll('.rc-bar-fill').forEach(el => {
+        el.style.width = el.dataset.fill + '%';
+      });
+      container.querySelectorAll('.rc-bar-you').forEach(el => {
+        el.style.left = el.dataset.pos + '%';
+      });
+      container.querySelectorAll('.rc-bar-you-tag').forEach(el => {
+        el.style.left = el.dataset.pos + '%';
+      });
     });
   });
 }
 
-function closeResult() {
-  const overlay = document.getElementById('result-overlay');
-  overlay.classList.remove('show');
-  document.getElementById('r-bar-fill').style.width = '0';
-  const youMark = document.querySelector('.r-bar-you');
-  if (youMark) youMark.style.left = '0%';
-  const youTag = document.querySelector('.r-bar-you-tag');
-  if (youTag) youTag.style.left = '0%';
+function closeCompareResults() {
+  document.getElementById('result-compare').style.display = 'none';
+  document.getElementById('result-compare').innerHTML = '';
 }
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResult(); });
 
 /* ═══ HERO ANIMATIONS ═══ */
 // Stat count-up
