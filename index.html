@@ -971,6 +971,56 @@
       .seats-banner { flex-direction: column; text-align: center; gap: 10px; }
       .seats-num-wrap { flex-direction: row; gap: 8px; align-items: baseline; }
       .seats-year-badge { margin: 0 auto; }
+      .channels-grid { grid-template-columns: 1fr; }
+      .rating-btn { width: 30px; height: 30px; font-size: 0.78rem; }
+    }
+
+    /* ═══ SURVEY STEP ═══ */
+    .knew-toggle { display: flex; gap: 8px; margin-top: 4px; }
+    .knew-btn {
+      flex: 1; padding: 10px 0; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); background: var(--bg-input);
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
+      color: var(--gray-2); cursor: pointer; transition: all 0.2s; text-align: center;
+    }
+    .knew-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 4px 12px rgba(255,82,0,0.2); }
+    .channels-wrap { display: none; margin-top: 10px; }
+    .channels-wrap.show { display: block; }
+    .channels-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 6px; }
+    .ch-label {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); background: var(--bg-input);
+      font-family: var(--font-body); font-size: 0.82rem; font-weight: 500; color: var(--gray-2);
+      cursor: pointer; transition: all 0.2s; user-select: none;
+    }
+    .ch-label:hover { border-color: var(--border-hover); background: var(--bg-card); }
+    .ch-label input[type="checkbox"] { display: none; }
+    .ch-check {
+      width: 16px; min-width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-size: 0.6rem; color: #fff; font-weight: 700;
+    }
+    .ch-label:has(input:checked) .ch-check { background: var(--orange); border-color: var(--orange); }
+    .ch-label:has(input:checked) .ch-check::after { content: '✓'; }
+    .ch-label:has(input:checked) { border-color: rgba(255,82,0,0.3); background: rgba(255,82,0,0.05); color: var(--gray-1); font-weight: 600; }
+    .rating-row { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+    .rating-btn {
+      width: 38px; height: 38px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: var(--bg-input);
+      font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700;
+      color: var(--gray-2); cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rating-btn:hover { border-color: var(--border-hover); background: var(--bg-card); }
+    .rating-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 4px 10px rgba(255,82,0,0.25); }
+    .rating-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+    .rating-labels span { font-size: 0.72rem; color: var(--gray-3); }
+    .survey-notice {
+      font-size: 0.78rem; color: var(--gray-3); margin-top: 4px;
+      padding: 6px 10px; background: var(--gray-5); border-radius: 6px;
+      border-left: 3px solid var(--border);
     }
   </style>
 </head>
@@ -1062,9 +1112,144 @@
     </div>
 
     <div class="fcard">
+
+      <!-- ── Step 1: ข้อมูลของคุณ ── -->
       <div class="fstep">
         <div class="fstep-header">
           <div class="fstep-num">1</div>
+          <div>
+            <div class="fstep-title">ข้อมูลของคุณ</div>
+            <div class="fstep-sub">เพื่อการวิจัยและพัฒนาระบบ — ไม่บังคับ ข้อมูลไม่ระบุตัวตน</div>
+          </div>
+        </div>
+
+        <div class="fgrid fg-2">
+          <div class="ff">
+            <label for="inp-school">1. โรงเรียน</label>
+            <input type="text" id="inp-school" placeholder="ชื่อโรงเรียนของคุณ" />
+          </div>
+          <div class="ff">
+            <label for="inp-province">2. จังหวัด</label>
+            <select id="inp-province">
+              <option value="">-- เลือกจังหวัด --</option>
+              <option>กรุงเทพมหานคร</option>
+              <option>กระบี่</option>
+              <option>กาญจนบุรี</option>
+              <option>กาฬสินธุ์</option>
+              <option>กำแพงเพชร</option>
+              <option>ขอนแก่น</option>
+              <option>จันทบุรี</option>
+              <option>ฉะเชิงเทรา</option>
+              <option>ชลบุรี</option>
+              <option>ชัยนาท</option>
+              <option>ชัยภูมิ</option>
+              <option>ชุมพร</option>
+              <option>เชียงราย</option>
+              <option>เชียงใหม่</option>
+              <option>ตรัง</option>
+              <option>ตราด</option>
+              <option>ตาก</option>
+              <option>นครนายก</option>
+              <option>นครปฐม</option>
+              <option>นครพนม</option>
+              <option>นครราชสีมา</option>
+              <option>นครศรีธรรมราช</option>
+              <option>นครสวรรค์</option>
+              <option>นนทบุรี</option>
+              <option>นราธิวาส</option>
+              <option>น่าน</option>
+              <option>บึงกาฬ</option>
+              <option>บุรีรัมย์</option>
+              <option>ปทุมธานี</option>
+              <option>ประจวบคีรีขันธ์</option>
+              <option>ปราจีนบุรี</option>
+              <option>ปัตตานี</option>
+              <option>พระนครศรีอยุธยา</option>
+              <option>พะเยา</option>
+              <option>พังงา</option>
+              <option>พัทลุง</option>
+              <option>พิจิตร</option>
+              <option>พิษณุโลก</option>
+              <option>เพชรบุรี</option>
+              <option>เพชรบูรณ์</option>
+              <option>แพร่</option>
+              <option>ภูเก็ต</option>
+              <option>มหาสารคาม</option>
+              <option>มุกดาหาร</option>
+              <option>แม่ฮ่องสอน</option>
+              <option>ยโสธร</option>
+              <option>ยะลา</option>
+              <option>ร้อยเอ็ด</option>
+              <option>ระนอง</option>
+              <option>ระยอง</option>
+              <option>ราชบุรี</option>
+              <option>ลพบุรี</option>
+              <option>ลำปาง</option>
+              <option>ลำพูน</option>
+              <option>เลย</option>
+              <option>ศรีสะเกษ</option>
+              <option>สกลนคร</option>
+              <option>สงขลา</option>
+              <option>สตูล</option>
+              <option>สมุทรปราการ</option>
+              <option>สมุทรสงคราม</option>
+              <option>สมุทรสาคร</option>
+              <option>สระแก้ว</option>
+              <option>สระบุรี</option>
+              <option>สิงห์บุรี</option>
+              <option>สุโขทัย</option>
+              <option>สุพรรณบุรี</option>
+              <option>สุราษฎร์ธานี</option>
+              <option>สุรินทร์</option>
+              <option>หนองคาย</option>
+              <option>หนองบัวลำภู</option>
+              <option>อ่างทอง</option>
+              <option>อำนาจเจริญ</option>
+              <option>อุดรธานี</option>
+              <option>อุตรดิตถ์</option>
+              <option>อุทัยธานี</option>
+              <option>อุบลราชธานี</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ff" style="margin-top:14px;">
+          <label>3. เคยรู้จักมหาวิทยาลัยนเรศวรมาก่อนหรือไม่?</label>
+          <div class="knew-toggle">
+            <button type="button" class="knew-btn" id="knew-no" onclick="setKnew(false)">ไม่รู้จักมาก่อน</button>
+            <button type="button" class="knew-btn" id="knew-yes" onclick="setKnew(true)">รู้จักอยู่แล้ว ✓</button>
+          </div>
+          <div class="channels-wrap" id="channels-wrap">
+            <label style="font-size:0.82rem;color:var(--gray-3);margin-bottom:2px;">รู้จักผ่านช่องทางใด? (เลือกได้หลายช่อง)</label>
+            <div class="channels-grid">
+              <label class="ch-label"><input type="checkbox" name="ch" value="เพื่อน/รุ่นพี่"><div class="ch-check"></div><span>เพื่อน / รุ่นพี่</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="อาจารย์แนะแนว"><div class="ch-check"></div><span>อาจารย์แนะแนว</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="ครอบครัว"><div class="ch-check"></div><span>ครอบครัว</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="เว็บไซต์ ม.นเรศวร"><div class="ch-check"></div><span>เว็บไซต์ ม.นเรศวร</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="Facebook/Instagram"><div class="ch-check"></div><span>Facebook / Instagram</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="TikTok/YouTube"><div class="ch-check"></div><span>TikTok / YouTube</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="Open House/แนะแนว"><div class="ch-check"></div><span>งาน Open House / แนะแนว</span></label>
+              <label class="ch-label"><input type="checkbox" name="ch" value="สื่อ/โฆษณา"><div class="ch-check"></div><span>สื่อ / โฆษณา</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="ff" style="margin-top:14px;">
+          <label>4. ท่านสนใจสมัครเรียนที่ ม.นเรศวร มากน้อยเพียงใด?</label>
+          <div class="rating-row" id="rating-row"></div>
+          <div class="rating-labels">
+            <span>ไม่สนใจเลย (0)</span>
+            <span>สนใจมากที่สุด (10)</span>
+          </div>
+        </div>
+
+        <div class="survey-notice">ข้อมูลในขั้นตอนนี้ไม่บังคับและไม่ส่งผลต่อการคำนวณ — ใช้เพื่อวิจัยและพัฒนาระบบเท่านั้น</div>
+      </div>
+
+      <!-- ── Step 2: เลือกคณะ ── -->
+      <div class="fstep">
+        <div class="fstep-header">
+          <div class="fstep-num">2</div>
           <div>
             <div class="fstep-title">เลือกคณะ / หลักสูตร</div>
           </div>
@@ -1084,7 +1269,7 @@
 
       <div class="fstep">
         <div class="fstep-header">
-          <div class="fstep-num">2</div>
+          <div class="fstep-num">3</div>
           <div>
             <div class="fstep-title">กรอกคะแนนสอบ</div>
           </div>
@@ -1176,6 +1361,69 @@ const SUBJ ={"GPAX": {"label": "GPAX (5 ภาคเรียน)", "max": 4, "t
 const SUBJ_ORDER =['GPAX','TGAT90','TPAT10','TPAT20','TPAT30','TPAT40','TPAT50','ALEV61','ALEV62','ALEV63','ALEV64','ALEV65','ALEV66','ALEV70','ALEV81','ALEV82','ALEV86','ALEV87'];
 
 let currentProgram = null;
+
+// ═══ GOOGLE SHEETS ═══
+// วิธีตั้งค่า:
+// 1. สร้าง Google Sheet แล้วไปที่ Extensions → Apps Script
+// 2. วางโค้ดด้านล่างแล้ว Deploy เป็น Web App (Execute as: Me, Who: Anyone)
+// 3. คัดลอก URL ที่ได้มาใส่ใน SHEETS_URL
+//
+// Apps Script code:
+// function doPost(e) {
+//   const sheet = SpreadsheetApp.getActiveSheet();
+//   const d = JSON.parse(e.postData.contents);
+//   sheet.appendRow([new Date(), d.school, d.province, d.knew_nu,
+//     d.channels, d.interest, d.faculty, d.program, d.total_score, d.result_level]);
+//   return ContentService.createTextOutput('OK');
+// }
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzc5DHJSCFdhQFTUqm27lwprVfSoM5W-ijWpUJOiASOyGgkGhgiiD0pbyh1Y6XHm6Mt/exec';
+
+function setKnew(val) {
+  document.getElementById('knew-no').classList.toggle('active', !val);
+  document.getElementById('knew-yes').classList.toggle('active', val);
+  document.getElementById('channels-wrap').classList.toggle('show', val);
+}
+
+(function buildRating() {
+  const row = document.getElementById('rating-row');
+  if (!row) return;
+  for (let i = 0; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rating-btn';
+    btn.textContent = i;
+    btn.dataset.v = i;
+    btn.onclick = function () {
+      row.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    };
+    row.appendChild(btn);
+  }
+})();
+
+function getSurveyData() {
+  const school = (document.getElementById('inp-school').value || '').trim();
+  const province = document.getElementById('inp-province').value || '';
+  const knewYes = document.getElementById('knew-yes').classList.contains('active');
+  const knewNo  = document.getElementById('knew-no').classList.contains('active');
+  const knewNu  = knewYes ? 'รู้จัก' : (knewNo ? 'ไม่รู้จัก' : '');
+  const channels = knewYes
+    ? [...document.querySelectorAll('input[name="ch"]:checked')].map(c => c.value).join(', ')
+    : '';
+  const ratingActive = document.querySelector('.rating-btn.active');
+  const interest = ratingActive ? parseInt(ratingActive.dataset.v) : '';
+  return { school, province, knewNu, channels, interest };
+}
+
+function sendToSheets(data) {
+  if (!SHEETS_URL || SHEETS_URL === 'YOUR_APPS_SCRIPT_URL_HERE') return;
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data),
+    mode: 'no-cors'
+  }).catch(() => {});
+}
 
 function resetScorePanel() {
   document.getElementById('program-info').classList.remove('show');
@@ -1484,10 +1732,11 @@ function calculate() {
     });
   }
 
-  showResult(totalScore, breakdown, prog, failedCriteria);
+  const surveyData = getSurveyData();
+  showResult(totalScore, breakdown, prog, failedCriteria, surveyData);
 }
 
-function showResult(totalScore, breakdown, prog, failedCriteria) {
+function showResult(totalScore, breakdown, prog, failedCriteria, surveyData) {
   failedCriteria = failedCriteria || [];
   const hasFail = failedCriteria.length > 0;
 
@@ -1689,6 +1938,19 @@ function showResult(totalScore, breakdown, prog, failedCriteria) {
   adviceHtml += '</div>';
 
   document.getElementById('r-advice').innerHTML = adviceHtml;
+
+  // ── ส่งข้อมูลไป Google Sheets ──
+  sendToSheets({
+    school:       (surveyData && surveyData.school)   || '',
+    province:     (surveyData && surveyData.province) || '',
+    knew_nu:      (surveyData && surveyData.knewNu)   || '',
+    channels:     (surveyData && surveyData.channels) || '',
+    interest:     (surveyData && surveyData.interest !== undefined) ? surveyData.interest : '',
+    faculty:      prog.f,
+    program:      prog.p,
+    total_score:  Math.round(totalScore),
+    result_level: level
+  });
 
   const overlay = document.getElementById('result-overlay');
   overlay.classList.add('show');
