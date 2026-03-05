@@ -612,12 +612,11 @@
     .result-compare {
       width: 100vw; margin-left: calc(-50vw + 50%);
       padding: 40px 3%;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(max(320px, calc((100% - 40px) / 3)), 1fr));
+      display: flex; flex-wrap: wrap; justify-content: center;
       gap: 20px;
       box-sizing: border-box;
     }
-    .result-compare-title, .result-compare-sub { grid-column: 1 / -1; }
+    .result-compare-title, .result-compare-sub, .btn-retry-compare { flex: 0 0 100%; }
     .result-compare-title {
       font-family: var(--font-thai-head); font-size: 1.3rem; font-weight: 800;
       color: var(--gray-1); text-align: center; margin-bottom: 4px;
@@ -626,7 +625,7 @@
       font-size: 0.82rem; color: var(--gray-3); text-align: center; margin-bottom: 12px;
     }
     .rc-card {
-      min-width: 0;
+      min-width: 320px; flex: 1 1 320px; max-width: 460px;
       background: var(--bg-card);
       border-radius: var(--radius-xl); overflow: hidden;
       box-shadow: 0 8px 30px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
@@ -804,7 +803,6 @@
     .rc-advice-empty { font-size: 0.76rem; color: var(--gray-3); font-style: italic; }
 
     .btn-retry-compare {
-      grid-column: 1 / -1;
       display: block; margin: 12px auto 0; padding: 14px 40px;
       background: var(--orange-grad); color: #fff;
       font-family: var(--font-body); font-size: 1rem; font-weight: 700;
@@ -987,7 +985,8 @@
       .seats-banner { gap: 14px; padding: 16px 18px; }
       .seats-num { font-size: 2.2rem; }
       .seats-prog-name { font-size: 0.85rem; }
-      .result-compare { padding: 30px 16px; grid-template-columns: 1fr; }
+      .result-compare { padding: 30px 16px; }
+      .rc-card { min-width: 0; max-width: none; }
       .rc-score-num { font-size: 2.6rem; }
       .rc-verdict-text { font-size: 1rem; }
       .rc-hero { padding: 16px; }
@@ -2058,7 +2057,7 @@ function showCompareResults(results) {
   html += '<button class="btn-retry-compare" onclick="closeCompareResults()">ทำนายผลใหม่</button>';
 
   container.innerHTML = html;
-  container.style.display = 'grid';
+  container.style.display = 'flex';
 
   // Scroll to results
   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
