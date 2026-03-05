@@ -610,11 +610,12 @@
 
     /* ═══ RESULT COMPARE CARDS ═══ */
     .result-compare {
-      max-width: 100%; margin: 0 auto;
+      width: 100vw; margin-left: calc(-50vw + 50%);
       padding: 40px 3%;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(max(320px, calc((100% - 40px) / 3)), 1fr));
       gap: 20px;
+      box-sizing: border-box;
     }
     .result-compare-title, .result-compare-sub { grid-column: 1 / -1; }
     .result-compare-title {
@@ -709,10 +710,10 @@
     }
     /* rc bar */
     .rc-bar-section { padding: 14px 20px 6px; }
-    .rc-bar-above { position: relative; height: 36px; }
+    .rc-bar-above { position: relative; height: 34px; }
     .rc-bar-lbl {
-      position: absolute; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      position: absolute; bottom: 2px; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 1px;
     }
     .rc-bar-lbl-box {
       font-family: var(--font-mono); font-size: 0.66rem; font-weight: 700;
@@ -1558,23 +1559,8 @@ function onProgramChange() {
   const prog = progs[idx];
   currentProgram = prog;
 
-  const info = document.getElementById('program-info');
-  info.classList.add('show');
-
   const isUnsupported = Object.keys(prog.w).length === 0 && prog.ao === 0;
   const isDuplicate = selectedPrograms.some(p => p.f === prog.f && p.p === prog.p);
-
-  info.innerHTML = `
-    <div class="seats-num-wrap">
-      <div class="seats-num">${prog.s}</div>
-      <div class="seats-label">ที่นั่ง</div>
-    </div>
-    <div class="seats-detail">
-      <div class="seats-prog-name">${prog.p}</div>
-      <div class="seats-year-badge">TCAS 2 / 2569</div>
-      ${isUnsupported ? '<div style="font-size:0.75rem;color:#ca8a04;margin-top:4px;">⚠ หลักสูตรนี้ใช้ Adj. T-score ไม่สามารถทำนายได้</div>' : ''}
-      ${isDuplicate ? '<div style="font-size:0.75rem;color:var(--gray-3);margin-top:4px;">เลือกหลักสูตรนี้แล้ว</div>' : ''}
-    </div>`;
 
   document.getElementById('btn-add-prog').disabled = isUnsupported || isDuplicate || selectedPrograms.length >= 3;
 }
@@ -2071,13 +2057,16 @@ function showCompareResults(results) {
     if (!hasFail && r.avg3yr) {
       html += '<div class="rc-bar-section">';
       html += '<div class="rc-bar-above" id="rc-bar-above-' + idx + '">';
+      const posMin = r.minMin > 0 ? Math.min(94, (r.minMin / barMax) * 100) : -99;
+      const posAvg = r.avg3yr > 0 ? Math.min(94, (r.avg3yr / barMax) * 100) : -99;
+      const tooClose = posMin > 0 && posAvg > 0 && (posAvg - posMin) < 8;
       if (r.minMin > 0) {
-        const pos1 = Math.min(94, (r.minMin / barMax) * 100);
-        html += '<div class="rc-bar-lbl" style="left:' + pos1 + '%"><span class="rc-bar-lbl-text">ต่ำสุด</span><div class="rc-bar-lbl-box box-min">' + r.minMin.toFixed(0) + '</div></div>';
+        const tx = tooClose ? 'transform:translateX(-100%);' : '';
+        html += '<div class="rc-bar-lbl" style="left:' + posMin + '%;' + tx + '"><span class="rc-bar-lbl-text">ต่ำสุด</span><div class="rc-bar-lbl-box box-min">' + r.minMin.toFixed(0) + '</div></div>';
       }
       if (r.avg3yr > 0) {
-        const pos2 = Math.min(94, (r.avg3yr / barMax) * 100);
-        html += '<div class="rc-bar-lbl" style="left:' + pos2 + '%"><span class="rc-bar-lbl-text">เฉลี่ย</span><div class="rc-bar-lbl-box box-avg">' + r.avg3yr.toFixed(0) + '</div></div>';
+        const tx = tooClose ? 'transform:none;' : '';
+        html += '<div class="rc-bar-lbl" style="left:' + posAvg + '%;' + tx + '"><span class="rc-bar-lbl-text">เฉลี่ย</span><div class="rc-bar-lbl-box box-avg">' + r.avg3yr.toFixed(0) + '</div></div>';
       }
       html += '</div>'; // above
 
