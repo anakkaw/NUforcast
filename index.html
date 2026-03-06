@@ -811,6 +811,27 @@
     }
     .btn-retry-compare:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(255,82,0,0.3); }
 
+    .btn-reset-all {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin: 14px auto 0; padding: 12px 32px;
+      background: #fff; border: 2px solid #e5e7eb;
+      color: var(--gray-2); font-family: var(--font-body); font-size: 0.92rem; font-weight: 700;
+      border-radius: 60px; cursor: pointer; transition: all 0.25s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .btn-reset-all .reset-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #fee2e2; color: #dc2626; font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+    .btn-reset-all:hover {
+      border-color: #fca5a5; color: #dc2626; background: #fff5f5;
+      box-shadow: 0 4px 16px rgba(220,38,38,0.12); transform: translateY(-1px);
+    }
+    .btn-reset-all:hover .reset-icon { background: #dc2626; color: #fff; }
+    .btn-reset-all:active { transform: translateY(0); }
+
     /* ═══ SHARED BADGE & ADVICE STYLES ═══ */
     .r-badge {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -1335,6 +1356,7 @@
         <button class="predict-btn" id="btn-predict" disabled onclick="calculate()">
           <span class="btn-text">คำนวณคะแนนและทำนายผล</span>
         </button>
+        <button type="button" class="btn-reset-all" onclick="resetAll()"><span class="reset-icon">↺</span> ล้างข้อมูล เริ่มใหม่</button>
       </div>
     </div>
 
@@ -2081,6 +2103,35 @@ function showCompareResults(results) {
 function closeCompareResults() {
   document.getElementById('result-compare').style.display = 'none';
   document.getElementById('result-compare').innerHTML = '';
+  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  // ซ่อนผลลัพธ์
+  document.getElementById('result-compare').style.display = 'none';
+  document.getElementById('result-compare').innerHTML = '';
+
+  // ล้าง survey
+  document.getElementById('inp-school').value = '';
+  document.getElementById('inp-province').selectedIndex = 0;
+  document.getElementById('knew-no').classList.remove('active');
+  document.getElementById('knew-yes').classList.remove('active');
+  document.getElementById('channels-wrap').classList.remove('show');
+  document.querySelectorAll('input[name="ch"]').forEach(c => c.checked = false);
+  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+
+  // ล้างหลักสูตร + dropdown
+  selectedPrograms = [];
+  currentProgram = null;
+  document.getElementById('sel-faculty').selectedIndex = 0;
+  document.getElementById('sel-program').innerHTML = '<option>-- เลือกคณะก่อน --</option>';
+  document.getElementById('sel-program').disabled = true;
+  document.getElementById('btn-add-prog').disabled = true;
+  document.getElementById('selected-programs').innerHTML = '';
+  resetScorePanel();
+  updatePredictButton();
+
+  // scroll ไปด้านบน
   document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
 }
 
