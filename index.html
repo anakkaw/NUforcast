@@ -616,7 +616,7 @@
       gap: 20px;
       box-sizing: border-box;
     }
-    .result-compare-title, .result-compare-sub, .btn-retry-compare { flex: 0 0 100%; }
+    .result-compare-title, .result-compare-sub, .btn-retry-compare, .result-compare .btn-reset-all { flex: 0 0 100%; }
     .result-compare-title {
       font-family: var(--font-thai-head); font-size: 1.3rem; font-weight: 800;
       color: var(--gray-1); text-align: center; margin-bottom: 4px;
@@ -2077,6 +2077,7 @@ function showCompareResults(results) {
   });
 
   html += '<button class="btn-retry-compare" onclick="closeCompareResults()">ทำนายผลใหม่</button>';
+  html += '<button type="button" class="btn-reset-all" onclick="resetAll()"><span class="reset-icon">↺</span> ล้างข้อมูล เริ่มใหม่ (ผู้ใช้คนถัดไป)</button>';
 
   container.innerHTML = html;
   container.style.display = 'flex';
