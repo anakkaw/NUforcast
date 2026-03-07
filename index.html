@@ -549,20 +549,46 @@
     .predict-btn:disabled::before { display: none; }
 
     /* ═══ MULTI-SELECT PROGRAM ═══ */
-    .sel-program-row {
-      display: flex; gap: 8px; align-items: stretch;
-    }
-    .sel-program-row select { flex: 1; min-width: 0; }
     .btn-add-prog {
-      flex-shrink: 0; padding: 0 18px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px;
       background: var(--orange-grad); color: #fff;
-      font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+      font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
       border: none; border-radius: var(--radius-sm); cursor: pointer;
-      transition: all 0.2s; white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(255,82,0,0.2);
+      transition: all 0.25s; white-space: nowrap; flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(255,82,0,0.3);
     }
-    .btn-add-prog:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,82,0,0.3); }
+    .btn-add-prog:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,82,0,0.4); }
+    .btn-add-prog:active { transform: translateY(0); }
     .btn-add-prog:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ═══ ADD MORE BANNER ═══ */
+    .add-more-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-top: 16px; padding: 18px 22px;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      border: 2px dashed rgba(255,82,0,0.28);
+      border-radius: var(--radius-md);
+      animation: fadeSlideIn 0.4s ease;
+    }
+    .add-more-content {
+      display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;
+    }
+    .add-more-icon-badge {
+      width: 44px; height: 44px; min-width: 44px;
+      background: var(--orange-grad); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(255,82,0,0.28); flex-shrink: 0;
+    }
+    .add-more-texts { display: flex; flex-direction: column; gap: 3px; }
+    .add-more-title {
+      font-family: var(--font-thai-head); font-size: 0.9rem; font-weight: 700;
+      color: var(--gray-1);
+    }
+    .add-more-msg {
+      font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+      color: var(--orange);
+    }
 
     .selected-programs {
       display: flex; flex-direction: column; gap: 8px;
@@ -989,8 +1015,9 @@
     @media (max-width: 800px) {
       html { font-size: 16px; }
       nav { padding: 0 1.2rem; height: 50px; }
-      .hero { grid-template-columns: 1fr; min-height: auto; padding: 64px 5% 48px; }
-      .hero-right { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 72px 5% 48px; align-items: start; }
+      .hero-right { display: flex; justify-content: center; padding-bottom: 16px; }
+      .hero-photo { max-width: clamp(180px, 55vw, 260px); }
       .hero-left { padding-right: 0; }
       .hero-stats { margin-bottom: 1.8rem; padding-bottom: 1.6rem; }
       .stats-numbers { gap: 0; }
@@ -1029,7 +1056,8 @@
       .seats-banner { flex-direction: column; text-align: center; gap: 10px; }
       .seats-num-wrap { flex-direction: row; gap: 8px; align-items: baseline; }
       .seats-year-badge { margin: 0 auto; }
-      .sel-program-row { flex-direction: column; }
+      .add-more-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .add-more-banner .btn-add-prog { width: 100%; justify-content: center; }
       .sp-card { gap: 10px; padding: 10px 14px; }
       .sp-card-num { font-size: 1.4rem; }
       .sp-card-num-wrap { min-width: 40px; }
@@ -1327,14 +1355,31 @@
           </div>
           <div class="ff">
             <label for="sel-program">หลักสูตร</label>
-            <div class="sel-program-row">
-              <select id="sel-program" disabled><option value="">-- เลือกคณะก่อน --</option></select>
-              <button type="button" class="btn-add-prog" id="btn-add-prog" disabled onclick="addProgram()">+ เพิ่ม</button>
-            </div>
+            <select id="sel-program" disabled><option value="">-- เลือกคณะก่อน --</option></select>
           </div>
         </div>
         <div id="program-info" class="seats-banner"></div>
         <div id="selected-programs" class="selected-programs"></div>
+
+        <!-- Add More Banner: แสดงหลังเลือกหลักสูตรแรกแล้ว -->
+        <div id="add-more-banner" class="add-more-banner" style="display:none;">
+          <div class="add-more-content">
+            <div class="add-more-icon-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <div class="add-more-texts">
+              <div class="add-more-title">เปรียบเทียบหลายหลักสูตรพร้อมกัน</div>
+              <div class="add-more-msg" id="add-more-msg">คุณสามารถเลือกเพิ่มได้อีก 2 หลักสูตร</div>
+            </div>
+          </div>
+          <button type="button" class="btn-add-prog" id="btn-add-prog" disabled onclick="addProgram()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            เพิ่มหลักสูตรที่เลือก
+          </button>
+        </div>
       </div>
 
       <div class="fstep">
@@ -1458,8 +1503,29 @@ function resetScorePanel() {
   document.getElementById('program-info').classList.remove('show');
   document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกคณะและหลักสูตรก่อน</div>';
   document.getElementById('btn-predict').disabled = true;
+  document.getElementById('add-more-banner').style.display = 'none';
   document.getElementById('btn-add-prog').disabled = true;
   currentProgram = null;
+}
+
+function updateAddMoreBanner() {
+  const banner = document.getElementById('add-more-banner');
+  const msg = document.getElementById('add-more-msg');
+  const btn = document.getElementById('btn-add-prog');
+  const remaining = 3 - selectedPrograms.length;
+
+  if (selectedPrograms.length === 0 || selectedPrograms.length >= 3) {
+    banner.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+
+  banner.style.display = 'flex';
+  msg.textContent = 'คุณสามารถเลือกเพิ่มได้อีก ' + remaining + ' หลักสูตร เพื่อเปรียบเทียบผล';
+
+  const isDuplicate = currentProgram && selectedPrograms.some(p => p.f === currentProgram.f && p.p === currentProgram.p);
+  const isUnsupported = currentProgram && Object.keys(currentProgram.w).length === 0 && currentProgram.ao === 0;
+  btn.disabled = !currentProgram || isDuplicate || isUnsupported;
 }
 
 function updatePredictButton() {
@@ -1502,8 +1568,7 @@ function addProgram() {
   // Hide preview card — the selected card now shows the info
   document.getElementById('program-info').classList.remove('show');
 
-  // Update add button state
-  document.getElementById('btn-add-prog').disabled = selectedPrograms.length >= 3;
+  updateAddMoreBanner();
 }
 
 function removeProgram(idx) {
@@ -1515,7 +1580,7 @@ function removeProgram(idx) {
     document.getElementById('score-inputs').innerHTML = '<div class="score-empty"><div class="score-empty-icon">📝</div>กรุณาเลือกคณะและหลักสูตรก่อน</div>';
   }
   updatePredictButton();
-  document.getElementById('btn-add-prog').disabled = selectedPrograms.length >= 3 || !currentProgram;
+  updateAddMoreBanner();
   // Hide compare results if visible
   document.getElementById('result-compare').style.display = 'none';
 }
@@ -1540,7 +1605,7 @@ function onFacultyChange() {
   pSel.disabled = !fac;
   currentProgram = null;
   document.getElementById('program-info').classList.remove('show');
-  document.getElementById('btn-add-prog').disabled = true;
+  updateAddMoreBanner();
 
   if (!fac) return;
 
@@ -1559,7 +1624,7 @@ function onProgramChange() {
   if (!pSel.value) {
     currentProgram = null;
     document.getElementById('program-info').classList.remove('show');
-    document.getElementById('btn-add-prog').disabled = true;
+    updateAddMoreBanner();
     return;
   }
 
@@ -1572,7 +1637,13 @@ function onProgramChange() {
   const isUnsupported = Object.keys(prog.w).length === 0 && prog.ao === 0;
   const isDuplicate = selectedPrograms.some(p => p.f === prog.f && p.p === prog.p);
 
-  document.getElementById('btn-add-prog').disabled = isUnsupported || isDuplicate || selectedPrograms.length >= 3;
+  // Auto-add first program immediately — ไม่ต้องกดปุ่มเพิ่ม
+  if (!isUnsupported && !isDuplicate && selectedPrograms.length === 0) {
+    addProgram();
+    return;
+  }
+
+  updateAddMoreBanner();
 }
 
 const ALEV_OTHER = [
@@ -2127,7 +2198,6 @@ function resetAll() {
   document.getElementById('sel-faculty').selectedIndex = 0;
   document.getElementById('sel-program').innerHTML = '<option>-- เลือกคณะก่อน --</option>';
   document.getElementById('sel-program').disabled = true;
-  document.getElementById('btn-add-prog').disabled = true;
   document.getElementById('selected-programs').innerHTML = '';
   resetScorePanel();
   updatePredictButton();
